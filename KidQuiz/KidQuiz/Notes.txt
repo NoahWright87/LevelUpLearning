@@ -1,0 +1,18 @@
+﻿Ideas:
+
+Interface for typing things in so they aren't hardcoded!!
+	Main Menu with 3 buttons: Start Quiz (grey if no words exist), Add New Words, Retire Old Words
+	Add New Words takes you to a screen with 2 textboxes: one for the word, one for the phrase
+		2 buttons: Add and Done
+		Add is the default.
+	Retire Old Words will store the previous week's words (or just delete them for now)
+	Start Quiz opens the existing form
+
+	The words need to be stored in a text/xml file or something...
+
+
+
+Low priority:
+
+Noises for right/wrong answers
+	Fireworks for correct stuff would be nice
