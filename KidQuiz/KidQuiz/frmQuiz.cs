@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Speech.Synthesis;
+using System.Text;
+using System.Windows.Forms;
 
 namespace KidQuiz
 {
     public partial class frmQuiz : Form
     {
-        String CurrentWord;
+        string CurrentWord;
 
-        Dictionary<String, VocabWord> SpellingWords;
+        Dictionary<string, VocabWord> SpellingWords;
         //List<String> SpellingWords_OLD;
-        Stack<String> WordStack;
+        Stack<string> WordStack;
 
         //int loop = 0;
         //int MAX_LOOPS = 1;
@@ -42,15 +40,15 @@ namespace KidQuiz
         SpeechSynthesizer synth;
 
         public frmQuiz() : this("") { }
-        public frmQuiz(String words) : this(words, new DifficultySettings()) { }
-        public frmQuiz(String words, DifficultySettings settings)
+        public frmQuiz(string words) : this(words, new DifficultySettings()) { }
+        public frmQuiz(string words, DifficultySettings settings)
         {
             InitializeComponent();
 
             SpellingWords = new Dictionary<string, VocabWord>();
-            foreach (String line in words.Split('\n'))
+            foreach (string line in words.Split('\n'))
             {
-                String[] lineParts = line.Trim().Split('\t');
+                string[] lineParts = line.Trim().Split('\t');
 
                 if (lineParts.Length >= 2)
                 {
@@ -87,7 +85,7 @@ namespace KidQuiz
             //CurrentWord = SpellingWords[r.Next(SpellingWords.Count)];
             if (WordStack.Count <= 0)
             {
-                foreach (String word in SpellingWords.OrderBy(x => r.NextDouble()).Where(x => x.Value.CurrentStreak < settings.TargetStreak).Select(x => x.Key))
+                foreach (string word in SpellingWords.OrderBy(x => r.NextDouble()).Where(x => x.Value.CurrentStreak < settings.TargetStreak).Select(x => x.Key))
                 {
                     WordStack.Push(word);
                 }
@@ -118,7 +116,7 @@ namespace KidQuiz
             }
         }
 
-        public String GetHintFor(String word, int difficulty)
+        public string GetHintFor(string word, int difficulty)
         {
             if (difficulty > word.Length) return "";
 
@@ -172,7 +170,7 @@ namespace KidQuiz
                 else
                 {
                     SpellingWords[CurrentWord].SpeakMisspelling(synth, txtInput.Text.Trim());
-                    CustomMessageBox.Show(String.Format("WRONG!\r\nCorrect spelling is: {0}", CurrentWord), "WRONG!", Color.Coral);
+                    CustomMessageBox.Show(string.Format("WRONG!\r\nCorrect spelling is: {0}", CurrentWord), "WRONG!", Color.Coral);
                 }
 
 
@@ -225,7 +223,7 @@ namespace KidQuiz
 
         private void btnStats_Click(object sender, EventArgs e)
         {
-            String statsMessage = "Stats:";
+            string statsMessage = "Stats:";
 
             foreach (VocabWord vw in SpellingWords.Values.OrderBy(x => x.PercentCorrect))
             {
@@ -235,119 +233,4 @@ namespace KidQuiz
             MessageBox.Show(statsMessage);
         }
     }
-
-    public class VocabWord
-    {
-        private readonly String ssmlFormatString = @"<break strength=""x-weak"" /><prosody rate=""slow"" pitch=""x-low""><emphasis level=""strong"">{0}</emphasis></prosody><break strength=""x-weak"" />";
-
-        public String Word { get; private set; }
-        public String ExampleSentence { get; private set; }
-        public PromptBuilder pb;
-
-        public int NumCorrect { get; private set; }
-        public int NumAttempts { get; private set; }
-        public int CurrentStreak { get; private set; }
-        public float PercentCorrect
-        {
-            get
-            {
-                if (NumAttempts <= 0) return 0;
-                else return ((float)NumCorrect / NumAttempts);
-            }
-        }
-
-        String prompt;
-
-        public Dictionary<String, int> PreviousAttempts;
-
-        public VocabWord(String Word, String ExampleSentence)
-        {
-            this.Word = Word;
-            this.ExampleSentence = ExampleSentence;
-
-            String wordWithSsml = String.Format(ssmlFormatString, Word);
-            prompt = String.Format("Spell {0}.  {1}.", wordWithSsml, ExampleSentence.Replace(Word, wordWithSsml));
-            pb = new PromptBuilder();
-            pb.AppendSsmlMarkup(prompt);
-
-            this.PreviousAttempts = new Dictionary<string, int>();
-        }
-
-        public void Speak(SpeechSynthesizer synth)
-        {
-            synth.SpeakAsync(pb);
-        }
-
-        public void SpeakMisspelling(SpeechSynthesizer synth, String incorrectSpelling)
-        {
-
-
-            String msg = String.Format("The word was {0}.  You spelled {1}.", 
-                                       String.Format(ssmlFormatString, this.Word),
-                                       String.Format(ssmlFormatString, incorrectSpelling));
-
-            var x = new PromptBuilder();
-            x.AppendSsmlMarkup(msg);
-
-            synth.SpeakAsyncCancelAll();
-            synth.SpeakAsync(x);
-        }
-
-        public String GetStatsMessage()
-        {
-            String previousAttempts = "";
-            foreach (String s in PreviousAttempts.Keys)
-            {
-                previousAttempts += String.Format("{0} ({1}), ", s, PreviousAttempts[s]);
-            }
-
-            if (this.NumAttempts <= 0) return "";
-
-            return String.Format("{0}: {1} / {2} ({3:0.00}%).{5}{4}", this.Word, this.NumCorrect, this.NumAttempts, (float)this.NumCorrect / this.NumAttempts * 100, previousAttempts,
-                this.NumAttempts > this.NumCorrect ? "  Incorrect spellings: " : "");
-        }
-
-        public bool RecordAttempt(String attempt, frmQuiz.StreakStyle style)
-        {
-            NumAttempts++;
-            if (Word.Equals(attempt, StringComparison.InvariantCultureIgnoreCase))
-            {
-                NumCorrect++;
-                CurrentStreak++;
-                return true;
-            }
-            else
-            {
-                switch (style)
-                {
-                    case frmQuiz.StreakStyle.MaintainStreak:
-                        //Do nothing
-                        break;
-                    case frmQuiz.StreakStyle.IncrementalLoss:
-                        if (CurrentStreak > 0) CurrentStreak--;
-                        break;
-                    case frmQuiz.StreakStyle.TotalLoss:
-                        CurrentStreak = 0;
-                        break;
-                }
-                
-                if (!PreviousAttempts.ContainsKey(attempt))
-                {
-                    PreviousAttempts.Add(attempt, 0);
-                }
-                PreviousAttempts[attempt] = PreviousAttempts[attempt] + 1;
-                return false;
-            }
-        }
-    }
-
-    public class DifficultySettings
-    {
-        public String Name;
-        public frmQuiz.StreakStyle StreakStyle;
-        public int Difficulty;
-        public int DifficultyPerStreak;
-        public int TargetStreak;
-    }
-
 }

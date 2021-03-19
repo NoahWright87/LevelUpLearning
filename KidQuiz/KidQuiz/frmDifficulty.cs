@@ -14,7 +14,7 @@ namespace KidQuiz
     {
         DifficultySettings[] DifficultySettingsOptions;
 
-        String wordsFile = "words.txt";
+        string wordsFile = "words.txt";
 
         public frmDifficulty()
         {
@@ -73,7 +73,7 @@ namespace KidQuiz
             {
                 this.Hide();
 
-                String wordsFromFile = "";
+                string wordsFromFile = "";
                 if (System.IO.File.Exists("words.txt"))
                 {
                     wordsFromFile = System.IO.File.ReadAllText("words.txt");

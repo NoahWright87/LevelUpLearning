@@ -17,7 +17,7 @@ namespace KidQuiz
             InitializeComponent();
         }
 
-        public static void Show(String text, String title, Color backColor)
+        public static void Show(string text, string title, Color backColor)
         {
             CustomMessageBox box = new CustomMessageBox();
             box.Text = title; 
