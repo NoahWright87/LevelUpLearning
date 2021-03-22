@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LevelUpLearning.Core\LevelUpLearning.Core.csproj" />
+    <ProjectReference Include="..\LevelUpLearning.SpeechWindows\LevelUpLearning.SpeechWindows.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CustomMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="CustomMessageBox.Designer.cs">
+      <DependentUpon>CustomMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Update="frmDifficulty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmDifficulty.Designer.cs">
+      <DependentUpon>frmDifficulty.cs</DependentUpon>
+    </Compile>
+    <Compile Update="frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Update="frmQuiz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="frmQuiz.Designer.cs">
+      <DependentUpon>frmQuiz.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="CustomMessageBox.resx">
+      <DependentUpon>CustomMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmDifficulty.resx">
+      <DependentUpon>frmDifficulty.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="frmQuiz.resx">
+      <DependentUpon>frmQuiz.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
