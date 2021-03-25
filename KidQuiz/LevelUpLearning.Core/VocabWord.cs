@@ -11,16 +11,7 @@ namespace LevelUpLearning.Core
         public int NumCorrect { get; private set; }
         public int NumAttempts { get; private set; }
         public int CurrentStreak { get; private set; }
-        public float PercentCorrect
-        {
-            get
-            {
-                if (NumAttempts <= 0) return 0;
-                else return ((float)NumCorrect / NumAttempts);
-            }
-        }
-
-        string prompt;
+        public float PercentCorrect => (NumAttempts <= 0 ? 0 : (float)NumCorrect / NumAttempts);
 
         public Dictionary<string, int> PreviousAttempts;
 
@@ -29,23 +20,24 @@ namespace LevelUpLearning.Core
             this.Word = Word;
             this.ExampleSentence = ExampleSentence;
 
-            this.PreviousAttempts = new Dictionary<string, int>();
+            PreviousAttempts = new Dictionary<string, int>();
         }
 
         public string GetStatsMessage()
         {
-            string previousAttempts = "";
+            string previousAttemptsMessage = PreviousAttempts.Count > 0 ? $"{Environment.NewLine}Incorrect spellings:" : "";
             foreach (string s in PreviousAttempts.Keys)
             {
-                previousAttempts += string.Format("{0} ({1}), ", s, PreviousAttempts[s]);
+                previousAttemptsMessage += $"{Environment.NewLine}{s} ({PreviousAttempts[s]})";
             }
 
-            if (this.NumAttempts <= 0) return "";
+            if (NumAttempts <= 0) return "";
 
-            return string.Format("{0}: {1} / {2} ({3:0.00}%).{5}{4}", this.Word, this.NumCorrect, this.NumAttempts, (float)this.NumCorrect / this.NumAttempts * 100, previousAttempts,
-                this.NumAttempts > this.NumCorrect ? "  Incorrect spellings: " : "");
+            return $"{Word}: {NumCorrect} / {NumAttempts} ({PercentCorrect * 100}%){previousAttemptsMessage}";
         }
 
+        //TODO: Consider storing this sessions's attempts and performance, then combining those into 
+        //  a lifetime performance stat that is stored separately
         public bool RecordAttempt(string attempt, StreakStyle style)
         {
             NumAttempts++;
@@ -57,7 +49,10 @@ namespace LevelUpLearning.Core
             }
             else
             {
-                switch (style)
+                //TODO: Looking back, I'm not sure this is the best way to handle this
+                //  I feel like this class should (at most) store the raw performance data, and decisions about what to do with it
+                //  (including how to calculate a 'streak' should be done elsewhere.  Give this one some thought
+                switch (style) 
                 {
                     case StreakStyle.MaintainStreak:
                         //Do nothing
@@ -69,8 +64,8 @@ namespace LevelUpLearning.Core
                         CurrentStreak = 0;
                         break;
                 }
-                
-                if (!PreviousAttempts.ContainsKey(attempt))
+
+                if (!PreviousAttempts.ContainsKey(attempt)) 
                 {
                     PreviousAttempts.Add(attempt, 0);
                 }

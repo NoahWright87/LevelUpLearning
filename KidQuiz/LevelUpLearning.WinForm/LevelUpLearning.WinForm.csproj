@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Notes.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Notes.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LevelUpLearning.Core\LevelUpLearning.Core.csproj" />
     <ProjectReference Include="..\LevelUpLearning.SpeechWindows\LevelUpLearning.SpeechWindows.csproj" />
   </ItemGroup>

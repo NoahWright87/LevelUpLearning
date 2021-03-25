@@ -65,7 +65,7 @@ namespace LevelUpLearning.WinForm
             }
             else
             {
-                this.Hide();
+                Hide();
 
                 string wordsFromFile = "";
                 if (System.IO.File.Exists("words.txt"))
@@ -74,7 +74,7 @@ namespace LevelUpLearning.WinForm
                 }
 
                 new frmQuiz(wordsFromFile, DifficultySettingsOptions[cboOptions.SelectedIndex]).ShowDialog(this);
-                this.Show();
+                Show();
             }
         }
 

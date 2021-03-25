@@ -24,7 +24,7 @@ namespace LevelUpLearning.WinForm
 
         private void btnOkay_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

@@ -7,16 +7,30 @@ This project is an initial upload of a spelling test program I made for my kids 
 # TODO
 Here is the current list of things that need to be done in this project:
 
+## Recent Changes
+- Separated code into frontend display and backend functionality
+- Created a test project
+- Some general clean-up done.  Still not up to best practices, but it's getting there
+  - Used string interpolation where possible
+  - Moved some hardcoded values to a Constants class
+  - Began to separate things into single responsibility, removed repetition
+- Added comments on most of the backend methods/variables
+
 ## Next Release
-- Separate code into frontend display and backend functionality
-- Create a test project and have some test coverage
-- Add comments throughout
-- General clean-up - this code is from years ago and may not use the best practices
-  - Use string interpolation whenever possible
-  - Refactor to move things into distinct methods with a single purpose
-  - Replace any magic numbers/strings with references to a Constants file
+- Add some basic unit tests
+- Improve on what's already there
+  - Provide interface where words / sentences can be created and saved
+    - Allow lists of words to be named, can be tested on one or more lists simultaneously
+    - Remember which lists were checked from previous session
+    - Make interface friendly for non-technical people, but insert the spelling word as a symbol placeholder
+    - Make sure words/sentences can be added quickly - parents dont' have much time
+  - Have a "login" where people can choose a name from a dropdown
+  - Store stats (per name chosen above) between sessions
+    - All this will be in XML for now, but keep things generic so it can later be put in a legit database
 
 ## Later Releases
+- Noises /animations when things are right/wrong
+- Some logic to say things were very close
 - Utilize Amazon Polly for text-to-speech: it may be slower than using native Windows voices, but will allow the code to be portable
 - Recreate UI in UWP
 - Go beyond spelling tests
