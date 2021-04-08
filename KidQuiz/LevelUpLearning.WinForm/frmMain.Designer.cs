@@ -28,69 +28,85 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dgWords = new System.Windows.Forms.DataGridView();
-            this.Word = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ExampleSentence = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnStartQuiz = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dgWords)).BeginInit();
+            this.btnSpellingTest = new System.Windows.Forms.Button();
+            this.btnSpellingTestSetup = new System.Windows.Forms.Button();
+            this.lblUsername = new System.Windows.Forms.Label();
+            this.btnLogout = new System.Windows.Forms.Button();
+            this.lblComingSoon = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // dgWords
+            // btnSpellingTest
             // 
-            this.dgWords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgWords.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Word,
-            this.ExampleSentence});
-            this.dgWords.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgWords.Location = new System.Drawing.Point(0, 0);
-            this.dgWords.Name = "dgWords";
-            this.dgWords.Size = new System.Drawing.Size(758, 587);
-            this.dgWords.TabIndex = 3;
+            this.btnSpellingTest.Location = new System.Drawing.Point(21, 115);
+            this.btnSpellingTest.Name = "btnSpellingTest";
+            this.btnSpellingTest.Size = new System.Drawing.Size(207, 29);
+            this.btnSpellingTest.TabIndex = 5;
+            this.btnSpellingTest.Text = "Spelling Test";
+            this.btnSpellingTest.UseVisualStyleBackColor = true;
+            this.btnSpellingTest.Click += new System.EventHandler(this.btnSpellingTest_Click);
             // 
-            // Word
+            // btnSpellingTestSetup
             // 
-            this.Word.HeaderText = "Word";
-            this.Word.Name = "Word";
-            this.Word.Width = 150;
+            this.btnSpellingTestSetup.Location = new System.Drawing.Point(272, 115);
+            this.btnSpellingTestSetup.Name = "btnSpellingTestSetup";
+            this.btnSpellingTestSetup.Size = new System.Drawing.Size(94, 29);
+            this.btnSpellingTestSetup.TabIndex = 5;
+            this.btnSpellingTestSetup.Text = "Edit...";
+            this.btnSpellingTestSetup.UseVisualStyleBackColor = true;
+            this.btnSpellingTestSetup.Click += new System.EventHandler(this.btnSpellingTestSetup_Click);
             // 
-            // ExampleSentence
+            // lblUsername
             // 
-            this.ExampleSentence.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ExampleSentence.HeaderText = "Example Sentence";
-            this.ExampleSentence.Name = "ExampleSentence";
+            this.lblUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Location = new System.Drawing.Point(276, 11);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(426, 20);
+            this.lblUsername.TabIndex = 6;
+            this.lblUsername.Text = "Welcome, [[user]] //TODO: Set this //TODO: Make right-aligned";
             // 
-            // btnStartQuiz
+            // btnLogout
             // 
-            this.btnStartQuiz.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnStartQuiz.Location = new System.Drawing.Point(0, 564);
-            this.btnStartQuiz.Name = "btnStartQuiz";
-            this.btnStartQuiz.Size = new System.Drawing.Size(758, 23);
-            this.btnStartQuiz.TabIndex = 4;
-            this.btnStartQuiz.Text = "Begin Quiz";
-            this.btnStartQuiz.UseVisualStyleBackColor = true;
-            this.btnStartQuiz.Click += new System.EventHandler(this.btnStartQuiz_Click);
+            this.btnLogout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLogout.Location = new System.Drawing.Point(708, 7);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(94, 29);
+            this.btnLogout.TabIndex = 7;
+            this.btnLogout.Text = "Logout";
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            // 
+            // lblComingSoon
+            // 
+            this.lblComingSoon.AutoSize = true;
+            this.lblComingSoon.Location = new System.Drawing.Point(135, 194);
+            this.lblComingSoon.Name = "lblComingSoon";
+            this.lblComingSoon.Size = new System.Drawing.Size(107, 20);
+            this.lblComingSoon.TabIndex = 8;
+            this.lblComingSoon.Text = "More to come!";
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(758, 587);
-            this.Controls.Add(this.btnStartQuiz);
-            this.Controls.Add(this.dgWords);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ClientSize = new System.Drawing.Size(814, 336);
+            this.Controls.Add(this.lblComingSoon);
+            this.Controls.Add(this.btnLogout);
+            this.Controls.Add(this.lblUsername);
+            this.Controls.Add(this.btnSpellingTestSetup);
+            this.Controls.Add(this.btnSpellingTest);
             this.Name = "frmMain";
-            this.Text = "frmMain";
-            ((System.ComponentModel.ISupportInitialize)(this.dgWords)).EndInit();
+            this.Text = "Level Up Learning - Main Menu";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridView dgWords;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Word;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ExampleSentence;
-        private System.Windows.Forms.Button btnStartQuiz;
-
+        private System.Windows.Forms.Button btnSpellingTest;
+        private System.Windows.Forms.Button btnSpellingTestSetup;
+        private System.Windows.Forms.Label lblUsername;
+        private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Label lblComingSoon;
     }
 }

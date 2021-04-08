@@ -9,7 +9,7 @@ namespace LevelUpLearning.SpeechWindows
     public class SpeechUtil
     {
         /// <summary>
-        /// DO NOT USE DIRECTLY, use Synch instead
+        /// DO NOT USE DIRECTLY, use Synth property instead
         /// </summary>
         private static SpeechSynthesizer _synth;
         /// <summary>

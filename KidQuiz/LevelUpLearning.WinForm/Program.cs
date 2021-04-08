@@ -11,6 +11,8 @@ namespace LevelUpLearning.WinForm
         [STAThread]
         static void Main()
         {
+            //TODO: Call common function that creates the data if it doesn't already exist
+
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

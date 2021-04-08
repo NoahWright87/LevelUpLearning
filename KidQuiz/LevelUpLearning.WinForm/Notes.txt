@@ -1,9 +1,0 @@
-﻿//TODO: Evaluate the ideas in this old file.  Transfer good stuff to the ReadMe, then delete this file
-
-Ideas:
-
-
-Low priority:
-
-Noises for right/wrong answers
-	Fireworks for correct stuff would be nice

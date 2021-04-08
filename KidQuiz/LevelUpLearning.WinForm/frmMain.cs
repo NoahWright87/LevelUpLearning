@@ -1,6 +1,4 @@
-﻿using LevelUpLearning.Core;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForm
@@ -13,20 +11,46 @@ namespace LevelUpLearning.WinForm
         {
             InitializeComponent();
 
-            //Check for file of words
-                //Load file if it exists
+            LoginChanged(); //React to the initial user login (if any)
         }
 
-        private void btnStartQuiz_Click(object sender, EventArgs e)
+        private void OpenLoginForm()
         {
-            //Grab words from the screen
-            List<VocabWord> words = new List<VocabWord>();
-            //for loop
-            words[0] = new VocabWord(dgWords[0, 0].Value.ToString(), dgWords[1, 0].Value.ToString());
-            //etc etc in loop
-
-            //TODO: Make a constructor that takes a list of files
-            new frmQuiz().ShowDialog();
+            //TODO: Open login form, hide this one
+            Hide();
+            //new frmLogin().ShowDialog(this);
+            //TODO: What if nobody logs in?  Close this form?
+            Show();
         }
+
+        private void LoginChanged()
+        {
+            //Look in save data, see if there's a remembered login
+            bool userNotLoggedIn = true; //TODO: Actually look in data
+            if (userNotLoggedIn)
+            {
+                OpenLoginForm();
+            }
+            
+            //TODO: Handle the case of no login happening, need to close form without action
+            //TODO: Set the user's name somewhere on the form
+        }
+
+        private void btnSpellingTest_Click(object sender, EventArgs e)
+        {
+            //TODO: Launch the spelling test difficulty selector
+        }
+
+        private void btnSpellingTestSetup_Click(object sender, EventArgs e)
+        {
+            //TODO: Launch the form to create spelling lists
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            //TODO: Log out, bring up the login form, close this form
+        }
+
+        //TODO: Handle closing the form
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace LevelUpLearning.Core
 {
+    //TODO: XML comments
     public class VocabWord
     {
         public string Word { get; private set; }
