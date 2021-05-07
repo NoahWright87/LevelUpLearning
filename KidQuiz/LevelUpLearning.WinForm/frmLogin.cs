@@ -14,7 +14,7 @@ namespace LevelUpLearning.WinForm
             //TODO: Init dropdown list with previous users
         }
 
-        private void cboUser_SelectedIndexChanged(object sender, EventArgs e)
+        private void UserDropdownChanged(object sender, EventArgs e)
         {
             //Disable the login button unless a username is actually typed
             btnLogin.Enabled = !string.IsNullOrWhiteSpace(cboUser.Text);
@@ -26,7 +26,11 @@ namespace LevelUpLearning.WinForm
 
             //TODO: Set the current user to what was entered
 
-            //Open main menu form
+            //Hide this form, open main menu form
+            Hide();
+            new frmMain().ShowDialog(this);
+            //Show back up when main menu is closed
+            Show();
         }
 
         private void btnExit_Click(object sender, EventArgs e)

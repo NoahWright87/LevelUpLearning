@@ -39,19 +39,22 @@ namespace LevelUpLearning.WinForm
             // cboUser
             // 
             this.cboUser.FormattingEnabled = true;
-            this.cboUser.Location = new System.Drawing.Point(12, 65);
+            this.cboUser.Location = new System.Drawing.Point(15, 81);
+            this.cboUser.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cboUser.Name = "cboUser";
-            this.cboUser.Size = new System.Drawing.Size(511, 28);
+            this.cboUser.Size = new System.Drawing.Size(638, 33);
             this.cboUser.Sorted = true;
             this.cboUser.TabIndex = 2;
-            this.cboUser.SelectedIndexChanged += new System.EventHandler(this.cboUser_SelectedIndexChanged);
+            this.cboUser.SelectedIndexChanged += new System.EventHandler(this.UserDropdownChanged);
+            this.cboUser.TextUpdate += new System.EventHandler(this.UserDropdownChanged);
             // 
             // lblUser
             // 
             this.lblUser.AutoSize = true;
-            this.lblUser.Location = new System.Drawing.Point(12, 42);
+            this.lblUser.Location = new System.Drawing.Point(15, 52);
+            this.lblUser.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(41, 20);
+            this.lblUser.Size = new System.Drawing.Size(51, 25);
             this.lblUser.TabIndex = 3;
             this.lblUser.Text = "User:";
             // 
@@ -59,9 +62,10 @@ namespace LevelUpLearning.WinForm
             // 
             this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.btnLogin.Enabled = false;
-            this.btnLogin.Location = new System.Drawing.Point(405, 99);
+            this.btnLogin.Location = new System.Drawing.Point(506, 124);
+            this.btnLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(118, 79);
+            this.btnLogin.Size = new System.Drawing.Size(148, 99);
             this.btnLogin.TabIndex = 4;
             this.btnLogin.Text = "Log In";
             this.btnLogin.UseVisualStyleBackColor = false;
@@ -70,9 +74,10 @@ namespace LevelUpLearning.WinForm
             // btnExit
             // 
             this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.btnExit.Location = new System.Drawing.Point(473, 12);
+            this.btnExit.Location = new System.Drawing.Point(591, 15);
+            this.btnExit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(50, 29);
+            this.btnExit.Size = new System.Drawing.Size(62, 36);
             this.btnExit.TabIndex = 5;
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = false;
@@ -81,9 +86,10 @@ namespace LevelUpLearning.WinForm
             // chkRememberMe
             // 
             this.chkRememberMe.AutoSize = true;
-            this.chkRememberMe.Location = new System.Drawing.Point(12, 99);
+            this.chkRememberMe.Location = new System.Drawing.Point(15, 124);
+            this.chkRememberMe.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.chkRememberMe.Name = "chkRememberMe";
-            this.chkRememberMe.Size = new System.Drawing.Size(129, 24);
+            this.chkRememberMe.Size = new System.Drawing.Size(154, 29);
             this.chkRememberMe.TabIndex = 6;
             this.chkRememberMe.Text = "Remember Me";
             this.chkRememberMe.UseVisualStyleBackColor = true;
@@ -91,16 +97,17 @@ namespace LevelUpLearning.WinForm
             // frmLogin
             // 
             this.AcceptButton = this.btnLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnExit;
-            this.ClientSize = new System.Drawing.Size(538, 190);
+            this.ClientSize = new System.Drawing.Size(672, 238);
             this.ControlBox = false;
             this.Controls.Add(this.chkRememberMe);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.lblUser);
             this.Controls.Add(this.cboUser);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "User Login";

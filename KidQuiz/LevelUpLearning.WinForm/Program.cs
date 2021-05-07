@@ -12,6 +12,7 @@ namespace LevelUpLearning.WinForm
         static void Main()
         {
             //TODO: Call common function that creates the data if it doesn't already exist
+            LevelUpLearning.Core.Data.datafilesingletonrenamelater.test_thing();
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
