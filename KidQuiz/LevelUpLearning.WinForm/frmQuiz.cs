@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using LevelUpLearning.SpeechWindows;
+using LevelUpLearning.Core.Data;
 
 namespace LevelUpLearning.WinForm
 {
@@ -21,25 +22,52 @@ namespace LevelUpLearning.WinForm
 
         Random r; //TODO: This should be in the background
 
-        public frmQuiz() : this("") { }
-        public frmQuiz(string words) : this(words, new DifficultySettings()) { }
-        public frmQuiz(string words, DifficultySettings settings)
+        //public frmQuiz() : this("") { }
+        //public frmQuiz(string words) : this(words, new DifficultySettings()) { }
+        //public frmQuiz(string words, DifficultySettings settings)
+        //{
+        //    InitializeComponent();
+
+        //    SpellingWords = new Dictionary<string, VocabWord>();
+        //    foreach (string line in words.Split('\n'))
+        //    {
+        //        string[] lineParts = line.Trim().Split('\t');
+
+        //        if (lineParts.Length >= 2)
+        //        {
+        //            SpellingWords.Add(lineParts[0], new VocabWord(lineParts[0], lineParts[1]));
+        //        }
+        //    }
+
+        //    this.settings = settings;
+
+        //    r = new Random();
+        //    WordStack = new Stack<string>();
+        //    PickNewWord_WithStreaks();
+        //}
+        //private frmQuiz() { throw new NotSupportedException(); }
+        public frmQuiz()
         {
             InitializeComponent();
-
+            //TODO: Pop up a quiz settings form as a dialog, use the settings from there to initialize
+            //Settings to grab:
+            //  Which lists (multi-select)
+            //  Difficulty (some presets + custom)
             SpellingWords = new Dictionary<string, VocabWord>();
-            foreach (string line in words.Split('\n'))
+            foreach (var word in DataController.Root.Spelling.WordLists.FirstOrDefault().Value.Words)
             {
-                string[] lineParts = line.Trim().Split('\t');
-
-                if (lineParts.Length >= 2)
-                {
-                    SpellingWords.Add(lineParts[0], new VocabWord(lineParts[0], lineParts[1]));
-                }
+                //TODO: Obviously this is jacked - use the new data structure, scrap the old
+                SpellingWords.Add(word.Word, new VocabWord(word.Word, word.Prompt));
             }
 
-            this.settings = settings;
-
+            settings = new DifficultySettings()
+            {
+                Difficulty = 20,
+                DifficultyPerStreak = 20,
+                Name = "??",
+                StreakStyle = StreakStyle.MaintainStreak,
+                TargetStreak = 3
+            };
             r = new Random();
             WordStack = new Stack<string>();
             PickNewWord_WithStreaks();

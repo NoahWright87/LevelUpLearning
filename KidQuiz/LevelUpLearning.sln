@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpLearning.Core", "LevelUpLearning.Core\LevelUpLearning.Core.csproj", "{CD6393DE-ADB9-47C9-93B9-0E5C6DB84FC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpLearning.WinForm", "LevelUpLearning.WinForm\LevelUpLearning.WinForm.csproj", "{F2381F9C-9EE6-475B-BF88-87243F6FD61E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelUpLearning.SpeechWindows", "LevelUpLearning.SpeechWindows\LevelUpLearning.SpeechWindows.csproj", "{1D02F6CF-3FF3-486A-A579-A68D415725F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelUpLearning.Tests", "LevelUpLearning.Tests\LevelUpLearning.Tests.csproj", "{BFD9904B-C6B9-4CF2-9425-79B80B2DF059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpLearning.Tests", "LevelUpLearning.Tests\LevelUpLearning.Tests.csproj", "{BFD9904B-C6B9-4CF2-9425-79B80B2DF059}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelUpLearning.WinForm", "LevelUpLearning.WinForm\LevelUpLearning.WinForm.csproj", "{A83F1540-CD2A-48EC-9D29-E3311BD3A768}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{CD6393DE-ADB9-47C9-93B9-0E5C6DB84FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD6393DE-ADB9-47C9-93B9-0E5C6DB84FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD6393DE-ADB9-47C9-93B9-0E5C6DB84FC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2381F9C-9EE6-475B-BF88-87243F6FD61E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2381F9C-9EE6-475B-BF88-87243F6FD61E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2381F9C-9EE6-475B-BF88-87243F6FD61E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2381F9C-9EE6-475B-BF88-87243F6FD61E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D02F6CF-3FF3-486A-A579-A68D415725F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D02F6CF-3FF3-486A-A579-A68D415725F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D02F6CF-3FF3-486A-A579-A68D415725F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{BFD9904B-C6B9-4CF2-9425-79B80B2DF059}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFD9904B-C6B9-4CF2-9425-79B80B2DF059}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFD9904B-C6B9-4CF2-9425-79B80B2DF059}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A83F1540-CD2A-48EC-9D29-E3311BD3A768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A83F1540-CD2A-48EC-9D29-E3311BD3A768}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A83F1540-CD2A-48EC-9D29-E3311BD3A768}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A83F1540-CD2A-48EC-9D29-E3311BD3A768}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

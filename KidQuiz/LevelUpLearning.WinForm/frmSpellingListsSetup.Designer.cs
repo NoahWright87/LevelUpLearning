@@ -29,248 +29,382 @@ namespace LevelUpLearning.WinForm
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lstSpellingLists = new System.Windows.Forms.ListBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.grpList = new System.Windows.Forms.GroupBox();
+            this.btnCancelList = new System.Windows.Forms.Button();
+            this.btnSaveList = new System.Windows.Forms.Button();
+            this.txtListName = new System.Windows.Forms.TextBox();
+            this.lblListName = new System.Windows.Forms.Label();
+            this.btnDeleteWord = new System.Windows.Forms.Button();
             this.lstWords = new System.Windows.Forms.ListBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtSpellingWord = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.btnEditWord = new System.Windows.Forms.Button();
+            this.btnAddWord = new System.Windows.Forms.Button();
+            this.lstSpellingLists = new System.Windows.Forms.ListBox();
+            this.grpLists = new System.Windows.Forms.GroupBox();
+            this.btnAddList = new System.Windows.Forms.Button();
+            this.btnCancelAll = new System.Windows.Forms.Button();
+            this.btnSaveAll = new System.Windows.Forms.Button();
+            this.btnEditList = new System.Windows.Forms.Button();
+            this.btnDeleteList = new System.Windows.Forms.Button();
+            this.btnHearTest = new System.Windows.Forms.Button();
             this.txtExampleSentence = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.lblExampleSentence = new System.Windows.Forms.Label();
+            this.txtSpellingWord = new System.Windows.Forms.TextBox();
+            this.lblSpellingWord = new System.Windows.Forms.Label();
+            this.grpWord = new System.Windows.Forms.GroupBox();
+            this.lblDifficultyRating = new System.Windows.Forms.Label();
+            this.btnInsertWord = new System.Windows.Forms.Button();
+            this.btnCancelWord = new System.Windows.Forms.Button();
+            this.btnSaveWord = new System.Windows.Forms.Button();
+            this.grpList.SuspendLayout();
+            this.grpLists.SuspendLayout();
+            this.grpWord.SuspendLayout();
             this.SuspendLayout();
             // 
-            // splitContainer1
+            // grpList
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.grpList.Controls.Add(this.btnCancelList);
+            this.grpList.Controls.Add(this.btnSaveList);
+            this.grpList.Controls.Add(this.txtListName);
+            this.grpList.Controls.Add(this.lblListName);
+            this.grpList.Controls.Add(this.btnDeleteWord);
+            this.grpList.Controls.Add(this.lstWords);
+            this.grpList.Controls.Add(this.btnEditWord);
+            this.grpList.Controls.Add(this.btnAddWord);
+            this.grpList.Location = new System.Drawing.Point(336, 20);
+            this.grpList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpList.Name = "grpList";
+            this.grpList.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpList.Size = new System.Drawing.Size(319, 398);
+            this.grpList.TabIndex = 27;
+            this.grpList.TabStop = false;
+            this.grpList.Text = "List Details";
+            this.grpList.Visible = false;
             // 
-            // splitContainer1.Panel1
+            // btnCancelList
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.button4);
-            this.splitContainer1.Panel1.Controls.Add(this.button3);
-            this.splitContainer1.Panel1.Controls.Add(this.button2);
-            this.splitContainer1.Panel1.Controls.Add(this.button1);
-            this.splitContainer1.Panel1.Controls.Add(this.label3);
-            this.splitContainer1.Panel1.Controls.Add(this.lstSpellingLists);
+            this.btnCancelList.Location = new System.Drawing.Point(6, 353);
+            this.btnCancelList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnCancelList.Name = "btnCancelList";
+            this.btnCancelList.Size = new System.Drawing.Size(94, 31);
+            this.btnCancelList.TabIndex = 30;
+            this.btnCancelList.Text = "Cancel";
+            this.btnCancelList.UseVisualStyleBackColor = true;
+            this.btnCancelList.Click += new System.EventHandler(this.btnCancelList_Click);
             // 
-            // splitContainer1.Panel2
+            // btnSaveList
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.button9);
-            this.splitContainer1.Panel2.Controls.Add(this.button8);
-            this.splitContainer1.Panel2.Controls.Add(this.button5);
-            this.splitContainer1.Panel2.Controls.Add(this.button6);
-            this.splitContainer1.Panel2.Controls.Add(this.button7);
-            this.splitContainer1.Panel2.Controls.Add(this.txtExampleSentence);
-            this.splitContainer1.Panel2.Controls.Add(this.label5);
-            this.splitContainer1.Panel2.Controls.Add(this.txtSpellingWord);
-            this.splitContainer1.Panel2.Controls.Add(this.label4);
-            this.splitContainer1.Panel2.Controls.Add(this.lstWords);
-            this.splitContainer1.Panel2.Controls.Add(this.label2);
-            this.splitContainer1.Size = new System.Drawing.Size(1028, 522);
-            this.splitContainer1.SplitterDistance = 258;
-            this.splitContainer1.TabIndex = 2;
+            this.btnSaveList.Location = new System.Drawing.Point(106, 353);
+            this.btnSaveList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnSaveList.Name = "btnSaveList";
+            this.btnSaveList.Size = new System.Drawing.Size(194, 31);
+            this.btnSaveList.TabIndex = 31;
+            this.btnSaveList.Text = "Save Changes";
+            this.btnSaveList.UseVisualStyleBackColor = true;
+            this.btnSaveList.Click += new System.EventHandler(this.btnSaveList_Click);
             // 
-            // label2
+            // txtListName
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 20);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Words:";
+            this.txtListName.Location = new System.Drawing.Point(6, 39);
+            this.txtListName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtListName.Name = "txtListName";
+            this.txtListName.Size = new System.Drawing.Size(294, 22);
+            this.txtListName.TabIndex = 32;
             // 
-            // lstSpellingLists
+            // lblListName
             // 
-            this.lstSpellingLists.FormattingEnabled = true;
-            this.lstSpellingLists.ItemHeight = 20;
-            this.lstSpellingLists.Location = new System.Drawing.Point(12, 36);
-            this.lstSpellingLists.Name = "lstSpellingLists";
-            this.lstSpellingLists.Size = new System.Drawing.Size(341, 104);
-            this.lstSpellingLists.TabIndex = 2;
+            this.lblListName.AutoSize = true;
+            this.lblListName.Location = new System.Drawing.Point(6, 20);
+            this.lblListName.Name = "lblListName";
+            this.lblListName.Size = new System.Drawing.Size(71, 17);
+            this.lblListName.TabIndex = 31;
+            this.lblListName.Text = "List Name";
             // 
-            // label3
+            // btnDeleteWord
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(98, 20);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Spelling Lists:";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(679, 111);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Add";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(679, 147);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(94, 29);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Edit";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(679, 183);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(94, 29);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Delete";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(857, 200);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(94, 29);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "Save";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnDeleteWord.Location = new System.Drawing.Point(206, 299);
+            this.btnDeleteWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDeleteWord.Name = "btnDeleteWord";
+            this.btnDeleteWord.Size = new System.Drawing.Size(94, 31);
+            this.btnDeleteWord.TabIndex = 21;
+            this.btnDeleteWord.Text = "Delete";
+            this.btnDeleteWord.UseVisualStyleBackColor = true;
+            this.btnDeleteWord.Click += new System.EventHandler(this.btnDeleteWord_Click);
             // 
             // lstWords
             // 
             this.lstWords.FormattingEnabled = true;
-            this.lstWords.ItemHeight = 20;
-            this.lstWords.Location = new System.Drawing.Point(12, 32);
+            this.lstWords.ItemHeight = 16;
+            this.lstWords.Location = new System.Drawing.Point(6, 66);
+            this.lstWords.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstWords.Name = "lstWords";
-            this.lstWords.Size = new System.Drawing.Size(341, 104);
-            this.lstWords.TabIndex = 3;
+            this.lstWords.Size = new System.Drawing.Size(294, 212);
+            this.lstWords.TabIndex = 16;
+            this.lstWords.SelectedIndexChanged += new System.EventHandler(this.lstWords_SelectedIndexChanged);
             // 
-            // label4
+            // btnEditWord
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(593, 32);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(103, 20);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Spelling Word";
+            this.btnEditWord.Location = new System.Drawing.Point(106, 299);
+            this.btnEditWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnEditWord.Name = "btnEditWord";
+            this.btnEditWord.Size = new System.Drawing.Size(94, 31);
+            this.btnEditWord.TabIndex = 19;
+            this.btnEditWord.Text = "Edit";
+            this.btnEditWord.UseVisualStyleBackColor = true;
+            this.btnEditWord.Click += new System.EventHandler(this.btnEditWord_Click);
             // 
-            // txtSpellingWord
+            // btnAddWord
             // 
-            this.txtSpellingWord.Location = new System.Drawing.Point(593, 56);
-            this.txtSpellingWord.Name = "txtSpellingWord";
-            this.txtSpellingWord.Size = new System.Drawing.Size(311, 27);
-            this.txtSpellingWord.TabIndex = 5;
+            this.btnAddWord.Location = new System.Drawing.Point(6, 299);
+            this.btnAddWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAddWord.Name = "btnAddWord";
+            this.btnAddWord.Size = new System.Drawing.Size(94, 31);
+            this.btnAddWord.TabIndex = 17;
+            this.btnAddWord.Text = "Add";
+            this.btnAddWord.UseVisualStyleBackColor = true;
+            this.btnAddWord.Click += new System.EventHandler(this.btnAddWord_Click);
             // 
-            // label5
+            // lstSpellingLists
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(593, 98);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(311, 20);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Example Sentence (use %% for spelling word)";
+            this.lstSpellingLists.FormattingEnabled = true;
+            this.lstSpellingLists.ItemHeight = 16;
+            this.lstSpellingLists.Location = new System.Drawing.Point(6, 21);
+            this.lstSpellingLists.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.lstSpellingLists.Name = "lstSpellingLists";
+            this.lstSpellingLists.Size = new System.Drawing.Size(294, 260);
+            this.lstSpellingLists.TabIndex = 14;
+            this.lstSpellingLists.SelectedIndexChanged += new System.EventHandler(this.lstSpellingLists_SelectedIndexChanged);
+            // 
+            // grpLists
+            // 
+            this.grpLists.Controls.Add(this.lstSpellingLists);
+            this.grpLists.Controls.Add(this.btnAddList);
+            this.grpLists.Controls.Add(this.btnCancelAll);
+            this.grpLists.Controls.Add(this.btnSaveAll);
+            this.grpLists.Controls.Add(this.btnEditList);
+            this.grpLists.Controls.Add(this.btnDeleteList);
+            this.grpLists.Location = new System.Drawing.Point(12, 20);
+            this.grpLists.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpLists.Name = "grpLists";
+            this.grpLists.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpLists.Size = new System.Drawing.Size(315, 398);
+            this.grpLists.TabIndex = 25;
+            this.grpLists.TabStop = false;
+            this.grpLists.Text = "Spelling Lists";
+            this.grpLists.Visible = false;
+            // 
+            // btnAddList
+            // 
+            this.btnAddList.Location = new System.Drawing.Point(6, 299);
+            this.btnAddList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAddList.Name = "btnAddList";
+            this.btnAddList.Size = new System.Drawing.Size(94, 31);
+            this.btnAddList.TabIndex = 26;
+            this.btnAddList.Text = "Add";
+            this.btnAddList.UseVisualStyleBackColor = true;
+            this.btnAddList.Click += new System.EventHandler(this.btnAddList_Click);
+            // 
+            // btnCancelAll
+            // 
+            this.btnCancelAll.Location = new System.Drawing.Point(6, 353);
+            this.btnCancelAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnCancelAll.Name = "btnCancelAll";
+            this.btnCancelAll.Size = new System.Drawing.Size(94, 31);
+            this.btnCancelAll.TabIndex = 28;
+            this.btnCancelAll.Text = "Cancel";
+            this.btnCancelAll.UseVisualStyleBackColor = true;
+            this.btnCancelAll.Click += new System.EventHandler(this.btnCancelAll_Click);
+            // 
+            // btnSaveAll
+            // 
+            this.btnSaveAll.Location = new System.Drawing.Point(106, 353);
+            this.btnSaveAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnSaveAll.Name = "btnSaveAll";
+            this.btnSaveAll.Size = new System.Drawing.Size(194, 31);
+            this.btnSaveAll.TabIndex = 28;
+            this.btnSaveAll.Text = "Save Changes";
+            this.btnSaveAll.UseVisualStyleBackColor = true;
+            this.btnSaveAll.Click += new System.EventHandler(this.btnSaveAll_Click);
+            // 
+            // btnEditList
+            // 
+            this.btnEditList.Location = new System.Drawing.Point(106, 299);
+            this.btnEditList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnEditList.Name = "btnEditList";
+            this.btnEditList.Size = new System.Drawing.Size(94, 31);
+            this.btnEditList.TabIndex = 28;
+            this.btnEditList.Text = "Edit";
+            this.btnEditList.UseVisualStyleBackColor = true;
+            this.btnEditList.Click += new System.EventHandler(this.btnEditList_Click);
+            // 
+            // btnDeleteList
+            // 
+            this.btnDeleteList.Location = new System.Drawing.Point(206, 299);
+            this.btnDeleteList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDeleteList.Name = "btnDeleteList";
+            this.btnDeleteList.Size = new System.Drawing.Size(94, 31);
+            this.btnDeleteList.TabIndex = 29;
+            this.btnDeleteList.Text = "Delete";
+            this.btnDeleteList.UseVisualStyleBackColor = true;
+            this.btnDeleteList.Click += new System.EventHandler(this.btnDeleteList_Click);
+            // 
+            // btnHearTest
+            // 
+            this.btnHearTest.Location = new System.Drawing.Point(160, 278);
+            this.btnHearTest.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnHearTest.Name = "btnHearTest";
+            this.btnHearTest.Size = new System.Drawing.Size(140, 44);
+            this.btnHearTest.TabIndex = 30;
+            this.btnHearTest.Text = "Hear Test";
+            this.btnHearTest.UseVisualStyleBackColor = true;
+            this.btnHearTest.Click += new System.EventHandler(this.btnHearTest_Click);
             // 
             // txtExampleSentence
             // 
-            this.txtExampleSentence.Location = new System.Drawing.Point(593, 122);
+            this.txtExampleSentence.AcceptsReturn = true;
+            this.txtExampleSentence.Location = new System.Drawing.Point(6, 84);
+            this.txtExampleSentence.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtExampleSentence.Multiline = true;
             this.txtExampleSentence.Name = "txtExampleSentence";
-            this.txtExampleSentence.Size = new System.Drawing.Size(125, 27);
-            this.txtExampleSentence.TabIndex = 7;
+            this.txtExampleSentence.Size = new System.Drawing.Size(294, 190);
+            this.txtExampleSentence.TabIndex = 24;
             // 
-            // button5
+            // lblExampleSentence
             // 
-            this.button5.Location = new System.Drawing.Point(385, 120);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(94, 29);
-            this.button5.TabIndex = 10;
-            this.button5.Text = "Delete";
-            this.button5.UseVisualStyleBackColor = true;
+            this.lblExampleSentence.AutoSize = true;
+            this.lblExampleSentence.Location = new System.Drawing.Point(6, 66);
+            this.lblExampleSentence.Name = "lblExampleSentence";
+            this.lblExampleSentence.Size = new System.Drawing.Size(297, 17);
+            this.lblExampleSentence.TabIndex = 22;
+            this.lblExampleSentence.Text = "Example Sentence (use %% for spelling word)";
             // 
-            // button6
+            // txtSpellingWord
             // 
-            this.button6.Location = new System.Drawing.Point(385, 84);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(94, 29);
-            this.button6.TabIndex = 9;
-            this.button6.Text = "Edit";
-            this.button6.UseVisualStyleBackColor = true;
+            this.txtSpellingWord.Location = new System.Drawing.Point(6, 39);
+            this.txtSpellingWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txtSpellingWord.Name = "txtSpellingWord";
+            this.txtSpellingWord.Size = new System.Drawing.Size(294, 22);
+            this.txtSpellingWord.TabIndex = 20;
+            this.txtSpellingWord.TextChanged += new System.EventHandler(this.txtSpellingWord_TextChanged);
             // 
-            // button7
+            // lblSpellingWord
             // 
-            this.button7.Location = new System.Drawing.Point(385, 48);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(94, 29);
-            this.button7.TabIndex = 8;
-            this.button7.Text = "Add";
-            this.button7.UseVisualStyleBackColor = true;
+            this.lblSpellingWord.AutoSize = true;
+            this.lblSpellingWord.Location = new System.Drawing.Point(6, 20);
+            this.lblSpellingWord.Name = "lblSpellingWord";
+            this.lblSpellingWord.Size = new System.Drawing.Size(253, 17);
+            this.lblSpellingWord.TabIndex = 18;
+            this.lblSpellingWord.Text = "Word (make sure it\'s spelled correctly!)";
             // 
-            // button8
+            // grpWord
             // 
-            this.button8.Location = new System.Drawing.Point(593, 203);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(94, 29);
-            this.button8.TabIndex = 11;
-            this.button8.Text = "Hear Test";
-            this.button8.UseVisualStyleBackColor = true;
+            this.grpWord.Controls.Add(this.lblDifficultyRating);
+            this.grpWord.Controls.Add(this.btnInsertWord);
+            this.grpWord.Controls.Add(this.btnCancelWord);
+            this.grpWord.Controls.Add(this.btnSaveWord);
+            this.grpWord.Controls.Add(this.txtExampleSentence);
+            this.grpWord.Controls.Add(this.lblSpellingWord);
+            this.grpWord.Controls.Add(this.txtSpellingWord);
+            this.grpWord.Controls.Add(this.lblExampleSentence);
+            this.grpWord.Controls.Add(this.btnHearTest);
+            this.grpWord.Location = new System.Drawing.Point(672, 20);
+            this.grpWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpWord.Name = "grpWord";
+            this.grpWord.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.grpWord.Size = new System.Drawing.Size(319, 398);
+            this.grpWord.TabIndex = 33;
+            this.grpWord.TabStop = false;
+            this.grpWord.Text = "Spelling Word";
+            this.grpWord.Visible = false;
             // 
-            // button9
+            // lblDifficultyRating
             // 
-            this.button9.Location = new System.Drawing.Point(764, 203);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(94, 29);
-            this.button9.TabIndex = 12;
-            this.button9.Text = "Finish";
-            this.button9.UseVisualStyleBackColor = true;
+            this.lblDifficultyRating.AutoSize = true;
+            this.lblDifficultyRating.Location = new System.Drawing.Point(6, 325);
+            this.lblDifficultyRating.Name = "lblDifficultyRating";
+            this.lblDifficultyRating.Size = new System.Drawing.Size(126, 17);
+            this.lblDifficultyRating.TabIndex = 34;
+            this.lblDifficultyRating.Text = "Difficulty Score: ??";
+            // 
+            // btnInsertWord
+            // 
+            this.btnInsertWord.Location = new System.Drawing.Point(6, 278);
+            this.btnInsertWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnInsertWord.Name = "btnInsertWord";
+            this.btnInsertWord.Size = new System.Drawing.Size(140, 44);
+            this.btnInsertWord.TabIndex = 33;
+            this.btnInsertWord.Text = "Insert Vocab Word";
+            this.btnInsertWord.UseVisualStyleBackColor = true;
+            this.btnInsertWord.Click += new System.EventHandler(this.btnInsertWord_Click);
+            // 
+            // btnCancelWord
+            // 
+            this.btnCancelWord.Location = new System.Drawing.Point(6, 353);
+            this.btnCancelWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnCancelWord.Name = "btnCancelWord";
+            this.btnCancelWord.Size = new System.Drawing.Size(94, 31);
+            this.btnCancelWord.TabIndex = 31;
+            this.btnCancelWord.Text = "Cancel";
+            this.btnCancelWord.UseVisualStyleBackColor = true;
+            this.btnCancelWord.Click += new System.EventHandler(this.btnCancelWord_Click);
+            // 
+            // btnSaveWord
+            // 
+            this.btnSaveWord.Location = new System.Drawing.Point(106, 353);
+            this.btnSaveWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnSaveWord.Name = "btnSaveWord";
+            this.btnSaveWord.Size = new System.Drawing.Size(194, 31);
+            this.btnSaveWord.TabIndex = 32;
+            this.btnSaveWord.Text = "Save Changes";
+            this.btnSaveWord.UseVisualStyleBackColor = true;
+            this.btnSaveWord.Click += new System.EventHandler(this.btnSaveWord_Click);
             // 
             // frmSpellingListsSetup
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1028, 522);
-            this.Controls.Add(this.splitContainer1);
+            this.ClientSize = new System.Drawing.Size(1014, 434);
+            this.Controls.Add(this.grpWord);
+            this.Controls.Add(this.grpList);
+            this.Controls.Add(this.grpLists);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmSpellingListsSetup";
-            this.Text = "frmSpellingListsSetup";
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.Text = "Spelling Lists Setup";
+            this.grpList.ResumeLayout(false);
+            this.grpList.PerformLayout();
+            this.grpLists.ResumeLayout(false);
+            this.grpWord.ResumeLayout(false);
+            this.grpWord.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ListBox lstSpellingLists;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.TextBox txtExampleSentence;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtSpellingWord;
-        private System.Windows.Forms.Label label4;
+
+        private System.Windows.Forms.GroupBox grpList;
+        private System.Windows.Forms.Button btnCancelList;
+        private System.Windows.Forms.Button btnSaveList;
+        private System.Windows.Forms.TextBox txtListName;
+        private System.Windows.Forms.Label lblListName;
+        private System.Windows.Forms.Button btnDeleteWord;
         private System.Windows.Forms.ListBox lstWords;
+        private System.Windows.Forms.Button btnEditWord;
+        private System.Windows.Forms.Button btnAddWord;
+        private System.Windows.Forms.ListBox lstSpellingLists;
+        private System.Windows.Forms.GroupBox grpLists;
+        private System.Windows.Forms.Button btnAddList;
+        private System.Windows.Forms.Button btnCancelAll;
+        private System.Windows.Forms.Button btnSaveAll;
+        private System.Windows.Forms.Button btnEditList;
+        private System.Windows.Forms.Button btnDeleteList;
+        private System.Windows.Forms.Button btnHearTest;
+        private System.Windows.Forms.TextBox txtExampleSentence;
+        private System.Windows.Forms.Label lblExampleSentence;
+        private System.Windows.Forms.TextBox txtSpellingWord;
+        private System.Windows.Forms.Label lblSpellingWord;
+        private System.Windows.Forms.GroupBox grpWord;
+        private System.Windows.Forms.Label lblDifficultyRating;
+        private System.Windows.Forms.Button btnInsertWord;
+        private System.Windows.Forms.Button btnCancelWord;
+        private System.Windows.Forms.Button btnSaveWord;
     }
 }

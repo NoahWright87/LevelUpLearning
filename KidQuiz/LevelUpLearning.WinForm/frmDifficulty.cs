@@ -73,7 +73,8 @@ namespace LevelUpLearning.WinForm
                     wordsFromFile = System.IO.File.ReadAllText("words.txt");
                 }
 
-                new frmQuiz(wordsFromFile, DifficultySettingsOptions[cboOptions.SelectedIndex]).ShowDialog(this);
+                MessageBox.Show("I broke it");
+                //new frmQuiz(wordsFromFile, DifficultySettingsOptions[cboOptions.SelectedIndex]).ShowDialog(this);
                 Show();
             }
         }

@@ -30,6 +30,8 @@ namespace LevelUpLearning.SpeechWindows
             }
         }
 
+        public const string PLACEHOLDER = "%%";
+
         /// <summary>
         /// Uses Windows speech synthesis to prompt the user to spell the given word using an example sentence.
         /// </summary>
@@ -42,7 +44,7 @@ namespace LevelUpLearning.SpeechWindows
             //TODO: SSML is also used by other TTS systems, right?  Move some of this to a more generic spot
             string emphasizedWord = GetEmphasizedWord(word);
 
-            exampleSentence = exampleSentence.Replace(word, emphasizedWord);
+            exampleSentence = exampleSentence.Replace(PLACEHOLDER, emphasizedWord);
             var prompt = $"Spell {emphasizedWord}.  {exampleSentence}";
             var pb = new PromptBuilder();
             pb.AppendSsmlMarkup(prompt);

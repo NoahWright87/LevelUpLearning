@@ -1,3 +1,4 @@
+using LevelUpLearning.Core.Data;
 using System;
 using System.Windows.Forms;
 
@@ -11,13 +12,12 @@ namespace LevelUpLearning.WinForm
         [STAThread]
         static void Main()
         {
-            //TODO: Call common function that creates the data if it doesn't already exist
-            LevelUpLearning.Core.Data.datafilesingletonrenamelater.test_thing();
-
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            //Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
+            Application.Run(new frmLogin());
+
+            DataController.SaveRoot();
         }
     }
 }

@@ -37,9 +37,10 @@
             // 
             // btnSpellingTest
             // 
-            this.btnSpellingTest.Location = new System.Drawing.Point(21, 115);
+            this.btnSpellingTest.Location = new System.Drawing.Point(21, 92);
+            this.btnSpellingTest.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSpellingTest.Name = "btnSpellingTest";
-            this.btnSpellingTest.Size = new System.Drawing.Size(207, 29);
+            this.btnSpellingTest.Size = new System.Drawing.Size(207, 32);
             this.btnSpellingTest.TabIndex = 5;
             this.btnSpellingTest.Text = "Spelling Test";
             this.btnSpellingTest.UseVisualStyleBackColor = true;
@@ -47,9 +48,10 @@
             // 
             // btnSpellingTestSetup
             // 
-            this.btnSpellingTestSetup.Location = new System.Drawing.Point(272, 115);
+            this.btnSpellingTestSetup.Location = new System.Drawing.Point(272, 92);
+            this.btnSpellingTestSetup.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSpellingTestSetup.Name = "btnSpellingTestSetup";
-            this.btnSpellingTestSetup.Size = new System.Drawing.Size(94, 29);
+            this.btnSpellingTestSetup.Size = new System.Drawing.Size(94, 32);
             this.btnSpellingTestSetup.TabIndex = 5;
             this.btnSpellingTestSetup.Text = "Edit...";
             this.btnSpellingTestSetup.UseVisualStyleBackColor = true;
@@ -59,18 +61,20 @@
             // 
             this.lblUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblUsername.AutoSize = true;
-            this.lblUsername.Location = new System.Drawing.Point(276, 11);
+            this.lblUsername.Location = new System.Drawing.Point(276, 9);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(426, 20);
+            this.lblUsername.Size = new System.Drawing.Size(404, 17);
             this.lblUsername.TabIndex = 6;
             this.lblUsername.Text = "Welcome, [[user]] //TODO: Set this //TODO: Make right-aligned";
+            this.lblUsername.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnLogout
             // 
             this.btnLogout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLogout.Location = new System.Drawing.Point(708, 7);
+            this.btnLogout.Location = new System.Drawing.Point(708, 6);
+            this.btnLogout.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(94, 29);
+            this.btnLogout.Size = new System.Drawing.Size(94, 32);
             this.btnLogout.TabIndex = 7;
             this.btnLogout.Text = "Logout";
             this.btnLogout.UseVisualStyleBackColor = true;
@@ -79,23 +83,25 @@
             // lblComingSoon
             // 
             this.lblComingSoon.AutoSize = true;
-            this.lblComingSoon.Location = new System.Drawing.Point(135, 194);
+            this.lblComingSoon.Location = new System.Drawing.Point(135, 155);
             this.lblComingSoon.Name = "lblComingSoon";
-            this.lblComingSoon.Size = new System.Drawing.Size(107, 20);
+            this.lblComingSoon.Size = new System.Drawing.Size(97, 17);
             this.lblComingSoon.TabIndex = 8;
             this.lblComingSoon.Text = "More to come!";
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(814, 336);
+            this.ClientSize = new System.Drawing.Size(814, 269);
             this.Controls.Add(this.lblComingSoon);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.lblUsername);
             this.Controls.Add(this.btnSpellingTestSetup);
             this.Controls.Add(this.btnSpellingTest);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Level Up Learning - Main Menu";
             this.ResumeLayout(false);
             this.PerformLayout();
