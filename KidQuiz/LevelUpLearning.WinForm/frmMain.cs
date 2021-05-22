@@ -4,8 +4,6 @@ using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForm
 {
-    //TODO: This code looks incomplete - I need a way to create words from this page
-    //  If I remember correctly, I didn't finish this and went with the lazy method of a tab-delimited file editted manually
     public partial class frmMain : Form
     {
         public frmMain()
@@ -22,8 +20,7 @@ namespace LevelUpLearning.WinForm
 
         private void btnSpellingTest_Click(object sender, EventArgs e)
         {
-            //TODO: Launch the spelling test difficulty selector
-            new frmQuiz().ShowDialog();
+            new frmSpellingQuiz().ShowDialog();
         }
 
         private void btnSpellingTestSetup_Click(object sender, EventArgs e)
@@ -33,10 +30,8 @@ namespace LevelUpLearning.WinForm
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            Close(); //TODO: Save things?
+            Close();
         }
-
-        //TODO: Handle closing the form
 
         private DialogResult ShowSubForm(Form otherForm)
         {
@@ -44,6 +39,11 @@ namespace LevelUpLearning.WinForm
             var result = otherForm.ShowDialog(this);
             Show();
             return result;
+        }
+
+        private void btnSpellingStats_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Coming soon!");
         }
     }
 }

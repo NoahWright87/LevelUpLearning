@@ -95,6 +95,7 @@ namespace LevelUpLearning.WinForm
             this.chkRememberMe.TabIndex = 6;
             this.chkRememberMe.Text = "Remember Me";
             this.chkRememberMe.UseVisualStyleBackColor = true;
+            this.chkRememberMe.Visible = false;
             // 
             // btnNewUser
             // 

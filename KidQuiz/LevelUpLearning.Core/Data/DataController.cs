@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.Services.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -37,6 +38,9 @@ namespace LevelUpLearning.Core.Data
 
         private DataState _state = new DataState();
         public static DataState State => Instance._state;
+
+        private Random _random = new Random();
+        public static Random Random => Instance._random;
 
         private DataController()
         {
@@ -133,12 +137,56 @@ namespace LevelUpLearning.Core.Data
         public int CorrectAnswers { get; set; }
         public double CorrectPercentage => Attempts > 0 ? (double)CorrectAnswers / Attempts : 0;
     }
+    public class SpellingQuizSettings
+    {
+        #region Presets
+        public static readonly SpellingQuizSettings Intro = new SpellingQuizSettings()
+        {
+            ShowBlanks = true,
+            NumHintLetters = int.MaxValue,
+            NumHintLettersChange = 0,
+            TargetStreak = 2,
+            StreakPenalty = 0
+        };
+        public static readonly SpellingQuizSettings Easy = new SpellingQuizSettings()
+        {
+            ShowBlanks = true,
+            NumHintLetters = 4,
+            NumHintLettersChange = 1,
+            TargetStreak = 3,
+            StreakPenalty = 0
+        };
+        public static readonly SpellingQuizSettings Medium = new SpellingQuizSettings()
+        {
+            ShowBlanks = true,
+            NumHintLetters = 3,
+            NumHintLettersChange = 2,
+            TargetStreak = 3,
+            StreakPenalty = 1
+        };
+        public static readonly SpellingQuizSettings Hard = new SpellingQuizSettings()
+        {
+            ShowBlanks = false,
+            NumHintLetters = 1,
+            NumHintLettersChange = 1,
+            TargetStreak = 3,
+            StreakPenalty = 2
+        };
+        #endregion
+
+        public bool ShowBlanks { get; set; }
+        public int NumHintLetters { get; set; }
+        public int NumHintLettersChange { get; set; }
+        public int TargetStreak { get; set; }
+        public int StreakPenalty { get; set; }
+        public List<SpellingWordList> SelectedLists { get; set; } = new List<SpellingWordList>();
+    }
 
     public class UserData
     {
         public string UserName { get; set; }
         public string DisplayName { get; set; }
-        //TODO: Birthday, other demographics
+        //TODO: Birthday, other demographics??
         public override string ToString() => DisplayName ?? UserName;
     }
 }

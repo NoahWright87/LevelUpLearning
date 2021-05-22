@@ -52,7 +52,6 @@ namespace LevelUpLearning.WinForm
         private void btnExit_Click(object sender, EventArgs e)
         {
             Close();
-            //TODO: Any final saving needs to be done here?  Or in Program.cs??
         }
 
         private void btnNewUser_Click(object sender, EventArgs e)

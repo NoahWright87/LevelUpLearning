@@ -1,5 +1,6 @@
 ﻿using System.Speech.Synthesis;
 using LevelUpLearning.Core;
+using LevelUpLearning.Core.Data;
 
 namespace LevelUpLearning.SpeechWindows
 {
@@ -32,6 +33,44 @@ namespace LevelUpLearning.SpeechWindows
 
         public const string PLACEHOLDER = "%%";
 
+        private readonly static string[] CONGRATS_PHRASES = new string[]
+        {
+            "You did it!",
+            "Good job!",
+            "Congrats!",
+            "That's right!",
+            "Wow",
+            "Hooray",
+            "Way to go",
+            "Super",
+            "Fantastic",
+            "Correct!",
+            "Whoa",
+            "Amazing!",
+            "Great job!"
+        };
+
+        public static void ShutUpAndSay(string words)
+        {
+            ShutUp();
+            Synth.SpeakAsync(words);
+        }
+
+        public static void Congrats()
+        {
+            ShutUpAndSay(CONGRATS_PHRASES[DataController.Random.Next(CONGRATS_PHRASES.Length)]);
+        }
+
+        /// <summary>
+        /// Uses Windows speech synthesis to prompt the user to spelling the given SpellingWord
+        /// using its Prompt.
+        /// </summary>
+        /// <param name="word"></param>
+        public static void PromptToSpellWord(SpellingWord word)
+        {
+            PromptToSpellWord(word.Word, word.Prompt);
+        }
+
         /// <summary>
         /// Uses Windows speech synthesis to prompt the user to spell the given word using an example sentence.
         /// </summary>
@@ -39,16 +78,15 @@ namespace LevelUpLearning.SpeechWindows
         /// <param name="exampleSentence">Sentence that uses the word as an example</param>
         public static void PromptToSpellWord(string word, string exampleSentence)
         {
-            //TODO: To prevent accidental replacements, use a placeholder (defined in Constants) instead of the word itself
-            //  e.g.: word is use, sentence is "Please USE a napkin becaUSE you don't want to make a mess" 
             //TODO: SSML is also used by other TTS systems, right?  Move some of this to a more generic spot
             string emphasizedWord = GetEmphasizedWord(word);
 
             exampleSentence = exampleSentence.Replace(PLACEHOLDER, emphasizedWord);
-            var prompt = $"Spell {emphasizedWord}.  {exampleSentence}";
+            var prompt = $"{emphasizedWord}.  {exampleSentence}";
             var pb = new PromptBuilder();
             pb.AppendSsmlMarkup(prompt);
 
+            ShutUp();
             Synth.SpeakAsync(pb); //TODO: Can I not pass the string here?  It's been a while and my old code wasn't documented
         }
 
@@ -59,10 +97,15 @@ namespace LevelUpLearning.SpeechWindows
             var x = new PromptBuilder();
             x.AppendSsmlMarkup(msg);
 
-            Synth.SpeakAsyncCancelAll();
+            ShutUp();
             //TODO: Again, can I pass the string by itself?  Or is promptbuilder required to use SSML?
             //TODO: DRY: Create a method that does the promptbuilder stuff 
             Synth.SpeakAsync(x);
+        }
+
+        public static void ShutUp()
+        {
+            Synth.SpeakAsyncCancelAll();
         }
 
         //TODO: Turn into a string extension, move to .Core project

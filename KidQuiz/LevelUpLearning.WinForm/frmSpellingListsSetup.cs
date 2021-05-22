@@ -286,7 +286,6 @@ namespace LevelUpLearning.WinForm
 
         private void btnSaveAll_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("//TODO: Save the data");
             DataController.Root.Spelling.WordLists = new SerializableDictionary<string, SpellingWordList>();
             foreach (var item in lstSpellingLists.Items)
             {

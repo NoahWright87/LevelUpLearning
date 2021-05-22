@@ -85,12 +85,6 @@
     <Compile Include="frmAddUser.Designer.cs">
       <DependentUpon>frmAddUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmDifficulty.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmDifficulty.Designer.cs">
-      <DependentUpon>frmDifficulty.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,17 +97,23 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmQuiz.cs">
+    <Compile Include="frmSpellingQuiz.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmQuiz.Designer.cs">
-      <DependentUpon>frmQuiz.cs</DependentUpon>
+    <Compile Include="frmSpellingQuiz.Designer.cs">
+      <DependentUpon>frmSpellingQuiz.cs</DependentUpon>
     </Compile>
     <Compile Include="frmSpellingListsSetup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmSpellingListsSetup.Designer.cs">
       <DependentUpon>frmSpellingListsSetup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSpellingQuizDifficulty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSpellingQuizDifficulty.Designer.cs">
+      <DependentUpon>frmSpellingQuizDifficulty.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,20 +123,20 @@
     <EmbeddedResource Include="frmAddUser.resx">
       <DependentUpon>frmAddUser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmDifficulty.resx">
-      <DependentUpon>frmDifficulty.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmQuiz.resx">
-      <DependentUpon>frmQuiz.cs</DependentUpon>
+    <EmbeddedResource Include="frmSpellingQuiz.resx">
+      <DependentUpon>frmSpellingQuiz.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSpellingListsSetup.resx">
       <DependentUpon>frmSpellingListsSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSpellingQuizDifficulty.resx">
+      <DependentUpon>frmSpellingQuizDifficulty.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
