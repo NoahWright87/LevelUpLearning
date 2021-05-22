@@ -12,11 +12,19 @@ namespace LevelUpLearning.WinForm
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmLogin());
+            //TODO: This is awful exception handling - catch more specific things in specific places
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new frmLogin());
 
-            DataController.SaveRoot();
+                DataController.SaveRoot();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Unhandled Exception occurred: {ex.Message}");
+            }
         }
     }
 }

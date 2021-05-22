@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LevelUpLearning.Tests", "Le
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelUpLearning.WinForm", "LevelUpLearning.WinForm\LevelUpLearning.WinForm.csproj", "{A83F1540-CD2A-48EC-9D29-E3311BD3A768}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LevelUpLearning.Setup", "LevelUpLearning.Setup\LevelUpLearning.Setup.vdproj", "{D54E1329-3C06-4A86-8844-01C1C3F7299A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,8 @@ Global
 		{A83F1540-CD2A-48EC-9D29-E3311BD3A768}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A83F1540-CD2A-48EC-9D29-E3311BD3A768}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A83F1540-CD2A-48EC-9D29-E3311BD3A768}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D54E1329-3C06-4A86-8844-01C1C3F7299A}.Debug|Any CPU.ActiveCfg = Debug
+		{D54E1329-3C06-4A86-8844-01C1C3F7299A}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

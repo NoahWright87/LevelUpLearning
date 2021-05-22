@@ -31,7 +31,9 @@ namespace LevelUpLearning.Core.Data
             }
         }
 
-        private static readonly string DATA_FILENAME = "lul.dat";
+        private static readonly string DATA_FILENAME = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Level Up Learning",
+                "lul.dat");
         
         private DataRoot _root;
         public static DataRoot Root => Instance._root;
@@ -59,7 +61,11 @@ namespace LevelUpLearning.Core.Data
         private XmlSerializer Serializer => new XmlSerializer(typeof(DataRoot));
         private void Save()
         {
-            //TODO: Blow up the whole program if we can't make the save data
+            //TODO: What if we can't make the save data?
+            if (!Directory.Exists(Path.GetDirectoryName(DATA_FILENAME)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(DATA_FILENAME));
+            }
             using (XmlWriter writer = XmlWriter.Create(DATA_FILENAME))
             {
                 Serializer.Serialize(writer, _root);
