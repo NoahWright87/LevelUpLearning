@@ -1,4 +1,6 @@
 # LevelUpLearning
+### [Download/install the latest release](https://github.com/NoahWright87/LevelUpLearning/releases/latest/download/LevelUpLearning.msi) or [check the release notes](https://github.com/NoahWright87/LevelUpLearning/releases/latest).
+
 Welcome to Level Up Learning!  This is a side project by [Noah Wright](https://github.com/NoahWright87) to help his kids (and anybody else's) with various learning activities.  Started years ago and revisited due to the at-home-learning debacle that came along with COVID-19, this is a work-in-progress that will be added onto over time.
 
 **The end goal**: This will be a collection of learning activities and games that track your "experience" in various subjects so you can "level up" your school skills.  Eventually this will expand to be a variety of skills at various grade levels, available to be used by multiple kids.
