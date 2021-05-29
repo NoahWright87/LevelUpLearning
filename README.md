@@ -1,108 +1,37 @@
-# LevelUpLearning
-A collection of learning activities and games that track your "experience" in various subjects so you can "level up" your school skills.
+﻿# LevelUpLearning
+### [Download/install the latest release](https://github.com/NoahWright87/LevelUpLearning/releases/latest/download/LevelUpLearning.msi) or [check the release notes](https://github.com/NoahWright87/LevelUpLearning/releases/latest).
 
-# Current status
-This project is an initial upload of a spelling test program I made for my kids years ago.  I plan to slowly expand from a simple Windows Forms app that I run on my home computer to a cross-platform, cloud-saved, gamified collection of learning activities that can be used by anyone.
+Welcome to Level Up Learning!  This is a side project by [Noah Wright](https://github.com/NoahWright87) to help his kids (and anybody else's) with various learning activities.  Started years ago and revisited due to the at-home-learning debacle that came along with COVID-19, this is a work-in-progress that will be added onto over time.
 
-# TODO
-Here is the current list of things that need to be done in this project:
+**The end goal**: This will be a collection of learning activities and games that track your "experience" in various subjects so you can "level up" your school skills.  Eventually this will expand to be a variety of skills at various grade levels, available to be used by multiple kids.
 
-## Current Work Plan:
-Program flow:
-Launch program
-(check if login is remembered, if it's not)
-Open login form
-	User logs in (for now, selects their name or types into a dropbox)
-Open main menu
-	Click edit
-		Open form to enter lists of words - some will be there by default?
-			Need code to create default lists
-		Click okay when done
-	Click "spelling test"
-		Open list of possible word lists with checkboxes
-		Pre-check same boxes that were checked before
-		Select difficulty settings
-			Dropdown of preconfigured difficulty
-			Edit button to adjust - done at bottom of same form
-				If not editting, bottom shows difficulty details
-		Click GO
-Open spelling test
-	This part works just fine
-	When done: show final stats (attempts, correct, etc)
-	When closing: save the above data
-	Return to main menu
+## Current Features
+NOTE: Features preceded by a ❗ were recently added.
 
+### General
+- Create and edit users.  Currently this is very limited, but if you have multiple kids (like me) it means you can track their performance separately.
+- ❗ Program shows the current version and alerts you if GitHub has a newer version available.
 
+### Spelling Test
+Currently, you can:
+- Create spelling words / list
+  - Each list can contain any number of words
+  - Each word can have an example sentence which will be spoken to the user
+  - ❗ Words have a rough difficulty calculated based on various characteristics.
+- Quiz yourself on those lists
+  - Can select any number of lists to quiz yourself on
+  - Can adjust the difficulty (multiple presets, plus custom settings)
+    - ❗ Difficulty settings result in a score percentage adjustment.
+  - Each word is read (via Windows text-to-speech), with possible hints shown to the user
+- View performance of your tests
+  - Automatically see the performance when you finish a test
+  - ❗ View previous performance of any list and its included words
+    - ❗ See a rating (out of 5 stars) based on your performance and the difficulty settings used
+    - ❗ See an overall score based on difficulty of the list and difficulty settings used
 
+## Upcoming Features
+Next will be to speed up the creation of word lists.  Ideally, this will mean the ability to import/export lists of words - after which I will post lists of words online so they can used by other people - but at a minimum it should mean a quick-entry form where lists of words can be entered quickly.
 
-Main Page:
+After that, it will be time to add another activity - probably a simple math test.
 
-On first run, open form that says a save file must be created?
-	Or just do it automatically in the background?  Yeah, I think so
-Pop up login first
-	For now, just a dropdown of names and a login button
-	Maybe a checkbox of "remember me" or "auto login"
-Main menu
-	Big button for spelling test, Edit / wrench / gear icon button beside it
-	Button for stats
-		Open an empty stats screen with "coming soon" on it
-	Save any stored data on exit?  Or will that be done elsewhere?
-Spelling test button opens session difficulty/list settings
-	Checkboxes by lists of spelling words to select which words to be tested on
-	Difficulty box with preset options
-		One option is "custom" and unlocks the specific options below
-	Big "BEGIN" button to start the test
-	Save the settings last picked, default to them on next open
-Edit button opens the list of spelling lists
-	Show: name of list, number of words, owner??
-	+/- buttons to add/delete lists
-		Delete archives a list, doesn't permanently delete it
-	Edit button to edit list
-		Opens same form as + button with slightly different options
-Edit list form
-	List of words and example sentences
-	+/-/edit buttons here as well
-		No separate form, just a box at the bottom to adjust things
-	Helpful button to add placeholder for word
-	Test audio button to make sure things sound correct
-	Question mark button to explain how to do things
-
-
-
-## Recent Changes
-- Separated code into frontend display and backend functionality
-- Created a test project
-- Some general clean-up done.  Still not up to best practices, but it's getting there
-  - Used string interpolation where possible
-  - Moved some hardcoded values to a Constants class
-  - Began to separate things into single responsibility, removed repetition
-- Added comments on most of the backend methods/variables
-
-## Next Release
-- Add some basic unit tests
-- Improve on what's already there
-  - Provide interface where words / sentences can be created and saved
-    - Allow lists of words to be named, can be tested on one or more lists simultaneously
-    - Remember which lists were checked from previous session
-    - Make interface friendly for non-technical people, but insert the spelling word as a symbol placeholder
-    - Make sure words/sentences can be added quickly - parents dont' have much time
-  - Have a "login" where people can choose a name from a dropdown
-  - Store stats (per name chosen above) between sessions
-    - All this will be in XML for now, but keep things generic so it can later be put in a legit database
-
-## Later Releases
-- Noises /animations when things are right/wrong
-- Some logic to say things were very close
-- Utilize Amazon Polly for text-to-speech: it may be slower than using native Windows voices, but will allow the code to be portable
-- Recreate UI in UWP
-- Go beyond spelling tests
-  - Math activities
-  - Grammar, parts of speech, and other non-spelling English activities
-  - Like the original idea - see what my kids need to study and incorporate it
-- Have accounts, so multiple people can use the same app, and store performance into a database
-  - Initially, local accounts stored in XML/JSON file
-  - Eventually, use Amazon Cognos (or similar) to have logins
-  - Eventually, store data in a cloud DB so progress is saved across devices
-- Create non-Windows UIs
-  - Use Xamarin to make an Android app
-  - Create a web-based interface
+Feel free to check out [this repo's project](https://github.com/NoahWright87/LevelUpLearning/projects/2) to see what else is being worked and what's planned down the road.

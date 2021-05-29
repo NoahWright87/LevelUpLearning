@@ -12,6 +12,7 @@ namespace LevelUpLearning.WinForm
         private readonly string HintChangePrefix;
         private readonly string TargetStreakPrefix;
         private readonly string StreakPenaltyPrefix;
+        private readonly string ScoreMultiplierPrefix;
 
         public frmSpellingQuizDifficulty()
         {
@@ -23,6 +24,7 @@ namespace LevelUpLearning.WinForm
             HintChangePrefix = lblHintChange.Text;
             TargetStreakPrefix = lblTargetStreak.Text;
             StreakPenaltyPrefix = lblStreakPenalty.Text;
+            ScoreMultiplierPrefix = lblScoreMultiplier.Text;
 
             InitializeWordLists();
 
@@ -108,6 +110,10 @@ namespace LevelUpLearning.WinForm
             lblHintChange.Text = $"{HintChangePrefix}{Environment.NewLine}{barHintChange.Value}";
             lblTargetStreak.Text = $"{TargetStreakPrefix}{Environment.NewLine}{barTargetStreak.Value}";
             lblStreakPenalty.Text = $"{StreakPenaltyPrefix}{Environment.NewLine}{barStreakPenalty.Value}";
+
+            double scoreMultiplier = SpellingQuizSettings.CalculateMultiplier(chkShowBlanks.Checked, barHintLetters.Value,
+                barHintChange.Value, barTargetStreak.Value, barStreakPenalty.Value);
+            lblScoreMultiplier.Text = $"{ScoreMultiplierPrefix} {scoreMultiplier:0.00%}";
         }
         private void CustomDifficultyChanged(object sender, EventArgs e)
         {

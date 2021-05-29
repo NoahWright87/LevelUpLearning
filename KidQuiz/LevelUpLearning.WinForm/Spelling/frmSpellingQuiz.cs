@@ -1,5 +1,7 @@
 ﻿using LevelUpLearning.Core.Data;
+using LevelUpLearning.Core.Extensions;
 using LevelUpLearning.SpeechWindows;
+using LevelUpLearning.WinForms.Spelling;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -69,7 +71,7 @@ namespace LevelUpLearning.WinForm
         }
         private void UpdateLabels()
         {
-            lblHint.Text = SpellingWordProgress[CurrentWord].GetPrompt(settings);
+            lblHint.Text = SpellingWordProgress[CurrentWord].GetPrompt(settings).ToUpper();
             lblProgress.Text = $"{ProgressPercentage:0.00%}";
             barRemaining.Value = (int)(ProgressPercentage * barRemaining.Maximum);
 
@@ -78,16 +80,30 @@ namespace LevelUpLearning.WinForm
         }
         private void Finish()
         {
-            SpeechUtil.ShutUpAndSay($"All done!  Let's see how you did, {DataController.State.CurrentUser.DisplayName}");
-            var sb = new StringBuilder("Stats: ");
-            foreach (var word in SpellingWordProgress.Values)
+            foreach (var list in settings.SelectedLists)
             {
-                sb.Append($"{Environment.NewLine}{word.Word.Word}: {word.NumCorrect} / {word.NumAttempts} ({word.PercentCorrect:0.0%})");
+                int totalAttempts = 0;
+                int totalCorrects = 0;
+
+                foreach (var w in list.Words)
+                {
+                    var wordPerf = SpellingWordProgress[w.Word];
+                    totalAttempts += wordPerf.NumAttempts;
+                    totalCorrects += wordPerf.NumCorrect;
+                }
+                
+                DataController.Root.Spelling.SaveUserPerformance(DataController.State.CurrentUser, list, settings, totalAttempts, totalCorrects);
             }
 
-            sb.Append($"{Environment.NewLine}//TODO: Save these stats for later viewing");
+            foreach (var word in SpellingWordProgress.Values)
+            {
+                DataController.Root.Spelling.SaveUserPerformance(DataController.State.CurrentUser, word.Word, word.NumAttempts, word.NumCorrect);
+            }
 
-            MessageBox.Show(sb.ToString());
+            DataController.SaveRoot();
+
+            SpeechUtil.ShutUpAndSay($"All done!  Let's see how you did, {DataController.State.CurrentUser.DisplayName}");
+            new frmSpellingQuizPerformance(settings.SelectedLists.FirstOrDefault()?.ListName).ShowDialog(this);
 
             Close();
         }
@@ -100,7 +116,9 @@ namespace LevelUpLearning.WinForm
             }
             else
             {
-                //TODO: Calculate if they were close, show that as a third "Almost!" option
+                //TODO: If this value is low, let them know they were close
+                int degreeOfDifference = txtInput.Text.DegreeOfDifferenceFrom(SpellingWordProgress[CurrentWord].Word.Word);
+                
                 if (SpellingWordProgress[CurrentWord].RecordAttempt(txtInput.Text.Trim(), settings))
                 {
                     SpeechUtil.Congrats();

@@ -95,7 +95,6 @@ namespace LevelUpLearning.WinForm
             this.chkRememberMe.TabIndex = 6;
             this.chkRememberMe.Text = "Remember Me";
             this.chkRememberMe.UseVisualStyleBackColor = true;
-            this.chkRememberMe.Visible = false;
             // 
             // btnNewUser
             // 
@@ -115,14 +114,16 @@ namespace LevelUpLearning.WinForm
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnExit;
             this.ClientSize = new System.Drawing.Size(538, 186);
-            this.ControlBox = false;
             this.Controls.Add(this.btnNewUser);
             this.Controls.Add(this.chkRememberMe);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.lblUser);
             this.Controls.Add(this.cboUser);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "User Login";

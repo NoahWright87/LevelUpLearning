@@ -1,5 +1,6 @@
 ﻿using LevelUpLearning.Core.Data;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForm
@@ -10,18 +11,30 @@ namespace LevelUpLearning.WinForm
         {
             InitializeComponent();
 
-            InitUsers();
-
-            //TODO: Check for "remember me" user, skip this form if present
+            if (DataController.Root.LastUser != null)
+            {
+                Login(DataController.Root.LastUser, true);
+            }
+            else
+            {
+                InitUsers();
+            }
         }
         private void InitUsers()
         {
-            cboUser.Items.Clear();
-            foreach (var user in DataController.Root.Users.Values)
+            if (DataController.Root.Users.Any())
             {
-                cboUser.Items.Add(user);
+                cboUser.Items.Clear();
+                foreach (var user in DataController.Root.Users.Values)
+                {
+                    cboUser.Items.Add(user);
+                }
+                cboUser.SelectedIndex = -1;
             }
-            cboUser.SelectedIndex = -1;
+            else
+            {
+                btnNewUser_Click(null, null);
+            }
         }
 
         private void UserDropdownChanged(object sender, EventArgs e)
@@ -34,19 +47,31 @@ namespace LevelUpLearning.WinForm
         {
             if (cboUser.SelectedIndex >= 0)
             {
-                DataController.State.CurrentUser = (UserData)cboUser.SelectedItem;
-
-                //Hide this form, open main menu form
-                Hide();
-                new frmMain().ShowDialog(this);
-                //Show back up when main menu is closed
-                Show();
+                Login((UserData)cboUser.SelectedItem, chkRememberMe.Checked);
             }
             else
             {
-                MessageBox.Show("Pick a user!  If none are available, add one!");
-                //TODO: Adjust this message once I force you to add a user
+                MessageBox.Show("You have to pick a user first!");
             }
+        }
+
+        private void Login(UserData user, bool rememberNextTime)
+        {
+            DataController.State.CurrentUser = user;
+            if (rememberNextTime)
+            {
+                DataController.Root.LastUser = user;
+            }
+            else
+            {
+                DataController.Root.LastUser = null;
+            }
+
+            //Hide this form, open main menu form
+            Hide();
+            new frmMain().ShowDialog(this);
+            //Show back up when main menu is closed
+            Show();
         }
 
         private void btnExit_Click(object sender, EventArgs e)

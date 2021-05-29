@@ -1,4 +1,5 @@
 ﻿using LevelUpLearning.Core.Data;
+using LevelUpLearning.Core.Extensions;
 using LevelUpLearning.SpeechWindows;
 using Microsoft.VisualStudio.Services.Common;
 using System;
@@ -60,6 +61,7 @@ namespace LevelUpLearning.WinForm
 
                 lstWords.Items.Clear();
                 lstWords.Items.AddRange(currentList.Words.ToArray());
+                UpdateListDifficulty();
             }
         }
         private void InitWord()
@@ -82,9 +84,13 @@ namespace LevelUpLearning.WinForm
                 txtExampleSentence.Text = currentWord.Prompt;
             }
         }
-        private void CalculateDifficulty()
+        private void UpdateDifficulty()
         {
-            lblDifficultyRating.Text = $"Difficulty: {txtSpellingWord.TextLength}";
+            lblDifficultyRating.Text = $"Difficulty:{Environment.NewLine}  {txtSpellingWord.Text.Difficulty()}";
+        }
+        private void UpdateListDifficulty()
+        {
+            lblListDifficulty.Text = $"Overall Difficulty:{Environment.NewLine}  {currentList.OverallDifficulty}";
         }
 
         private void lstSpellingLists_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -210,11 +216,11 @@ namespace LevelUpLearning.WinForm
                 if (wordIsNew)
                 {
                     lstWords.Items.Add(currentWord);
+                    UpdateListDifficulty();
                 }
                 else
                 {
                     lstWords.SelectedItem = currentWord;
-
                 }
 
                 grpWord.Enabled = false;
@@ -272,7 +278,7 @@ namespace LevelUpLearning.WinForm
 
         private void txtSpellingWord_TextChanged(object sender, EventArgs e)
         {
-            CalculateDifficulty();
+            UpdateDifficulty();
         }
 
         private void btnCancelAll_Click(object sender, EventArgs e)

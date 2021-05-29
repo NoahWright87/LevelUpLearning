@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Services.Common;
+﻿using LevelUpLearning.Core.Extensions;
+using Microsoft.VisualStudio.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,16 +48,6 @@ namespace LevelUpLearning.Core.Data
         private DataController()
         {
             Load();
-            ////TODO: Some error handling in case the load fails
-            //if (!File.Exists(DATA_FILENAME))
-            //{
-            //    _root = new DataRoot();
-            //    Save();
-            //}
-            //else
-            //{
-            //    Load();
-            //}
         }
         private XmlSerializer Serializer => new XmlSerializer(typeof(DataRoot));
         private void Save()
@@ -113,6 +104,53 @@ namespace LevelUpLearning.Core.Data
             = new SerializableDictionary<string, SpellingWordList>();
         public SerializableDictionary<string, UserSpellingPerformance> UserPerformances { get; set; }
             = new SerializableDictionary<string, UserSpellingPerformance>();
+
+        public void SaveUserPerformance(UserData user, SpellingWord word, int attempts, int correct)
+        {
+            //Create a default if one doesn't already exist
+            if (!UserPerformances.ContainsKey(user.UserName))
+            {
+                UserPerformances.Add(user.UserName, new UserSpellingPerformance() { UserName = user.UserName });
+            }
+            var perf = UserPerformances[user.UserName];
+
+            if (!perf.WordPerformances.ContainsKey(word.Word))
+            {
+                perf.WordPerformances.Add(word.Word, new SpellingWordPerformance()
+                {
+                    SpellingWord = word.Word
+                });
+            }
+            var wordPerf = perf.WordPerformances[word.Word];
+            wordPerf.LastAttemptDate = DateTime.Today;
+            wordPerf.LastCorrect = correct;
+            wordPerf.LastAttempts = attempts;
+            wordPerf.TotalCorrect += correct;
+            wordPerf.TotalAttempts += attempts;
+        }
+        public void SaveUserPerformance(UserData user, SpellingWordList list, SpellingQuizSettings settings, int totalAttempts, int totalCorrect)
+        {
+            if (!UserPerformances.ContainsKey(user.UserName))
+            {
+                UserPerformances.Add(user.UserName, new UserSpellingPerformance() { UserName = user.UserName });
+            }
+            var perf = UserPerformances[user.UserName];
+
+            if (!perf.ListPerformances.ContainsKey(list.ListName))
+            {
+                perf.ListPerformances.Add(list.ListName, new SpellingWordListPerformance() { });
+            }
+            var listPerf = perf.ListPerformances[list.ListName];
+            listPerf.LastAttemptDate = DateTime.Today;
+            listPerf.TotalAttempts++;
+            listPerf.LastPercentage = (double)totalCorrect / totalAttempts * settings.DifficultyMultiplier;
+            listPerf.LastScore = list.OverallDifficulty * listPerf.LastPercentage;
+            if (listPerf.LastPercentage > listPerf.BestPercentage)
+            {
+                listPerf.BestPercentage = listPerf.LastPercentage;
+                listPerf.BestScore = list.OverallDifficulty * listPerf.BestPercentage;
+            }
+        }
     }
     public class SpellingWordList
     {
@@ -121,6 +159,18 @@ namespace LevelUpLearning.Core.Data
         public double GradeLevel { get; set; }
 
         public override string ToString() => ListName;
+        public double OverallDifficulty
+        {
+            get
+            {
+                double difficulty = 0;
+                foreach (var w in Words)
+                {
+                    difficulty += w.Word.Difficulty();
+                }
+                return difficulty;
+            }
+        }
     }
     public class SpellingWord
     {
@@ -132,17 +182,32 @@ namespace LevelUpLearning.Core.Data
     public class UserSpellingPerformance
     {
         public string UserName { get; set; }
-        public SerializableDictionary<string, SpellingPerformance> Performances { get; set; }
-            = new SerializableDictionary<string, SpellingPerformance>();
+        public SerializableDictionary<string, SpellingWordPerformance> WordPerformances { get; set; }
+            = new SerializableDictionary<string, SpellingWordPerformance>();
+        public SerializableDictionary<string, SpellingWordListPerformance> ListPerformances { get; set; }
+             = new SerializableDictionary<string, SpellingWordListPerformance>();
     }
-    public class SpellingPerformance
+    public class SpellingWordPerformance
     {
-        public string SpellingWordListName { get; set; }
+        public DateTime LastAttemptDate { get; set; }
         public string SpellingWord { get; set; }
-        public int Attempts { get; set; }
-        public int CorrectAnswers { get; set; }
-        public double CorrectPercentage => Attempts > 0 ? (double)CorrectAnswers / Attempts : 0;
+        public int TotalAttempts { get; set; }
+        public int TotalCorrect { get; set; }
+        public double TotalCorrectPercentage => TotalAttempts > 0 ? (double)TotalCorrect / TotalAttempts : 0;
+        public int LastAttempts { get; set; }
+        public int LastCorrect { get; set; }
+        public double CorrectPercentage => LastAttempts > 0 ? (double)LastCorrect / LastAttempts : 0;
     }
+    public class SpellingWordListPerformance
+    {
+        public DateTime LastAttemptDate { get; set; }
+        public int TotalAttempts { get; set; }
+        public double LastPercentage { get; set; } = 0;
+        public double LastScore { get; set; } = 0;
+        public double BestPercentage { get; set; } = 0;
+        public double BestScore { get; set; } = 0;
+    }
+
     public class SpellingQuizSettings
     {
         #region Presets
@@ -173,8 +238,8 @@ namespace LevelUpLearning.Core.Data
         public static readonly SpellingQuizSettings Hard = new SpellingQuizSettings()
         {
             ShowBlanks = false,
-            NumHintLetters = 1,
-            NumHintLettersChange = 1,
+            NumHintLetters = 0,
+            NumHintLettersChange = 0,
             TargetStreak = 3,
             StreakPenalty = 2
         };
@@ -186,6 +251,18 @@ namespace LevelUpLearning.Core.Data
         public int TargetStreak { get; set; }
         public int StreakPenalty { get; set; }
         public List<SpellingWordList> SelectedLists { get; set; } = new List<SpellingWordList>();
+
+        public double DifficultyMultiplier => 
+            CalculateMultiplier(ShowBlanks, NumHintLetters, NumHintLettersChange, TargetStreak, StreakPenalty);
+        public static double CalculateMultiplier(bool showBlanks, int hintLetters, int hintLettersChange, int streak, int penalty)
+        {
+            double blanksMultiplier = showBlanks ? 0.75 : 1.00;
+            double hintsMultiplier = Math.Min(1.0, 1.0 - (0.05 * hintLetters) + (0.025 * hintLettersChange));
+            double streakMultiplier = 0.70 + streak * 0.10;
+            double penaltyMultipler = 1.0 + penalty * 0.05;
+
+            return blanksMultiplier * hintsMultiplier * streakMultiplier * penaltyMultipler;
+        }
     }
 
     public class UserData

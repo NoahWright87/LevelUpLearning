@@ -55,6 +55,7 @@ namespace LevelUpLearning.WinForm
             this.btnInsertWord = new System.Windows.Forms.Button();
             this.btnCancelWord = new System.Windows.Forms.Button();
             this.btnSaveWord = new System.Windows.Forms.Button();
+            this.lblListDifficulty = new System.Windows.Forms.Label();
             this.grpList.SuspendLayout();
             this.grpLists.SuspendLayout();
             this.grpWord.SuspendLayout();
@@ -62,6 +63,7 @@ namespace LevelUpLearning.WinForm
             // 
             // grpList
             // 
+            this.grpList.Controls.Add(this.lblListDifficulty);
             this.grpList.Controls.Add(this.btnCancelList);
             this.grpList.Controls.Add(this.btnSaveList);
             this.grpList.Controls.Add(this.txtListName);
@@ -74,7 +76,7 @@ namespace LevelUpLearning.WinForm
             this.grpList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grpList.Name = "grpList";
             this.grpList.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.grpList.Size = new System.Drawing.Size(319, 398);
+            this.grpList.Size = new System.Drawing.Size(319, 446);
             this.grpList.TabIndex = 27;
             this.grpList.TabStop = false;
             this.grpList.Text = "List Details";
@@ -82,7 +84,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnCancelList
             // 
-            this.btnCancelList.Location = new System.Drawing.Point(6, 353);
+            this.btnCancelList.Location = new System.Drawing.Point(6, 411);
             this.btnCancelList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancelList.Name = "btnCancelList";
             this.btnCancelList.Size = new System.Drawing.Size(94, 31);
@@ -93,7 +95,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnSaveList
             // 
-            this.btnSaveList.Location = new System.Drawing.Point(106, 353);
+            this.btnSaveList.Location = new System.Drawing.Point(106, 411);
             this.btnSaveList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSaveList.Name = "btnSaveList";
             this.btnSaveList.Size = new System.Drawing.Size(194, 31);
@@ -121,7 +123,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnDeleteWord
             // 
-            this.btnDeleteWord.Location = new System.Drawing.Point(206, 299);
+            this.btnDeleteWord.Location = new System.Drawing.Point(206, 357);
             this.btnDeleteWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnDeleteWord.Name = "btnDeleteWord";
             this.btnDeleteWord.Size = new System.Drawing.Size(94, 31);
@@ -137,13 +139,13 @@ namespace LevelUpLearning.WinForm
             this.lstWords.Location = new System.Drawing.Point(6, 66);
             this.lstWords.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstWords.Name = "lstWords";
-            this.lstWords.Size = new System.Drawing.Size(294, 212);
+            this.lstWords.Size = new System.Drawing.Size(294, 244);
             this.lstWords.TabIndex = 16;
             this.lstWords.SelectedIndexChanged += new System.EventHandler(this.lstWords_SelectedIndexChanged);
             // 
             // btnEditWord
             // 
-            this.btnEditWord.Location = new System.Drawing.Point(106, 299);
+            this.btnEditWord.Location = new System.Drawing.Point(106, 357);
             this.btnEditWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnEditWord.Name = "btnEditWord";
             this.btnEditWord.Size = new System.Drawing.Size(94, 31);
@@ -154,7 +156,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnAddWord
             // 
-            this.btnAddWord.Location = new System.Drawing.Point(6, 299);
+            this.btnAddWord.Location = new System.Drawing.Point(6, 357);
             this.btnAddWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAddWord.Name = "btnAddWord";
             this.btnAddWord.Size = new System.Drawing.Size(94, 31);
@@ -170,7 +172,7 @@ namespace LevelUpLearning.WinForm
             this.lstSpellingLists.Location = new System.Drawing.Point(6, 21);
             this.lstSpellingLists.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstSpellingLists.Name = "lstSpellingLists";
-            this.lstSpellingLists.Size = new System.Drawing.Size(294, 260);
+            this.lstSpellingLists.Size = new System.Drawing.Size(294, 292);
             this.lstSpellingLists.TabIndex = 14;
             this.lstSpellingLists.SelectedIndexChanged += new System.EventHandler(this.lstSpellingLists_SelectedIndexChanged);
             // 
@@ -186,7 +188,7 @@ namespace LevelUpLearning.WinForm
             this.grpLists.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grpLists.Name = "grpLists";
             this.grpLists.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.grpLists.Size = new System.Drawing.Size(315, 398);
+            this.grpLists.Size = new System.Drawing.Size(315, 446);
             this.grpLists.TabIndex = 25;
             this.grpLists.TabStop = false;
             this.grpLists.Text = "Spelling Lists";
@@ -194,7 +196,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnAddList
             // 
-            this.btnAddList.Location = new System.Drawing.Point(6, 299);
+            this.btnAddList.Location = new System.Drawing.Point(6, 357);
             this.btnAddList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAddList.Name = "btnAddList";
             this.btnAddList.Size = new System.Drawing.Size(94, 31);
@@ -205,7 +207,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnCancelAll
             // 
-            this.btnCancelAll.Location = new System.Drawing.Point(6, 353);
+            this.btnCancelAll.Location = new System.Drawing.Point(6, 411);
             this.btnCancelAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancelAll.Name = "btnCancelAll";
             this.btnCancelAll.Size = new System.Drawing.Size(94, 31);
@@ -216,7 +218,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnSaveAll
             // 
-            this.btnSaveAll.Location = new System.Drawing.Point(106, 353);
+            this.btnSaveAll.Location = new System.Drawing.Point(106, 411);
             this.btnSaveAll.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSaveAll.Name = "btnSaveAll";
             this.btnSaveAll.Size = new System.Drawing.Size(194, 31);
@@ -227,7 +229,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnEditList
             // 
-            this.btnEditList.Location = new System.Drawing.Point(106, 299);
+            this.btnEditList.Location = new System.Drawing.Point(106, 357);
             this.btnEditList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnEditList.Name = "btnEditList";
             this.btnEditList.Size = new System.Drawing.Size(94, 31);
@@ -238,7 +240,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnDeleteList
             // 
-            this.btnDeleteList.Location = new System.Drawing.Point(206, 299);
+            this.btnDeleteList.Location = new System.Drawing.Point(206, 357);
             this.btnDeleteList.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnDeleteList.Name = "btnDeleteList";
             this.btnDeleteList.Size = new System.Drawing.Size(94, 31);
@@ -249,7 +251,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnHearTest
             // 
-            this.btnHearTest.Location = new System.Drawing.Point(160, 278);
+            this.btnHearTest.Location = new System.Drawing.Point(160, 357);
             this.btnHearTest.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnHearTest.Name = "btnHearTest";
             this.btnHearTest.Size = new System.Drawing.Size(140, 44);
@@ -265,7 +267,7 @@ namespace LevelUpLearning.WinForm
             this.txtExampleSentence.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtExampleSentence.Multiline = true;
             this.txtExampleSentence.Name = "txtExampleSentence";
-            this.txtExampleSentence.Size = new System.Drawing.Size(294, 190);
+            this.txtExampleSentence.Size = new System.Drawing.Size(294, 226);
             this.txtExampleSentence.TabIndex = 24;
             // 
             // lblExampleSentence
@@ -310,7 +312,7 @@ namespace LevelUpLearning.WinForm
             this.grpWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.grpWord.Name = "grpWord";
             this.grpWord.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.grpWord.Size = new System.Drawing.Size(319, 398);
+            this.grpWord.Size = new System.Drawing.Size(319, 446);
             this.grpWord.TabIndex = 33;
             this.grpWord.TabStop = false;
             this.grpWord.Text = "Spelling Word";
@@ -319,15 +321,15 @@ namespace LevelUpLearning.WinForm
             // lblDifficultyRating
             // 
             this.lblDifficultyRating.AutoSize = true;
-            this.lblDifficultyRating.Location = new System.Drawing.Point(6, 325);
+            this.lblDifficultyRating.Location = new System.Drawing.Point(6, 321);
             this.lblDifficultyRating.Name = "lblDifficultyRating";
-            this.lblDifficultyRating.Size = new System.Drawing.Size(126, 17);
+            this.lblDifficultyRating.Size = new System.Drawing.Size(151, 34);
             this.lblDifficultyRating.TabIndex = 34;
-            this.lblDifficultyRating.Text = "Difficulty Score: ??";
+            this.lblDifficultyRating.Text = "Approximate Difficulty: \r\n??";
             // 
             // btnInsertWord
             // 
-            this.btnInsertWord.Location = new System.Drawing.Point(6, 278);
+            this.btnInsertWord.Location = new System.Drawing.Point(6, 357);
             this.btnInsertWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnInsertWord.Name = "btnInsertWord";
             this.btnInsertWord.Size = new System.Drawing.Size(140, 44);
@@ -338,7 +340,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnCancelWord
             // 
-            this.btnCancelWord.Location = new System.Drawing.Point(6, 353);
+            this.btnCancelWord.Location = new System.Drawing.Point(6, 411);
             this.btnCancelWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancelWord.Name = "btnCancelWord";
             this.btnCancelWord.Size = new System.Drawing.Size(94, 31);
@@ -349,7 +351,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnSaveWord
             // 
-            this.btnSaveWord.Location = new System.Drawing.Point(106, 353);
+            this.btnSaveWord.Location = new System.Drawing.Point(106, 411);
             this.btnSaveWord.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnSaveWord.Name = "btnSaveWord";
             this.btnSaveWord.Size = new System.Drawing.Size(194, 31);
@@ -358,11 +360,20 @@ namespace LevelUpLearning.WinForm
             this.btnSaveWord.UseVisualStyleBackColor = true;
             this.btnSaveWord.Click += new System.EventHandler(this.btnSaveWord_Click);
             // 
+            // lblListDifficulty
+            // 
+            this.lblListDifficulty.AutoSize = true;
+            this.lblListDifficulty.Location = new System.Drawing.Point(6, 321);
+            this.lblListDifficulty.Name = "lblListDifficulty";
+            this.lblListDifficulty.Size = new System.Drawing.Size(118, 34);
+            this.lblListDifficulty.TabIndex = 34;
+            this.lblListDifficulty.Text = "Overall Difficulty: \r\n??";
+            // 
             // frmSpellingListsSetup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1014, 434);
+            this.ClientSize = new System.Drawing.Size(1014, 477);
             this.Controls.Add(this.grpWord);
             this.Controls.Add(this.grpList);
             this.Controls.Add(this.grpLists);
@@ -406,5 +417,6 @@ namespace LevelUpLearning.WinForm
         private System.Windows.Forms.Button btnInsertWord;
         private System.Windows.Forms.Button btnCancelWord;
         private System.Windows.Forms.Button btnSaveWord;
+        private System.Windows.Forms.Label lblListDifficulty;
     }
 }

@@ -46,6 +46,7 @@ namespace LevelUpLearning.WinForm
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnFinish = new System.Windows.Forms.Button();
             this.btnHelp = new System.Windows.Forms.Button();
+            this.lblScoreMultiplier = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.barDifficulty)).BeginInit();
             this.grpDifficultyDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barStreakPenalty)).BeginInit();
@@ -93,6 +94,7 @@ namespace LevelUpLearning.WinForm
             // 
             // grpDifficultyDetails
             // 
+            this.grpDifficultyDetails.Controls.Add(this.lblScoreMultiplier);
             this.grpDifficultyDetails.Controls.Add(this.lblStreakPenalty);
             this.grpDifficultyDetails.Controls.Add(this.lblTargetStreak);
             this.grpDifficultyDetails.Controls.Add(this.lblHintChange);
@@ -233,6 +235,15 @@ namespace LevelUpLearning.WinForm
             this.btnHelp.Text = "?";
             this.btnHelp.UseVisualStyleBackColor = true;
             // 
+            // lblScoreMultiplier
+            // 
+            this.lblScoreMultiplier.AutoSize = true;
+            this.lblScoreMultiplier.Location = new System.Drawing.Point(17, 302);
+            this.lblScoreMultiplier.Name = "lblScoreMultiplier";
+            this.lblScoreMultiplier.Size = new System.Drawing.Size(109, 17);
+            this.lblScoreMultiplier.TabIndex = 16;
+            this.lblScoreMultiplier.Text = "Score Multiplier:";
+            // 
             // frmSpellingQuizDifficulty
             // 
             this.AcceptButton = this.btnFinish;
@@ -286,5 +297,6 @@ namespace LevelUpLearning.WinForm
         private System.Windows.Forms.TrackBar barHintChange;
         private System.Windows.Forms.TrackBar barHintLetters;
         private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.Label lblScoreMultiplier;
     }
 }
