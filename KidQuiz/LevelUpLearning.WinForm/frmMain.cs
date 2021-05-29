@@ -66,7 +66,21 @@ namespace LevelUpLearning.WinForm
 
         private void btnSpellingTestSetup_Click(object sender, EventArgs e)
         {
-            ShowSubForm(new frmSpellingListsSetup());
+            var result = MessageBox.Show("Would you like to use the quick-create?  Click 'No' to see the full setup screen.", 
+                "Which create style?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+            switch(result)
+            {
+                case DialogResult.Yes:
+                    ShowSubForm(new frmSpellingListsQuickCreate());
+                    break;
+                case DialogResult.No:
+                    ShowSubForm(new frmSpellingListsSetup());
+                    break;
+                default:
+                    //Do nothing!
+                    break;
+            }
         }
 
         private void btnLogout_Click(object sender, EventArgs e)

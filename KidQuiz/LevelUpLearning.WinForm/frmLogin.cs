@@ -11,13 +11,10 @@ namespace LevelUpLearning.WinForm
         {
             InitializeComponent();
 
+            InitUsers();
             if (DataController.Root.LastUser != null)
             {
                 Login(DataController.Root.LastUser, true);
-            }
-            else
-            {
-                InitUsers();
             }
         }
         private void InitUsers()

@@ -98,10 +98,12 @@ namespace LevelUpLearning.WinForm
             if (lstSpellingLists.SelectedIndex < 0)
             {
                 currentList = null;
+                btnExport.Hide();
             }
             else
             {
                 currentList = lstSpellingLists.SelectedItem as SpellingWordList;
+                btnExport.Show();
                 listIsNew = false;
             }
             InitSpellingList();
@@ -138,8 +140,9 @@ namespace LevelUpLearning.WinForm
 
         private void btnDeleteList_Click(object sender, System.EventArgs e)
         {
-            if (MessageBox.Show("Are you sure?") == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure?  You cannot undo this change!", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
+                DataController.Root.Spelling.WordLists.Remove(currentList.ListName);
                 lstSpellingLists.Items.RemoveAt(lstSpellingLists.SelectedIndex);
                 currentList = null;
                 InitSpellingList();
@@ -232,7 +235,7 @@ namespace LevelUpLearning.WinForm
 
         private void btnCancelList_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure?") == DialogResult.Yes)
+            if (MessageBox.Show("Are you sure?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 currentList = null;
                 InitSpellingList();
@@ -299,6 +302,33 @@ namespace LevelUpLearning.WinForm
             }
             DataController.SaveRoot();
             Close();
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                if (DataController.TryImportWordList(openFileDialog.FileName))
+                {
+                    InitSpellingLists();
+                }
+                else
+                {
+                    MessageBox.Show("List import failed!  Make sure you selected a good file and that the list doesn't already exist.");
+                }
+            }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            saveFileDialog.FileName = currentList.ListName;
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                if (!DataController.TryExportWordList(currentList, saveFileDialog.FileName))
+                {
+                    MessageBox.Show("List export failed!  Make sure you have permission to write files in the folder you selected.");
+                }
+            }
         }
     }
 }

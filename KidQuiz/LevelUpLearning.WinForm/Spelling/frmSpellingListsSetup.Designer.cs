@@ -30,6 +30,7 @@ namespace LevelUpLearning.WinForm
         private void InitializeComponent()
         {
             this.grpList = new System.Windows.Forms.GroupBox();
+            this.lblListDifficulty = new System.Windows.Forms.Label();
             this.btnCancelList = new System.Windows.Forms.Button();
             this.btnSaveList = new System.Windows.Forms.Button();
             this.txtListName = new System.Windows.Forms.TextBox();
@@ -55,7 +56,10 @@ namespace LevelUpLearning.WinForm
             this.btnInsertWord = new System.Windows.Forms.Button();
             this.btnCancelWord = new System.Windows.Forms.Button();
             this.btnSaveWord = new System.Windows.Forms.Button();
-            this.lblListDifficulty = new System.Windows.Forms.Label();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.grpList.SuspendLayout();
             this.grpLists.SuspendLayout();
             this.grpWord.SuspendLayout();
@@ -81,6 +85,15 @@ namespace LevelUpLearning.WinForm
             this.grpList.TabStop = false;
             this.grpList.Text = "List Details";
             this.grpList.Visible = false;
+            // 
+            // lblListDifficulty
+            // 
+            this.lblListDifficulty.AutoSize = true;
+            this.lblListDifficulty.Location = new System.Drawing.Point(6, 321);
+            this.lblListDifficulty.Name = "lblListDifficulty";
+            this.lblListDifficulty.Size = new System.Drawing.Size(118, 34);
+            this.lblListDifficulty.TabIndex = 34;
+            this.lblListDifficulty.Text = "Overall Difficulty: \r\n??";
             // 
             // btnCancelList
             // 
@@ -178,6 +191,8 @@ namespace LevelUpLearning.WinForm
             // 
             // grpLists
             // 
+            this.grpLists.Controls.Add(this.btnExport);
+            this.grpLists.Controls.Add(this.btnImport);
             this.grpLists.Controls.Add(this.lstSpellingLists);
             this.grpLists.Controls.Add(this.btnAddList);
             this.grpLists.Controls.Add(this.btnCancelAll);
@@ -360,14 +375,39 @@ namespace LevelUpLearning.WinForm
             this.btnSaveWord.UseVisualStyleBackColor = true;
             this.btnSaveWord.Click += new System.EventHandler(this.btnSaveWord_Click);
             // 
-            // lblListDifficulty
+            // btnImport
             // 
-            this.lblListDifficulty.AutoSize = true;
-            this.lblListDifficulty.Location = new System.Drawing.Point(6, 321);
-            this.lblListDifficulty.Name = "lblListDifficulty";
-            this.lblListDifficulty.Size = new System.Drawing.Size(118, 34);
-            this.lblListDifficulty.TabIndex = 34;
-            this.lblListDifficulty.Text = "Overall Difficulty: \r\n??";
+            this.btnImport.Location = new System.Drawing.Point(6, 317);
+            this.btnImport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(94, 31);
+            this.btnImport.TabIndex = 30;
+            this.btnImport.Text = "Import";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(106, 317);
+            this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(94, 31);
+            this.btnExport.TabIndex = 30;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.DefaultExt = "xml";
+            this.saveFileDialog.Filter = "XML|*.xml";
+            this.saveFileDialog.Title = "Export Word List";
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.DefaultExt = "xml";
+            this.openFileDialog.Filter = "XML|*.xml";
+            this.openFileDialog.Title = "Import Word List";
             // 
             // frmSpellingListsSetup
             // 
@@ -418,5 +458,9 @@ namespace LevelUpLearning.WinForm
         private System.Windows.Forms.Button btnCancelWord;
         private System.Windows.Forms.Button btnSaveWord;
         private System.Windows.Forms.Label lblListDifficulty;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }

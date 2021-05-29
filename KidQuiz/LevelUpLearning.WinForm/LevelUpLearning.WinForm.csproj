@@ -24,7 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.2.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -91,6 +91,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\frmTextPrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmTextPrompt.Designer.cs">
+      <DependentUpon>frmTextPrompt.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,12 @@
     </Compile>
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Spelling\frmSpellingListsQuickCreate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Spelling\frmSpellingListsQuickCreate.Designer.cs">
+      <DependentUpon>frmSpellingListsQuickCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Spelling\frmSpellingQuiz.cs">
       <SubType>Form</SubType>
@@ -141,6 +153,15 @@
     <Compile Include="Spelling\frmSpellingQuizPerformance.Designer.cs">
       <DependentUpon>frmSpellingQuizPerformance.cs</DependentUpon>
     </Compile>
+    <Compile Include="Spelling\frmSpellingWordQuickCreate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Spelling\frmSpellingWordQuickCreate.Designer.cs">
+      <DependentUpon>frmSpellingWordQuickCreate.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Common\frmTextPrompt.resx">
+      <DependentUpon>frmTextPrompt.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomMessageBox.resx">
       <DependentUpon>CustomMessageBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -152,6 +173,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Spelling\frmSpellingListsQuickCreate.resx">
+      <DependentUpon>frmSpellingListsQuickCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Spelling\frmSpellingQuiz.resx">
       <DependentUpon>frmSpellingQuiz.cs</DependentUpon>
@@ -173,6 +197,9 @@
     </Compile>
     <EmbeddedResource Include="Spelling\frmSpellingQuizPerformance.resx">
       <DependentUpon>frmSpellingQuizPerformance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Spelling\frmSpellingWordQuickCreate.resx">
+      <DependentUpon>frmSpellingWordQuickCreate.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

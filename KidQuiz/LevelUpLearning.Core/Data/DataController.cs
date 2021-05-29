@@ -50,6 +50,7 @@ namespace LevelUpLearning.Core.Data
             Load();
         }
         private XmlSerializer Serializer => new XmlSerializer(typeof(DataRoot));
+        private static XmlSerializer SpellingListSerializer => new XmlSerializer(typeof(SpellingWordList));
         private void Save()
         {
             //TODO: What if we can't make the save data?
@@ -80,6 +81,53 @@ namespace LevelUpLearning.Core.Data
                 _root = new DataRoot();
                 Save();
             }
+        }
+
+        public static bool TryExportWordList(SpellingWordList list, string filePath)
+        {
+            try
+            {
+                if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                }
+                using (XmlWriter writer = XmlWriter.Create(filePath))
+                {
+                    SpellingListSerializer.Serialize(writer, list);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryImportWordList(string filePath)
+        {
+            if (!File.Exists(filePath)) return false;
+            try
+            {
+                using (XmlReader reader = XmlReader.Create(filePath))
+                {
+                    var list = (SpellingWordList)SpellingListSerializer.Deserialize(reader);
+                    if (Root.Spelling.WordLists.ContainsKey(list.ListName))
+                    {
+                        //TODO: Merge the lists together instead
+                        return false;
+                    }
+                    else
+                    {
+                        Root.Spelling.WordLists.Add(list.ListName, list);
+                        SaveRoot();
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
         }
     }
 
