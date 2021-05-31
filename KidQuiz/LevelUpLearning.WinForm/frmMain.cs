@@ -1,8 +1,10 @@
 ﻿using LevelUpLearning.Core.Data;
-using System;
-using System.Windows.Forms;
+using LevelUpLearning.WinForms;
+using LevelUpLearning.WinForms.Common;
 using LevelUpLearning.WinForms.Spelling;
+using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForm
 {
@@ -66,20 +68,46 @@ namespace LevelUpLearning.WinForm
 
         private void btnSpellingTestSetup_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show("Would you like to use the quick-create?  Click 'No' to see the full setup screen.", 
-                "Which create style?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            int choice = OptionDialog.Show(this, "How would you like to set up the spelling lists?",
+                "Quick Create", "Check for Downloadable Lists", "Advanced Setup");
 
-            switch(result)
+            switch(choice)
             {
-                case DialogResult.Yes:
+                case 0:
                     ShowSubForm(new frmSpellingListsQuickCreate());
                     break;
-                case DialogResult.No:
+                case 1:
+                    DownloadSpellingLists();
+                    break;
+                case 2:
                     ShowSubForm(new frmSpellingListsSetup());
                     break;
                 default:
-                    //Do nothing!
+                    //Do nothing
                     break;
+            }
+        }
+        private void DownloadSpellingLists()
+        {
+            //TODO: Eventually, there may be a ton of lists - maybe give the option to only import some?
+            var response = GitHubUtility.GetSpellingLists();
+            if (response.Files.Count <= 0)
+            {
+                MessageBox.Show("No files are available right now.  Check back later!");
+            }
+            else
+            {
+                GitHubUtility.DownloadFiles(response);
+                int successes = 0;
+
+                foreach (var file in response.Files)
+                {
+                    if (DataController.TryImportWordXml(file.Contents)) successes++;
+                }
+
+                string failMessage = (response.Files.Count > successes) ? "  Failures may be because a list with the same name already exists." : "";
+                MessageBox.Show($"Imported {successes} of {response.Files.Count} file(s) from web source.{failMessage}", "Done",
+                    MessageBoxButtons.OK, string.IsNullOrEmpty(failMessage) ? MessageBoxIcon.Exclamation : MessageBoxIcon.None);
             }
         }
 

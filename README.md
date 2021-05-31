@@ -3,7 +3,7 @@
 
 Welcome to Level Up Learning!  This is a side project by [Noah Wright](https://github.com/NoahWright87) to help his kids (and anybody else's) with various learning activities.  Started years ago and revisited due to the at-home-learning debacle that came along with COVID-19, this is a work-in-progress that will be added onto over time.
 
-Looking for spelling words to import?  Check out the [Spelling Lists](https://github.com/NoahWright87/LevelUpLearning/tree/main/Spelling Lists) folder!
+Looking for spelling words to import?  Check out the [Spelling Lists](https://github.com/NoahWright87/LevelUpLearning/tree/main/Spelling%20Lists) folder!  Or, use the option Level Up Learning to import them automatically!
 
 **The end goal**: This will be a collection of learning activities and games that track your "experience" in various subjects so you can "level up" your school skills.  Eventually this will expand to be a variety of skills at various grade levels, available to be used by multiple kids.
 
@@ -21,7 +21,8 @@ Currently, you can:
   - Each word can have an example sentence which will be spoken to the user
   - Words have a rough difficulty calculated based on various characteristics
   - ❗ Fast-tracked way to quickly create lists or words in a text-only form
-  - ❗ Able to export and import lists.  Some exported lists will be available in the GitHub repo.  Some pre-made lists will be added under the [Spelling Lists](https://github.com/NoahWright87/LevelUpLearning/tree/main/Spelling Lists) folder.
+  - ❗ Able to export and import lists.  Some exported lists will be available in the GitHub repo.  Some pre-made lists will be added under the [Spelling Lists](https://github.com/NoahWright87/LevelUpLearning/tree/main/Spelling%20Lists) folder.
+  - ❗ Program can automatically import the lists stored here on GitHub.
 - Quiz yourself on those lists
   - Can select any number of lists to quiz yourself on
   - Can adjust the difficulty (multiple presets, plus custom settings)

@@ -3,18 +3,18 @@ using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForms.Common
 {
-    public partial class frmTextPrompt : Form
+    public partial class TextDialog : Form
     {
-        private frmTextPrompt(string prompt)
+        private TextDialog(string prompt)
         {
             InitializeComponent();
 
             lblPrompt.Text = prompt;
         }
 
-        public static string GetAnswer(IWin32Window owner, string prompt)
+        public static string Show(IWin32Window owner, string prompt)
         {
-            var form = new frmTextPrompt(prompt);
+            var form = new TextDialog(prompt);
             if (form.ShowDialog(owner) == DialogResult.OK)
             {
                 return form.txtAnswer.Text;

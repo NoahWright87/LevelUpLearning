@@ -1,7 +1,7 @@
 ﻿
 namespace LevelUpLearning.WinForms.Common
 {
-    partial class frmTextPrompt
+    partial class TextDialog
     {
         /// <summary>
         /// Required designer variable.

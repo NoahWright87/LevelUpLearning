@@ -185,8 +185,6 @@ namespace LevelUpLearning.WinForm
             return $"{Word}: {NumCorrect} / {NumAttempts} ({PercentCorrect * 100}%){previousAttemptsMessage}";
         }
 
-        //TODO: Consider storing this sessions's attempts and performance, then combining those into 
-        //  a lifetime performance stat that is stored separately
         public bool RecordAttempt(string attempt, SpellingQuizSettings settings)
         {
             NumAttempts++;

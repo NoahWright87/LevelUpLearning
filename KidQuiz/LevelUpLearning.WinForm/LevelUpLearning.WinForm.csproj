@@ -91,11 +91,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\frmTextPrompt.cs">
+    <Compile Include="Common\OptionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Common\frmTextPrompt.Designer.cs">
-      <DependentUpon>frmTextPrompt.cs</DependentUpon>
+    <Compile Include="Common\OptionDialog.Designer.cs">
+      <DependentUpon>OptionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\TextDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\TextDialog.Designer.cs">
+      <DependentUpon>TextDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="CustomMessageBox.cs">
       <SubType>Form</SubType>
@@ -159,8 +165,12 @@
     <Compile Include="Spelling\frmSpellingWordQuickCreate.Designer.cs">
       <DependentUpon>frmSpellingWordQuickCreate.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Common\frmTextPrompt.resx">
-      <DependentUpon>frmTextPrompt.cs</DependentUpon>
+    <Compile Include="GitHubUtility.cs" />
+    <EmbeddedResource Include="Common\OptionDialog.resx">
+      <DependentUpon>OptionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\TextDialog.resx">
+      <DependentUpon>TextDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomMessageBox.resx">
       <DependentUpon>CustomMessageBox.cs</DependentUpon>

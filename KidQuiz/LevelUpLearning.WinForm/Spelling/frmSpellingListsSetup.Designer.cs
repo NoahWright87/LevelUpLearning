@@ -388,7 +388,7 @@ namespace LevelUpLearning.WinForm
             // 
             // btnExport
             // 
-            this.btnExport.Location = new System.Drawing.Point(106, 317);
+            this.btnExport.Location = new System.Drawing.Point(206, 317);
             this.btnExport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(94, 31);
@@ -407,6 +407,7 @@ namespace LevelUpLearning.WinForm
             // 
             this.openFileDialog.DefaultExt = "xml";
             this.openFileDialog.Filter = "XML|*.xml";
+            this.openFileDialog.Multiselect = true;
             this.openFileDialog.Title = "Import Word List";
             // 
             // frmSpellingListsSetup

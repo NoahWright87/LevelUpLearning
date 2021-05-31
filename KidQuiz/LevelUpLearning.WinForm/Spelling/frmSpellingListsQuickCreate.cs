@@ -41,7 +41,7 @@ NOTE: Not all words have to have sentences.  You will have a chance to enter the
                 //Keep asking until we get a name!
                 while (string.IsNullOrWhiteSpace(newList.ListName))
                 {
-                    newList.ListName = frmTextPrompt.GetAnswer(this, "Name of this list?");
+                    newList.ListName = TextDialog.Show(this, "Name of this list?");
                 }
 
                 foreach (var line in txtWordList.Lines.Select(x => x?.Trim() ?? "").Where(x => !string.IsNullOrEmpty(x)))

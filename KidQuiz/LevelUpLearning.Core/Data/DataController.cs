@@ -83,7 +83,7 @@ namespace LevelUpLearning.Core.Data
             }
         }
 
-        public static bool TryExportWordList(SpellingWordList list, string filePath)
+        public static bool TryExportWordFile(SpellingWordList list, string filePath)
         {
             try
             {
@@ -103,12 +103,11 @@ namespace LevelUpLearning.Core.Data
             return true;
         }
 
-        public static bool TryImportWordList(string filePath)
+        public static bool TryImportWordXml(string xml)
         {
-            if (!File.Exists(filePath)) return false;
             try
             {
-                using (XmlReader reader = XmlReader.Create(filePath))
+                using (var reader = new StringReader(xml))
                 {
                     var list = (SpellingWordList)SpellingListSerializer.Deserialize(reader);
                     if (Root.Spelling.WordLists.ContainsKey(list.ListName))
@@ -120,6 +119,7 @@ namespace LevelUpLearning.Core.Data
                     {
                         Root.Spelling.WordLists.Add(list.ListName, list);
                         SaveRoot();
+                        return true;
                     }
                 }
             }
@@ -127,7 +127,19 @@ namespace LevelUpLearning.Core.Data
             {
                 return false;
             }
-            return true;
+        }
+        public static bool TryImportWordFile(string filePath)
+        {
+            if (!File.Exists(filePath)) return false;
+            try
+            {
+                string xml = File.ReadAllText(filePath);
+                return TryImportWordXml(xml);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 

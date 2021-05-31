@@ -4,6 +4,7 @@ using LevelUpLearning.SpeechWindows;
 using Microsoft.VisualStudio.Services.Common;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForm
@@ -308,13 +309,29 @@ namespace LevelUpLearning.WinForm
         {
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                if (DataController.TryImportWordList(openFileDialog.FileName))
+                int numFails = 0;
+                int numSuccesses = 0;
+                foreach (var file in openFileDialog.FileNames)
+                {
+                    if (DataController.TryImportWordFile(file))
+                    {
+                        numSuccesses++;
+                    }
+                    else
+                    {
+                        numFails++;
+                    }
+                }
+
+                string successMessage = $"{numSuccesses} file(s) imported.";
+                string failMessage = numFails > 0 ? $"  {numFails} file(s) failed to import.  Make sure you picked a valid file and that the list doesn't already exist." : "";
+
+                MessageBox.Show($"{successMessage}{failMessage}", "Complete", MessageBoxButtons.OK, 
+                    numFails > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.None);
+
+                if (numSuccesses > 0)
                 {
                     InitSpellingLists();
-                }
-                else
-                {
-                    MessageBox.Show("List import failed!  Make sure you selected a good file and that the list doesn't already exist.");
                 }
             }
         }
@@ -324,7 +341,7 @@ namespace LevelUpLearning.WinForm
             saveFileDialog.FileName = currentList.ListName;
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                if (!DataController.TryExportWordList(currentList, saveFileDialog.FileName))
+                if (!DataController.TryExportWordFile(currentList, saveFileDialog.FileName))
                 {
                     MessageBox.Show("List export failed!  Make sure you have permission to write files in the folder you selected.");
                 }
