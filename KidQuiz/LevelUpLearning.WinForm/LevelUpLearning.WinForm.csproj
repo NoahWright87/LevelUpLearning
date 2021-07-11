@@ -24,7 +24,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.2.0.0</ApplicationVersion>
+    <ApplicationVersion>1.2.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -97,6 +97,12 @@
     <Compile Include="Common\OptionDialog.Designer.cs">
       <DependentUpon>OptionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\RpgBanner.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\RpgBanner.Designer.cs">
+      <DependentUpon>RpgBanner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Common\TextDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +121,12 @@
     <Compile Include="frmAddUser.Designer.cs">
       <DependentUpon>frmAddUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmAdventureMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAdventureMode.Designer.cs">
+      <DependentUpon>frmAdventureMode.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +138,24 @@
     </Compile>
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMultipleChoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMultipleChoice.Designer.cs">
+      <DependentUpon>frmMultipleChoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Math\frmMathQuiz.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Math\frmMathQuiz.Designer.cs">
+      <DependentUpon>frmMathQuiz.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Math\frmMathSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Math\frmMathSettings.Designer.cs">
+      <DependentUpon>frmMathSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Spelling\frmSpellingListsQuickCreate.cs">
       <SubType>Form</SubType>
@@ -144,6 +174,12 @@
     </Compile>
     <Compile Include="Spelling\frmSpellingListsSetup.Designer.cs">
       <DependentUpon>frmSpellingListsSetup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Spelling\frmSpellingQuizDifficultyAdventure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Spelling\frmSpellingQuizDifficultyAdventure.Designer.cs">
+      <DependentUpon>frmSpellingQuizDifficultyAdventure.cs</DependentUpon>
     </Compile>
     <Compile Include="Spelling\frmSpellingQuizDifficulty.cs">
       <SubType>Form</SubType>
@@ -169,6 +205,9 @@
     <EmbeddedResource Include="Common\OptionDialog.resx">
       <DependentUpon>OptionDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Common\RpgBanner.resx">
+      <DependentUpon>RpgBanner.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Common\TextDialog.resx">
       <DependentUpon>TextDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,11 +217,20 @@
     <EmbeddedResource Include="frmAddUser.resx">
       <DependentUpon>frmAddUser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmAdventureMode.resx">
+      <DependentUpon>frmAdventureMode.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMultipleChoice.resx">
+      <DependentUpon>frmMultipleChoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Math\frmMathQuiz.resx">
+      <DependentUpon>frmMathQuiz.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Spelling\frmSpellingListsQuickCreate.resx">
       <DependentUpon>frmSpellingListsQuickCreate.cs</DependentUpon>
@@ -192,6 +240,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Spelling\frmSpellingListsSetup.resx">
       <DependentUpon>frmSpellingListsSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Spelling\frmSpellingQuizDifficultyAdventure.resx">
+      <DependentUpon>frmSpellingQuizDifficultyAdventure.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Spelling\frmSpellingQuizDifficulty.resx">
       <DependentUpon>frmSpellingQuizDifficulty.cs</DependentUpon>
@@ -249,7 +300,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Grammar\" />
-    <Folder Include="Math\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

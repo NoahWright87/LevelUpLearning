@@ -17,13 +17,13 @@ NOTE: Features preceded by a ❗ were recently added.
 ### Spelling Test
 Currently, you can:
 - Create spelling words / list
-  - Each list can contain any number of words
+  - Each list is named and can contain any number of words
   - Each word can have an example sentence which will be spoken to the user
   - Words have a rough difficulty calculated based on various characteristics
-  - ❗ Fast-tracked way to quickly create lists or words in a text-only form
-  - ❗ Able to export and import lists.  Some exported lists will be available in the GitHub repo.  Some pre-made lists will be added under the [Spelling Lists](https://github.com/NoahWright87/LevelUpLearning/tree/main/Spelling%20Lists) folder.
-  - ❗ Program can automatically import the lists stored here on GitHub.
+  - Lists can be made by-hand, editted later, or import/exported
+  - ❗ For very long lists of words, they can automatically be split into several smaller lists
 - Quiz yourself on those lists
+  - ❗ Automatically progress in spelling difficulty, RPG-style!
   - Can select any number of lists to quiz yourself on
   - Can adjust the difficulty (multiple presets, plus custom settings)
     - Difficulty settings result in a score percentage adjustment
@@ -35,8 +35,6 @@ Currently, you can:
     - See an overall score based on difficulty of the list and difficulty settings used
 
 ## Upcoming Features
-Next will be to speed up the creation of word lists.  Ideally, this will mean the ability to import/export lists of words - after which I will post lists of words online so they can used by other people - but at a minimum it should mean a quick-entry form where lists of words can be entered quickly.
-
-After that, it will be time to add another activity - probably a simple math test.
+Some code organization and using better practices to prepare for adding more activities.
 
 Feel free to check out [this repo's project](https://github.com/NoahWright87/LevelUpLearning/projects/2) to see what else is being worked and what's planned down the road.

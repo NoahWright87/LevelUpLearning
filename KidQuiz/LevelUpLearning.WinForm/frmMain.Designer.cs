@@ -36,6 +36,7 @@
             this.btnSpellingStats = new System.Windows.Forms.Button();
             this.lblVersion = new System.Windows.Forms.Label();
             this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnMathTest = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSpellingTest
@@ -46,7 +47,7 @@
             this.btnSpellingTest.Name = "btnSpellingTest";
             this.btnSpellingTest.Size = new System.Drawing.Size(194, 86);
             this.btnSpellingTest.TabIndex = 5;
-            this.btnSpellingTest.Text = "Spelling Test";
+            this.btnSpellingTest.Text = "Spelling";
             this.btnSpellingTest.UseVisualStyleBackColor = true;
             this.btnSpellingTest.Click += new System.EventHandler(this.btnSpellingTest_Click);
             // 
@@ -137,6 +138,18 @@
             this.btnUpdate.UseVisualStyleBackColor = false;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
+            // btnMathTest
+            // 
+            this.btnMathTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMathTest.Location = new System.Drawing.Point(276, 113);
+            this.btnMathTest.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnMathTest.Name = "btnMathTest";
+            this.btnMathTest.Size = new System.Drawing.Size(194, 86);
+            this.btnMathTest.TabIndex = 5;
+            this.btnMathTest.Text = "Math";
+            this.btnMathTest.UseVisualStyleBackColor = true;
+            this.btnMathTest.Click += new System.EventHandler(this.btnMathTest_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -149,6 +162,7 @@
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.lblUsername);
             this.Controls.Add(this.btnSpellingTestSetup);
+            this.Controls.Add(this.btnMathTest);
             this.Controls.Add(this.btnSpellingTest);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
@@ -170,5 +184,6 @@
         private System.Windows.Forms.Button btnSpellingStats;
         private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Button btnMathTest;
     }
 }

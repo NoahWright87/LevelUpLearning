@@ -47,13 +47,19 @@ namespace LevelUpLearning.SpeechWindows
             "Correct!",
             "Whoa",
             "Amazing!",
-            "Great job!"
+            "Great job!",
+            "You're a genius!",
+            "Another one!",
+            "You're the best!",
+            "I'm in awe",
+            "Incredible",
+            "Couldn't have done better myself"
         };
 
         public static void ShutUpAndSay(string words)
         {
             ShutUp();
-            Synth.SpeakAsync(words);
+            Synth.SpeakAsync(GetSanitized(words));
         }
 
         public static void Congrats()
@@ -84,7 +90,7 @@ namespace LevelUpLearning.SpeechWindows
             exampleSentence = exampleSentence.Replace(PLACEHOLDER, emphasizedWord);
             var prompt = $"{emphasizedWord}.  {exampleSentence}";
             var pb = new PromptBuilder();
-            pb.AppendSsmlMarkup(prompt);
+            pb.AppendSsmlMarkup(GetSanitized(prompt));
 
             ShutUp();
             Synth.SpeakAsync(pb); //TODO: Can I not pass the string here?  It's been a while and my old code wasn't documented
@@ -95,7 +101,7 @@ namespace LevelUpLearning.SpeechWindows
             string msg = $"The word was {GetEmphasizedWord(correctWord)}.  You spelled {GetEmphasizedWord(incorrectSpelling)}.";
 
             var x = new PromptBuilder();
-            x.AppendSsmlMarkup(msg);
+            x.AppendSsmlMarkup(GetSanitized(msg));
 
             ShutUp();
             //TODO: Again, can I pass the string by itself?  Or is promptbuilder required to use SSML?
@@ -117,6 +123,16 @@ namespace LevelUpLearning.SpeechWindows
         private static string GetEmphasizedWord(string word)
         {
             return $"{Constants.SSML_BREAK_WEAK}{Constants.SSML_EMPHASIZE_BEGIN}{word}{Constants.SSML_EMPHASIZE_END}{Constants.SSML_BREAK_WEAK}";
+        }
+
+        /// <summary>
+        /// This removes any special characters that keep the speech from properly generating.
+        /// </summary>
+        /// <param name="speech"></param>
+        /// <returns></returns>
+        private static string GetSanitized(string speech)
+        {
+            return speech.Replace("&", " and ");
         }
     }
 }

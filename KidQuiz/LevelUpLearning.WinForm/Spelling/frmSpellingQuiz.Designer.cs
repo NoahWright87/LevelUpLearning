@@ -34,6 +34,7 @@
             this.lblHint = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
             this.barRemaining = new System.Windows.Forms.ProgressBar();
+            this.lblLevels = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtInput
@@ -99,12 +100,21 @@
             this.barRemaining.Size = new System.Drawing.Size(917, 64);
             this.barRemaining.TabIndex = 6;
             // 
+            // lblLevels
+            // 
+            this.lblLevels.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.lblLevels.Location = new System.Drawing.Point(12, 185);
+            this.lblLevels.Name = "lblLevels";
+            this.lblLevels.Size = new System.Drawing.Size(681, 78);
+            this.lblLevels.TabIndex = 7;
+            // 
             // frmSpellingQuiz
             // 
             this.AcceptButton = this.btnDone;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(917, 348);
+            this.Controls.Add(this.lblLevels);
             this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.barRemaining);
             this.Controls.Add(this.lblHint);
@@ -128,6 +138,7 @@
         private System.Windows.Forms.Label lblHint;
         private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.ProgressBar barRemaining;
+        private System.Windows.Forms.Label lblLevels;
     }
 }
 

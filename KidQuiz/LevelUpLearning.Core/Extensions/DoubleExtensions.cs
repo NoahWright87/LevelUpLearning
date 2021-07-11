@@ -16,5 +16,10 @@
         {
             return d.StarsCount().ToStars();
         }
+
+        public static bool IsWithin(this double value, double min, double max)
+        {
+            return value <= max && value >= min;
+        }
     }
 }

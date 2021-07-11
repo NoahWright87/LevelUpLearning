@@ -1,6 +1,7 @@
 ﻿using LevelUpLearning.Core.Data;
 using LevelUpLearning.WinForms;
 using LevelUpLearning.WinForms.Common;
+using LevelUpLearning.WinForms.Math;
 using LevelUpLearning.WinForms.Spelling;
 using System;
 using System.Drawing;
@@ -24,6 +25,13 @@ namespace LevelUpLearning.WinForm
             }
 
             InitLogin();
+            UpdateLevels();
+        }
+
+        private void UpdateLevels()
+        {
+            btnSpellingTest.Text = $"Spelling{Environment.NewLine}Level: {DataController.State.CurrentUser.Character.LevelSpelling:0.0}";
+            btnMathTest.Text = $"Math{Environment.NewLine}Level: {DataController.State.CurrentUser.Character.LevelMath:0.0}";
         }
 
         private void InitLogin()
@@ -64,6 +72,7 @@ namespace LevelUpLearning.WinForm
         private void btnSpellingTest_Click(object sender, EventArgs e)
         {
             new frmSpellingQuiz().ShowDialog();
+            UpdateLevels();
         }
 
         private void btnSpellingTestSetup_Click(object sender, EventArgs e)
@@ -135,6 +144,12 @@ namespace LevelUpLearning.WinForm
             {
                 PromptForUpdate();
             }
+        }
+
+        private void btnMathTest_Click(object sender, EventArgs e)
+        {
+            ShowSubForm(new frmMathQuiz());
+            UpdateLevels();
         }
     }
 }

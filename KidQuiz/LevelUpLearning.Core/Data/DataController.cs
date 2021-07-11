@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -238,6 +240,39 @@ namespace LevelUpLearning.Core.Data
         public string Prompt { get; set; }
 
         public override string ToString() => Word;
+
+        public string GetPrompt(int hintLetters, bool showBlanks)
+        {
+            if (hintLetters <= 0)
+            {
+                if (showBlanks)
+                {
+                    var sb = new StringBuilder();
+                    for (int i = 0; i < Word.Length; i++)
+                    {
+                        sb.Append("_ ");
+                    }
+                    return sb.ToString();
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            else
+            {
+                var indices = Enumerable.Range(0, Word.Length).ToList().OrderBy(x => DataController.Random.Next()).Take(hintLetters).ToList();
+
+                var sb = new StringBuilder();
+                for (int i = 0; i < Word.Length; i++)
+                {
+                    if (indices.Contains(i)) sb.Append($"{Word[i]} ");
+                    else sb.Append("_ ");
+                }
+
+                return sb.ToString();
+            }
+        }
     }
     public class UserSpellingPerformance
     {
@@ -324,6 +359,88 @@ namespace LevelUpLearning.Core.Data
             return blanksMultiplier * hintsMultiplier * streakMultiplier * penaltyMultipler;
         }
     }
+    public class SpellingAdventureSettings
+    {
+        public int DifficultyRange { get; set; } = 5;
+        public int WordsPerDeal { get; set; } = 5;
+        public int RepsPerWord { get; set; } = 2;
+        public int TotalDeals { get; set; } = 2;
+        public int MaxHints { get; set; } = 3;
+        public int MinHints { get; set; } = 0;
+
+        public static readonly SpellingAdventureSettings Quick = new SpellingAdventureSettings()
+        {
+            DifficultyRange = 5,
+            MinHints = 0,
+            MaxHints = 2,
+            RepsPerWord = 2,
+            TotalDeals = 2,
+            WordsPerDeal = 10
+        };
+
+        public static readonly SpellingAdventureSettings Normal = new SpellingAdventureSettings()
+        {
+            DifficultyRange = 10,
+            MinHints = 0,
+            MaxHints = 1,
+            RepsPerWord = 2,
+            TotalDeals = 3,
+            WordsPerDeal = 15
+        };
+
+        public static readonly SpellingAdventureSettings Brutal = new SpellingAdventureSettings()
+        {
+            DifficultyRange = 15,
+            MinHints = 0,
+            MaxHints = 0,
+            RepsPerWord = 3,
+            TotalDeals = 3,
+            WordsPerDeal = 20
+        };
+
+        public static readonly SpellingAdventureSettings Random = new SpellingAdventureSettings()
+        {
+            DifficultyRange = 30,
+            MinHints = 0,
+            MaxHints = 5,
+            RepsPerWord = 1,
+            TotalDeals = 10,
+            WordsPerDeal = 5
+        };
+    }
+
+    public class MathQuizSettings
+    {
+        //[Difficulty(DifficultyMultiplier = 2)]
+        public int ProblemsToDo { get; set; }
+        public double MaxLeftOperand { get; set; }
+        public double MaxRightOperand { get; set; }
+        public bool OnlyPositiveInputs { get; set; }
+        public bool OnlyPositiveResults { get; set; }
+        public bool OnlyWholeNumbers { get; set; }
+        public bool ShowVisuals { get; set; } //TODO: Use this to show visuals on quiz
+        public List<MathOperator> Operators { get; set; }
+
+        //Presets
+        public static MathQuizSettings SINGLE_DIGIT_ADDITION => new MathQuizSettings()
+        {
+
+        };
+    }
+    public class DifficultyAttribute : Attribute
+    {
+        //TODO: use this eventually, maybe to automatically scale difficulty ???
+        public double DifficultyMultiplier { get; private set; }
+    }
+
+    public enum MathOperator
+    {
+        Add,
+        Subtract,
+        Multiply,
+        Divide,
+        Exponent
+    }
 
     public class UserData
     {
@@ -331,5 +448,20 @@ namespace LevelUpLearning.Core.Data
         public string DisplayName { get; set; }
         //TODO: Birthday, other demographics??
         public override string ToString() => DisplayName ?? UserName;
+
+        public CharacterData Character { get; set; } = new CharacterData();
+    }
+
+    public class CharacterData
+    {
+        public int Level { get; set; } = 1;
+        public int TotalExperience { get; set; } = 0;
+        public double LevelSpelling { get; set; } = 0;
+        public double LevelMath { get; set; } = 0;
+
+        public int CurrentHealth { get; set; } = 100;
+        public int MaxHealth { get; set; } = 100;
+        public int CurrentMana { get; set; } = 100;
+        public int MaxMana { get; set; } = 100;
     }
 }

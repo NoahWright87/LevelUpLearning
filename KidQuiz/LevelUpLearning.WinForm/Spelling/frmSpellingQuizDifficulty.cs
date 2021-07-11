@@ -137,5 +137,15 @@ namespace LevelUpLearning.WinForm
                 Close();
             }
         }
+
+        private void ValuesChanged(object sender, EventArgs e)
+        {
+            UpdateLabels();
+        }
+
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            
+        }
     }
 }

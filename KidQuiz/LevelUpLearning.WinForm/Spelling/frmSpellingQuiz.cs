@@ -21,13 +21,49 @@ namespace LevelUpLearning.WinForm
         int WordsToFinish => SpellingWordProgress.Count * settings.TargetStreak;
         double ProgressPercentage => (1 - (double)WordsRemaining / WordsToFinish);
 
+        int Adventure_WordsCompleted = 0;
+        int Adventure_WordsToFinish => settingsAdventure.RepsPerWord
+            * settingsAdventure.TotalDeals
+            * settingsAdventure.WordsPerDeal;
+        double Adventure_ProgressPercentage => ((double)Adventure_WordsCompleted / Adventure_WordsToFinish);
+
         Stack<string> WordStack = new Stack<string>();
         SpellingQuizSettings settings;
+        SpellingAdventureSettings settingsAdventure;
+
+        double UserSpellingLevel => DataController.State.CurrentUser.Character.LevelSpelling;
+        bool IsAdventureMode = false;
+        double Adventure_LevelChange = 0;
+        int Adventure_DealsLeft = 0;
+        int Adventure_RepsLeft = 0;
+        int Adventure_CurrentHints = 0;
+        SpellingWord Adventure_CurrentWord;
+        List<SpellingWord> Adventure_AvailableWords;
+        Stack<SpellingWord> Adventure_RemainingWords;
 
         public frmSpellingQuiz()
         {
-            if (frmSpellingQuizDifficulty.ShowDialog(out SpellingQuizSettings settings))
+            //TODO: Pull up a settings form as well?
+            if (MessageBox.Show("Do you want to try the new automatic progression system?", "Auto-Mode?", MessageBoxButtons.YesNo)
+                == DialogResult.Yes)
             {
+                if (frmSpellingQuizDifficultyAdventure.ShowDialog(out SpellingAdventureSettings adventureSettings))
+                {
+                    this.IsAdventureMode = true;
+                    InitializeComponent();
+                    this.settingsAdventure = adventureSettings;
+                    Adventure_DealsLeft = settingsAdventure.TotalDeals;
+                    Adventure_DealCards();
+                }
+                else
+                {
+                    Close();
+                }
+            }
+            else if (frmSpellingQuizDifficulty.ShowDialog(out SpellingQuizSettings settings))
+            {
+                this.IsAdventureMode = false;
+
                 InitializeComponent();
                 this.settings = settings;
 
@@ -43,6 +79,68 @@ namespace LevelUpLearning.WinForm
             {
                 Close();
             }
+        }
+
+        
+        private void Adventure_DealCards()
+        {
+            var minWordLevel = UserSpellingLevel - settingsAdventure.DifficultyRange;
+            var maxWordLevel = UserSpellingLevel + settingsAdventure.DifficultyRange;
+
+            Adventure_AvailableWords = DataController.Root.Spelling.WordLists.SelectMany(wl => wl.Value.Words)
+                .Where(word => word.Word.Difficulty().IsWithin(minWordLevel, maxWordLevel))
+                .Take(settingsAdventure.WordsPerDeal).ToList();
+
+            Adventure_DealsLeft--;
+            Adventure_RepsLeft = settingsAdventure.RepsPerWord;
+            Adventure_ShuffleCards();
+        }
+        private void Adventure_ShuffleCards()
+        {
+            Adventure_RemainingWords = new Stack<SpellingWord>(Adventure_AvailableWords
+                .OrderBy(x => DataController.Random.Next()));
+
+            Adventure_RepsLeft--;
+
+            Adventure_DrawCard();
+        }
+        private void Adventure_DrawCard()
+        {
+            if (!Adventure_RemainingWords.Any())
+            {
+                if (Adventure_RepsLeft > 0) Adventure_ShuffleCards();
+                else if (Adventure_DealsLeft > 0) Adventure_DealCards();
+                else Adventure_Finish();
+            }
+            else
+            {
+                Adventure_CurrentWord = Adventure_RemainingWords.Pop();
+                Adventure_UpdateLabels();
+                Adventure_SayWord();
+            }
+        }
+        private void Adventure_Finish()
+        {
+            double previousLevel = UserSpellingLevel;
+            double newLevel = UserSpellingLevel + Adventure_LevelChange;
+
+            MessageBox.Show($"All done!  Spelling level changed from {previousLevel} to {newLevel}");
+
+            DataController.State.CurrentUser.Character.LevelSpelling = newLevel;
+
+            Close();
+        }
+
+        private void Adventure_UpdateLabels()
+        {
+            Adventure_CurrentHints = DataController.Random.Next(settingsAdventure.MinHints, settingsAdventure.MaxHints);
+            lblHint.Text = Adventure_CurrentWord.GetPrompt(Adventure_CurrentHints, true);
+            
+            lblProgress.Text = $"{Adventure_ProgressPercentage:0.00%}";
+            barRemaining.Value = (int)(Adventure_ProgressPercentage * barRemaining.Maximum);
+
+            txtInput.Clear();
+            txtInput.Focus();
         }
 
         private void PickNewWord()
@@ -108,57 +206,92 @@ namespace LevelUpLearning.WinForm
             Close();
         }
 
+        private void Adventure_RecordAnswer(bool isCorrect)
+        {
+            Adventure_WordsCompleted++;
+            double trueDifficulty = Adventure_CurrentWord.Word.Difficulty() - Adventure_CurrentHints;
+            double difference = trueDifficulty - UserSpellingLevel;
+
+            //Flip the formulas if things were wrong
+            if (!isCorrect) difference *= -1;
+
+            //Base score is .1 or 1 / 10
+            double numerator = 1;
+            double denominator = 10;
+
+            if (difference > 0)
+            {
+                numerator += difference;
+            }
+            else
+            {
+                denominator += difference;
+            }
+
+            double scoreChange = (numerator / denominator) * (isCorrect ? 1 : -1);
+            Adventure_LevelChange += scoreChange;
+        }
+
         private void btnDone_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtInput.Text))
             {
-                SayWord();
+                btnRepeat_Click(sender, e);
+            }
+            else if (Adventure_CurrentWord != null)
+            {
+                bool isCorrect = Adventure_CurrentWord.Word.Equals(txtInput.Text.Trim(), StringComparison.OrdinalIgnoreCase);
+                Adventure_RecordAnswer(isCorrect);
+                ShowAnswerResults(Adventure_CurrentWord.Word, txtInput.Text.Trim(), isCorrect);
+                Adventure_DrawCard();
             }
             else
             {
                 //TODO: If this value is low, let them know they were close
                 int degreeOfDifference = txtInput.Text.DegreeOfDifferenceFrom(SpellingWordProgress[CurrentWord].Word.Word);
-                
-                if (SpellingWordProgress[CurrentWord].RecordAttempt(txtInput.Text.Trim(), settings))
-                {
-                    SpeechUtil.Congrats();
-                    CustomMessageBox.Show("Correct!", "Correct!", Color.LightGreen);
-                }
-                else
-                {
-                    SpeechUtil.ExplainMisspelling(SpellingWordProgress[CurrentWord].Word.Word, txtInput.Text.Trim());
-                    CustomMessageBox.Show(string.Format("WRONG!\r\nCorrect spelling is: {0}", CurrentWord), "WRONG!", Color.Coral);
-                }
 
+                var isCorrect = SpellingWordProgress[CurrentWord].RecordAttempt(txtInput.Text.Trim(), settings);
+                ShowAnswerResults(SpellingWordProgress[CurrentWord].Word.Word, txtInput.Text.Trim(), isCorrect);
+                
                 PickNewWord();
+            }
+        }
+
+        private void ShowAnswerResults(string correctSpelling, string yourSpelling, bool isCorrect)
+        {
+            if (isCorrect)
+            {
+                SpeechUtil.Congrats();
+                CustomMessageBox.Show($"You spelled '{correctSpelling}' correctly!", "Correct!", Color.LightGreen);
+            }
+            else
+            {
+                SpeechUtil.ExplainMisspelling(correctSpelling, yourSpelling);
+                CustomMessageBox.Show($@"Wrong! :(
+You spelled: {yourSpelling}
+Correct spelling: {correctSpelling}", "Wrong", Color.Coral);
             }
         }
 
         private void btnRepeat_Click(object sender, EventArgs e)
         {
-            SayWord();
+            if (Adventure_CurrentWord != null) Adventure_SayWord();
+            else SayWord();
         }
 
         private void SayWord()
         {
             if (!string.IsNullOrEmpty(CurrentWord))
             {
-
                 SpeechUtil.PromptToSpellWord(SpellingWordProgress[CurrentWord].Word);
             }
         }
-
-        private void btnStats_Click(object sender, EventArgs e)
+        private void Adventure_SayWord()
         {
-            //string statsMessage = "Stats:";
-
-            //foreach (VocabWord vw in SpellingWords_old.Values.OrderBy(x => x.PercentCorrect))
-            //{
-            //    statsMessage += "\r\n" + vw.GetStatsMessage();// String.Format("\r\n{0}: {1} / {2} ({3:0.00}%)", vw.Word, vw.NumCorrect, vw.NumAttempts, (float)vw.NumCorrect / vw.NumAttempts);
-            //}
-
-            //MessageBox.Show(statsMessage);
-            MessageBox.Show("I think I'll disable this button");
+            if (Adventure_CurrentWord != null)
+            {
+                SpeechUtil.PromptToSpellWord(Adventure_CurrentWord);
+            }
         }
     }
 
@@ -212,35 +345,7 @@ namespace LevelUpLearning.WinForm
         public string GetPrompt(SpellingQuizSettings settings)
         {
             int hintLetters = Math.Min(Word.Word.Length, settings.NumHintLetters) - CurrentStreak * settings.NumHintLettersChange;
-            if (hintLetters <= 0)
-            {
-                if (settings.ShowBlanks)
-                {
-                    var sb = new StringBuilder();
-                    for (int i = 0; i < Word.Word.Length; i++)
-                    {
-                        sb.Append("_ ");
-                    }
-                    return sb.ToString();
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-            else
-            {
-                var indices = Enumerable.Range(0, Word.Word.Length).ToList().OrderBy(x => DataController.Random.Next()).Take(hintLetters).ToList();
-
-                var sb = new StringBuilder();
-                for (int i = 0; i < Word.Word.Length; i++)
-                {
-                    if (indices.Contains(i)) sb.Append($"{Word.Word[i]} "); 
-                    else sb.Append("_ ");
-                }
-
-                return sb.ToString();
-            }
+            return Word.GetPrompt(hintLetters, settings.ShowBlanks);
         }
     }
 }

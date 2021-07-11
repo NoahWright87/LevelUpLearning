@@ -298,6 +298,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A3FEE5DD54FE7F8410CF4C981D99DBA7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D5ED8EE437FFE5A26D6B129BF5A35905"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -329,12 +335,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_908136D63CE45191AA7C51DB5AF01EA1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A3FEE5DD54FE7F8410CF4C981D99DBA7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -428,6 +428,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -680,7 +688,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:LevelUpLearning.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:LevelUpLearning.Core, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_53827177506740BF0DED5297FC6DDA24"
@@ -866,7 +874,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:LevelUpLearning.SpeechWindows, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:LevelUpLearning.SpeechWindows, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A3FEE5DD54FE7F8410CF4C981D99DBA7"
@@ -1135,15 +1143,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Level Up Learning"
-        "ProductCode" = "8:{2A13B3E3-29A3-426E-87DD-399604FC3419}"
-        "PackageCode" = "8:{E0805273-4CAF-4D70-ACAA-67F6189F585F}"
+        "ProductCode" = "8:{F3B7F14C-1503-4C48-A68A-3355C7766D59}"
+        "PackageCode" = "8:{E085628F-A26F-4308-AB4F-71BC89862BD3}"
         "UpgradeCode" = "8:{79D51408-4FFA-44DA-A300-65282E043FA3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.2.1"
         "Manufacturer" = "8:Code Done Wright"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
