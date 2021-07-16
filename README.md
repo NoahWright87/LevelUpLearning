@@ -1,5 +1,5 @@
 ﻿# LevelUpLearning
-### [Download/install the latest release](https://github.com/NoahWright87/LevelUpLearning/releases/latest/download/LevelUpLearning.msi) or [check the release notes](https://github.com/NoahWright87/LevelUpLearning/releases/latest).
+### [Download/install the latest release](https://github.com/NoahWright87/LevelUpLearning/releases/latest/download/LevelUpLearning.Setup.msi) or [check the release notes](https://github.com/NoahWright87/LevelUpLearning/releases/latest).
 
 Welcome to Level Up Learning!  This is a side project by [Noah Wright](https://github.com/NoahWright87) to help his kids (and anybody else's) with various learning activities.  Started years ago and revisited due to the at-home-learning debacle that came along with COVID-19, this is a work-in-progress that will be added onto over time.
 
@@ -45,3 +45,6 @@ Currently, you can:
 Some code organization and using better practices to prepare for adding more activities.
 
 Feel free to check out [this repo's project](https://github.com/NoahWright87/LevelUpLearning/projects/2) to see what else is being worked and what's planned down the road.
+
+## Credits
+- http://mathparser.org/ is used to parse the results of the math formulas
