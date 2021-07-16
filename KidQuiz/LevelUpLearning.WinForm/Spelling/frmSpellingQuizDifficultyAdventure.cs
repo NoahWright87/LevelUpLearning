@@ -41,8 +41,7 @@ namespace LevelUpLearning.WinForm
                     RepsPerWord = form.barReps.Value,
                     TotalDeals = form.barNumDeals.Value,
                     WordsPerDeal = form.barWordsPerDeal.Value,
-                    MinHints = form.barHintMin.Value,
-                    MaxHints = form.barHintMax.Value
+                    MistakesPerHint = form.barHint.Value
                 };
 
                 return true;
@@ -88,20 +87,17 @@ namespace LevelUpLearning.WinForm
             barReps.Value = difficulty.RepsPerWord;
             barNumDeals.Value = difficulty.TotalDeals;
             barWordsPerDeal.Value = difficulty.WordsPerDeal;
-            barHintMin.Value = difficulty.MinHints;
-            barHintMax.Value = difficulty.MaxHints;
+            barHint.Value = difficulty.MistakesPerHint;
 
             UpdateLabels();
         }
         private void UpdateLabels()
         {
-            var hintLetters = (barHintMin.Value == barHintMax.Value) ? barHintMin.Value.ToString() : $"{barHintMin.Value} - {barHintMax.Value}";
-
             lblDifficultyRange.Text = $"{DifficultyPrefix}{Environment.NewLine}{barDifficultyRange.Value}";
             lblDeals.Text = $"{NumDealsPrefix}{Environment.NewLine}{barNumDeals.Value}";
             lblWordsPerDeal.Text = $"{WordsPerDealPrefix}{Environment.NewLine}{barWordsPerDeal.Value}";
             lblReps.Text = $"{NumRepsPrefix}{Environment.NewLine}{barReps.Value}";
-            lblHintLetters.Text = $"{HintLettersPrefix}{Environment.NewLine}{hintLetters}";
+            lblHintLetters.Text = $"{HintLettersPrefix}{Environment.NewLine}{barHint.Value}";
 
             int totalWords = barNumDeals.Value * barWordsPerDeal.Value * barReps.Value;
             lblTotal.Text = $"{TotalPrefix} {totalWords}";
@@ -116,12 +112,6 @@ namespace LevelUpLearning.WinForm
             Close();
         }
 
-        private void HintsChange(object sender, EventArgs e)
-        {
-            barHintMax.Minimum = barHintMin.Value;
-            barHintMin.Maximum = barHintMax.Value;
-            UpdateLabels();
-        }
         private void ValuesChanged(object sender, EventArgs e)
         {
             UpdateLabels();

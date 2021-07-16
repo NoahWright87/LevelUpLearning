@@ -1,4 +1,5 @@
-﻿using LevelUpLearning.Core.Data;
+﻿using LevelUpLearning.Core;
+using LevelUpLearning.Core.Data;
 using LevelUpLearning.Core.Extensions;
 using LevelUpLearning.SpeechWindows;
 using LevelUpLearning.WinForms.Spelling;
@@ -22,6 +23,7 @@ namespace LevelUpLearning.WinForm
         double ProgressPercentage => (1 - (double)WordsRemaining / WordsToFinish);
 
         int Adventure_WordsCompleted = 0;
+        int Adventure_CurrentStreak = 0;
         int Adventure_WordsToFinish => settingsAdventure.RepsPerWord
             * settingsAdventure.TotalDeals
             * settingsAdventure.WordsPerDeal;
@@ -31,7 +33,18 @@ namespace LevelUpLearning.WinForm
         SpellingQuizSettings settings;
         SpellingAdventureSettings settingsAdventure;
 
-        double UserSpellingLevel => DataController.State.CurrentUser.Character.LevelSpelling;
+        double UserSpellingLevel
+        {
+            get
+            {
+                return DataController.State.CurrentUser.Character.LevelSpelling;
+            }
+            set
+            {
+                DataController.State.CurrentUser.Character.SetSpellingLevel(value);
+            }
+        }
+        double UserSpellingLevelInitial;
         bool IsAdventureMode = false;
         double Adventure_LevelChange = 0;
         int Adventure_DealsLeft = 0;
@@ -52,6 +65,7 @@ namespace LevelUpLearning.WinForm
                     this.IsAdventureMode = true;
                     InitializeComponent();
                     this.settingsAdventure = adventureSettings;
+                    UserSpellingLevelInitial = UserSpellingLevel;
                     Adventure_DealsLeft = settingsAdventure.TotalDeals;
                     Adventure_DealCards();
                 }
@@ -84,6 +98,13 @@ namespace LevelUpLearning.WinForm
         
         private void Adventure_DealCards()
         {
+            //Apply level changes with each deal
+            if (Adventure_LevelChange != 0)
+            {
+                UserSpellingLevel += Adventure_LevelChange;
+                Adventure_LevelChange = 0;
+            }
+
             var minWordLevel = UserSpellingLevel - settingsAdventure.DifficultyRange;
             var maxWordLevel = UserSpellingLevel + settingsAdventure.DifficultyRange;
 
@@ -121,26 +142,75 @@ namespace LevelUpLearning.WinForm
         }
         private void Adventure_Finish()
         {
-            double previousLevel = UserSpellingLevel;
-            double newLevel = UserSpellingLevel + Adventure_LevelChange;
+            //Apply one last level update
+            UserSpellingLevel += Adventure_LevelChange;
 
-            MessageBox.Show($"All done!  Spelling level changed from {previousLevel} to {newLevel}");
+            bool levelIncreased = (UserSpellingLevel >= UserSpellingLevelInitial);
+            var congratsMessage = levelIncreased ? "  Looks like you leveled up!  Great job!" : "";
 
-            DataController.State.CurrentUser.Character.LevelSpelling = newLevel;
+            SpeechUtil.ShutUpAndSay($"All done!  Let's see how you did, {DataController.State.CurrentUser.DisplayName}.{congratsMessage}");
+
+            CustomMessageBox.Show($"Spelling level changed from {UserSpellingLevelInitial} to {UserSpellingLevel}"
+                , "All done!"
+                , levelIncreased ? Color.AliceBlue : Color.Gray);
 
             Close();
         }
 
         private void Adventure_UpdateLabels()
         {
-            Adventure_CurrentHints = DataController.Random.Next(settingsAdventure.MinHints, settingsAdventure.MaxHints);
-            lblHint.Text = Adventure_CurrentWord.GetPrompt(Adventure_CurrentHints, true);
-            
+            bool showBlanks = (Adventure_CurrentStreak < 0);
+            int hints = Adventure_CurrentStreak < 0 ? -(Adventure_CurrentStreak / settingsAdventure.MistakesPerHint) - 1 : 0;
+
+            //TODO: Remove the min/max hints?
+            //Adventure_CurrentHints = DataController.Random.Next(settingsAdventure.MinHints, settingsAdventure.MaxHints);
+            //lblHint.Text = Adventure_CurrentWord.GetPrompt(Adventure_CurrentHints, true);
+            lblHint.Text = Adventure_CurrentWord.GetPrompt(hints, showBlanks);
+            Adventure_UpdateStreakLabel();
+
             lblProgress.Text = $"{Adventure_ProgressPercentage:0.00%}";
             barRemaining.Value = (int)(Adventure_ProgressPercentage * barRemaining.Maximum);
 
+            this.Text = $"LUL Spelling - {UserSpellingLevelInitial:0.0} ==> {UserSpellingLevel:0.0}";
+
             txtInput.Clear();
             txtInput.Focus();
+        }
+
+        private void Adventure_UpdateStreakLabel()
+        {
+            if (Adventure_CurrentStreak == 0)
+            {
+                lblInfo.Text = "";
+                lblInfo.ForeColor = Color.Black;
+            }
+            else if (Adventure_CurrentStreak < 0)
+            {
+                lblInfo.Text = "Don't worry, you'll get it next time!";
+                lblInfo.ForeColor = Color.DarkRed;
+            }
+            else
+            {
+                var message = $"Streak: {Adventure_CurrentStreak}";
+                switch (Adventure_CurrentStreak)
+                {
+                    case 1: lblInfo.ForeColor = Color.Black; break;
+                    case 2: message += " !"; break;
+                    case 3: message += " !!!"; break;
+                    case 4: message += " !!!  :)"; break;
+                    case 5: 
+                        message += " !!!  :D";
+                        lblInfo.ForeColor = Color.ForestGreen;
+                        break;
+                    case 6: message += " !?!?  :O :O"; break;
+                    default:
+                    case 7:
+                        message += " !?!? O__O;;";
+                        lblInfo.ForeColor = Color.DarkGreen;
+                        break;
+                }
+                lblInfo.Text = message;
+            }
         }
 
         private void PickNewWord()
@@ -210,26 +280,41 @@ namespace LevelUpLearning.WinForm
         {
             Adventure_WordsCompleted++;
             double trueDifficulty = Adventure_CurrentWord.Word.Difficulty() - Adventure_CurrentHints;
-            double difference = trueDifficulty - UserSpellingLevel;
 
-            //Flip the formulas if things were wrong
-            if (!isCorrect) difference *= -1;
-
-            //Base score is .1 or 1 / 10
-            double numerator = 1;
-            double denominator = 10;
-
-            if (difference > 0)
+            if (isCorrect)
             {
-                numerator += difference;
+                if (Adventure_CurrentStreak < 0) Adventure_CurrentStreak = 0;
+                Adventure_CurrentStreak++;
             }
             else
             {
-                denominator += difference;
+                if (Adventure_CurrentStreak > 0) Adventure_CurrentStreak = 0;
+                Adventure_CurrentStreak--;
             }
 
-            double scoreChange = (numerator / denominator) * (isCorrect ? 1 : -1);
-            Adventure_LevelChange += scoreChange;
+            //double difference = trueDifficulty - UserSpellingLevel;
+
+            ////Flip the formulas if things were wrong
+            //if (!isCorrect) difference *= -1;
+
+            ////Base score is .1 or 1 / 10
+            //double numerator = 1;
+            //double denominator = 10;
+
+            //if (difference > 0)
+            //{
+            //    numerator += difference;
+            //}
+            //else
+            //{
+            //    denominator += difference;
+            //}
+
+            //double scoreChange = (numerator / denominator) * (isCorrect ? 1 : -1);
+            Adventure_LevelChange += Utils.LevelChange(UserSpellingLevel, trueDifficulty, isCorrect);
+
+            //TODO: Track streaks, adjust hints based on that
+            //TODO: Indicate that streak somehow on the screen ??
         }
 
         private void btnDone_Click(object sender, EventArgs e)

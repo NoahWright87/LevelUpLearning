@@ -110,7 +110,7 @@ namespace LevelUpLearning.WinForms.Math
             this.MinimizeBox = false;
             this.Name = "frmMathQuiz";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Math Activity";
+            this.Text = "Level Up Learning - Math";
             this.ResumeLayout(false);
             this.PerformLayout();
 

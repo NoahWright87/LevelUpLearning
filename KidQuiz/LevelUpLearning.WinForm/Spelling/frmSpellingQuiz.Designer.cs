@@ -34,7 +34,7 @@
             this.lblHint = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
             this.barRemaining = new System.Windows.Forms.ProgressBar();
-            this.lblLevels = new System.Windows.Forms.Label();
+            this.lblInfo = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtInput
@@ -100,13 +100,13 @@
             this.barRemaining.Size = new System.Drawing.Size(917, 64);
             this.barRemaining.TabIndex = 6;
             // 
-            // lblLevels
+            // lblInfo
             // 
-            this.lblLevels.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
-            this.lblLevels.Location = new System.Drawing.Point(12, 185);
-            this.lblLevels.Name = "lblLevels";
-            this.lblLevels.Size = new System.Drawing.Size(681, 78);
-            this.lblLevels.TabIndex = 7;
+            this.lblInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.lblInfo.Location = new System.Drawing.Point(12, 185);
+            this.lblInfo.Name = "lblInfo";
+            this.lblInfo.Size = new System.Drawing.Size(681, 78);
+            this.lblInfo.TabIndex = 7;
             // 
             // frmSpellingQuiz
             // 
@@ -114,7 +114,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(917, 348);
-            this.Controls.Add(this.lblLevels);
+            this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.lblProgress);
             this.Controls.Add(this.barRemaining);
             this.Controls.Add(this.lblHint);
@@ -124,7 +124,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "frmSpellingQuiz";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Kid Quiz";
+            this.Text = "Level Up Learning - Spelling";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,7 +138,7 @@
         private System.Windows.Forms.Label lblHint;
         private System.Windows.Forms.Label lblProgress;
         private System.Windows.Forms.ProgressBar barRemaining;
-        private System.Windows.Forms.Label lblLevels;
+        private System.Windows.Forms.Label lblInfo;
     }
 }
 

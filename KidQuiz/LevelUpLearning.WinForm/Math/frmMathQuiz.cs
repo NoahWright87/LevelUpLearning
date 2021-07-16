@@ -9,61 +9,77 @@ namespace LevelUpLearning.WinForms.Math
     {
         //TODO: Put this with the quiz settings
         MathQuizSettings settings;
-        int problemsToDo = 20;
-        int maxNum = 9;
+        int problemsRemaining;
         
+        double ProgressPercentage => 1 - (double)problemsRemaining / settings.ProblemsToDo;
+        string CurrentProblem;
+        double CurrentProblemDifficulty;
 
-        int numCorrect = 0;
-        int numSubmitted = 0;
+        double UserMathLevel
+        {
+            get
+            {
+                return DataController.State.CurrentUser.Character.LevelMath;
+            }
+            set
+            {
+                if (value <= 0) DataController.State.CurrentUser.Character.LevelMath = 0;
+                DataController.State.CurrentUser.Character.LevelMath = value;
+            }
+        }
 
-        double leftNumber = 0;
-        double rightNumber = 0;
-        //TODO: Current operator
-
-        //TODO: Change based on operator
-        double CorrectAnswer => leftNumber + rightNumber;
-        string ProblemText => $"{leftNumber} + {rightNumber}";
-
-        double ProgressPercentage => (double)numSubmitted / problemsToDo;
+        double UserMathLevelInitial;
 
         public frmMathQuiz()
         {
             InitializeComponent();
 
-            //TODO: Show math settings, change things based on those settings
+            //TODO: Show math settings form, change things based on those settings
+            settings = new MathQuizSettings();
+
+            problemsRemaining = settings.ProblemsToDo;
+
+            UserMathLevelInitial = UserMathLevel;
+
             GenerateProblem();
-
-
         }
 
         private void GenerateProblem()
         {
-            //TODO: Vary based on settings
-            leftNumber = Utils.Random.Next(maxNum);
-            rightNumber = Utils.Random.Next(maxNum);
+            var problem = MathUtils.GetMathProblemFor(UserMathLevel + Utils.Random.NextDouble()*settings.LevelRange);
+            CurrentProblem = problem.Item1;
+            CurrentProblemDifficulty = problem.Item2;
 
-            lblPrompt.Text = ProblemText;
+            lblPrompt.Text = CurrentProblem;
+
             lblProgress.Text = $"{ProgressPercentage:0.00%}";
             barRemaining.Value = (int)(ProgressPercentage * barRemaining.Maximum);
+
+            this.Text = $"LUL Math - {UserMathLevelInitial:0.0} ==> {UserMathLevel:0.0}";
 
             txtInput.Clear();
             txtInput.Focus();
         }
-        private void SubmitAnswer(double answer)
+        private void SubmitAnswer(double userInput)
         {
-            //TODO: Account for precision - may need to round this once we get into decimals
-            if (answer == CorrectAnswer)
+            var answer = MathUtils.SolveMathProblem(CurrentProblem);
+            answer = System.Math.Round(answer, 3);
+            userInput = System.Math.Round(userInput, 3);
+
+            bool isCorrect = (answer == userInput);
+            if (isCorrect)
             {
                 MessageBox.Show("Correct!");
-                numCorrect++;
             }
             else
             {
-                MessageBox.Show($"Incorrect.  {ProblemText} = {CorrectAnswer} ( you said {answer}");
+                MessageBox.Show($"Incorrect.  {CurrentProblem} = {answer} ( you said {userInput}");
             }
-            numSubmitted++;
 
-            if (numSubmitted >= problemsToDo)
+            problemsRemaining--;
+            UserMathLevel += Utils.LevelChange(UserMathLevel, CurrentProblemDifficulty, isCorrect);
+
+            if (problemsRemaining <= 0)
             {
                 Finish();
             }
@@ -75,7 +91,7 @@ namespace LevelUpLearning.WinForms.Math
 
         private void Finish()
         {
-            MessageBox.Show($"All done!{Environment.NewLine}You got {numCorrect} / {numSubmitted} correct!");
+            MessageBox.Show($"All done!{Environment.NewLine}Level changed from {UserMathLevelInitial} to {UserMathLevel}");
             Close();
             //TODO: Show a better message, save stats for later
         }

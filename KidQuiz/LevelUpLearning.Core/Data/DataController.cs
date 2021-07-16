@@ -41,10 +41,10 @@ namespace LevelUpLearning.Core.Data
         private DataRoot _root;
         public static DataRoot Root => Instance._root;
 
-        private DataState _state = new DataState();
+        private readonly DataState _state = new DataState();
         public static DataState State => Instance._state;
 
-        private Random _random = new Random();
+        private readonly Random _random = new Random();
         public static Random Random => Instance._random;
 
         private DataController()
@@ -166,6 +166,9 @@ namespace LevelUpLearning.Core.Data
             = new SerializableDictionary<string, SpellingWordList>();
         public SerializableDictionary<string, UserSpellingPerformance> UserPerformances { get; set; }
             = new SerializableDictionary<string, UserSpellingPerformance>();
+
+        public double MaxDifficulty => WordLists.Values.SelectMany(wl => wl.Words)
+            .Max(w => w.Word.Difficulty());
 
         public void SaveUserPerformance(UserData user, SpellingWord word, int attempts, int correct)
         {
@@ -365,67 +368,65 @@ namespace LevelUpLearning.Core.Data
         public int WordsPerDeal { get; set; } = 5;
         public int RepsPerWord { get; set; } = 2;
         public int TotalDeals { get; set; } = 2;
-        public int MaxHints { get; set; } = 3;
-        public int MinHints { get; set; } = 0;
+        public int MistakesPerHint { get; set; } = 2;
 
         public static readonly SpellingAdventureSettings Quick = new SpellingAdventureSettings()
         {
-            DifficultyRange = 5,
-            MinHints = 0,
-            MaxHints = 2,
+            DifficultyRange = 4,
+            MistakesPerHint = 1,
             RepsPerWord = 2,
             TotalDeals = 2,
-            WordsPerDeal = 10
+            WordsPerDeal = 5
         };
 
         public static readonly SpellingAdventureSettings Normal = new SpellingAdventureSettings()
         {
-            DifficultyRange = 10,
-            MinHints = 0,
-            MaxHints = 1,
-            RepsPerWord = 2,
-            TotalDeals = 3,
-            WordsPerDeal = 15
+            DifficultyRange = 8,
+            MistakesPerHint = 2,
+            RepsPerWord = 1,
+            TotalDeals = 4,
+            WordsPerDeal = 7
         };
 
         public static readonly SpellingAdventureSettings Brutal = new SpellingAdventureSettings()
         {
-            DifficultyRange = 15,
-            MinHints = 0,
-            MaxHints = 0,
-            RepsPerWord = 3,
-            TotalDeals = 3,
-            WordsPerDeal = 20
+            DifficultyRange = 12,
+            MistakesPerHint = 3,
+            RepsPerWord = 2,
+            TotalDeals = 5,
+            WordsPerDeal = 5
         };
 
         public static readonly SpellingAdventureSettings Random = new SpellingAdventureSettings()
         {
             DifficultyRange = 30,
-            MinHints = 0,
-            MaxHints = 5,
+            MistakesPerHint = 1,
             RepsPerWord = 1,
             TotalDeals = 10,
-            WordsPerDeal = 5
+            WordsPerDeal = 3
         };
     }
 
     public class MathQuizSettings
     {
         //[Difficulty(DifficultyMultiplier = 2)]
-        public int ProblemsToDo { get; set; }
-        public double MaxLeftOperand { get; set; }
-        public double MaxRightOperand { get; set; }
-        public bool OnlyPositiveInputs { get; set; }
-        public bool OnlyPositiveResults { get; set; }
-        public bool OnlyWholeNumbers { get; set; }
-        public bool ShowVisuals { get; set; } //TODO: Use this to show visuals on quiz
-        public List<MathOperator> Operators { get; set; }
+        public int ProblemsToDo { get; set; } = 10;
 
-        //Presets
-        public static MathQuizSettings SINGLE_DIGIT_ADDITION => new MathQuizSettings()
-        {
+        public double LevelRange { get; set; } = 1.5;
 
-        };
+        //public double MaxLeftOperand { get; set; }
+        //public double MaxRightOperand { get; set; }
+        //public bool OnlyPositiveInputs { get; set; }
+        //public bool OnlyPositiveResults { get; set; }
+        //public bool OnlyWholeNumbers { get; set; }
+        //public bool ShowVisuals { get; set; } //TODO: Use this to show visuals on quiz
+        //public List<MathOperator> Operators { get; set; }
+
+        ////Presets
+        //public static MathQuizSettings SINGLE_DIGIT_ADDITION => new MathQuizSettings()
+        //{
+
+        //};
     }
     public class DifficultyAttribute : Attribute
     {
@@ -457,6 +458,10 @@ namespace LevelUpLearning.Core.Data
         public int Level { get; set; } = 1;
         public int TotalExperience { get; set; } = 0;
         public double LevelSpelling { get; set; } = 0;
+        public void SetSpellingLevel(double value)
+        {
+            LevelSpelling = value.Clamp(0, DataController.Root.Spelling.MaxDifficulty);
+        }
         public double LevelMath { get; set; } = 0;
 
         public int CurrentHealth { get; set; } = 100;

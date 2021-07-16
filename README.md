@@ -10,6 +10,9 @@ Looking for spelling words to import?  Check out the [Spelling Lists](https://gi
 ## Current Features
 NOTE: Features preceded by a ❗ were recently added.
 
+### Recent Bug Fixes 🕷
+- User's spelling level is now limited to stay between 0 and the max spelling word difficulty.  Previously it was possible to do really well on your first spelling test and end up with a value that's WAY too high.
+
 ### General
 - Create and edit users.  Currently this is very limited, but if you have multiple kids (like me) it means you can track their performance separately.
 - Program shows the current version and alerts you if GitHub has a newer version available.
@@ -33,6 +36,10 @@ Currently, you can:
   - View previous performance of any list and its included words
     - See a rating (out of 5 stars) based on your performance and the difficulty settings used
     - See an overall score based on difficulty of the list and difficulty settings used
+
+### Math Test
+- ❗ Still very early, but you can quiz yourself on math problems!
+- ❗ Difficulty ramps up as your level increases - the balance on this may be out of whack and will be tweaked in the future.
 
 ## Upcoming Features
 Some code organization and using better practices to prepare for adding more activities.

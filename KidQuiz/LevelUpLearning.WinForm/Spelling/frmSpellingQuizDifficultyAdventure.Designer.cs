@@ -44,17 +44,15 @@ namespace LevelUpLearning.WinForm
             this.barNumDeals = new System.Windows.Forms.TrackBar();
             this.lblDifficultyRange = new System.Windows.Forms.Label();
             this.barDifficultyRange = new System.Windows.Forms.TrackBar();
-            this.barHintMax = new System.Windows.Forms.TrackBar();
             this.lblHintLetters = new System.Windows.Forms.Label();
-            this.barHintMin = new System.Windows.Forms.TrackBar();
+            this.barHint = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.barDifficulty)).BeginInit();
             this.grpDifficultyDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barReps)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barWordsPerDeal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barNumDeals)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barDifficultyRange)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barHintMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barHintMin)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barHint)).BeginInit();
             this.SuspendLayout();
             // 
             // barDifficulty
@@ -121,9 +119,8 @@ namespace LevelUpLearning.WinForm
             this.grpDifficultyDetails.Controls.Add(this.barNumDeals);
             this.grpDifficultyDetails.Controls.Add(this.lblDifficultyRange);
             this.grpDifficultyDetails.Controls.Add(this.barDifficultyRange);
-            this.grpDifficultyDetails.Controls.Add(this.barHintMax);
             this.grpDifficultyDetails.Controls.Add(this.lblHintLetters);
-            this.grpDifficultyDetails.Controls.Add(this.barHintMin);
+            this.grpDifficultyDetails.Controls.Add(this.barHint);
             this.grpDifficultyDetails.Location = new System.Drawing.Point(12, 92);
             this.grpDifficultyDetails.Name = "grpDifficultyDetails";
             this.grpDifficultyDetails.Size = new System.Drawing.Size(515, 399);
@@ -218,35 +215,26 @@ namespace LevelUpLearning.WinForm
             this.barDifficultyRange.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.barDifficultyRange.ValueChanged += new System.EventHandler(this.ValuesChanged);
             // 
-            // barHintMax
-            // 
-            this.barHintMax.LargeChange = 1;
-            this.barHintMax.Location = new System.Drawing.Point(28, 308);
-            this.barHintMax.Name = "barHintMax";
-            this.barHintMax.Size = new System.Drawing.Size(321, 56);
-            this.barHintMax.TabIndex = 16;
-            this.barHintMax.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.barHintMax.ValueChanged += new System.EventHandler(this.HintsChange);
-            // 
             // lblHintLetters
             // 
             this.lblHintLetters.AutoSize = true;
             this.lblHintLetters.Location = new System.Drawing.Point(355, 266);
             this.lblHintLetters.Name = "lblHintLetters";
-            this.lblHintLetters.Size = new System.Drawing.Size(81, 17);
+            this.lblHintLetters.Size = new System.Drawing.Size(117, 17);
             this.lblHintLetters.TabIndex = 12;
-            this.lblHintLetters.Text = "Hint Letters";
+            this.lblHintLetters.Text = "Mistakes per Hint";
             // 
-            // barHintMin
+            // barHint
             // 
-            this.barHintMin.LargeChange = 1;
-            this.barHintMin.Location = new System.Drawing.Point(28, 266);
-            this.barHintMin.Maximum = 5;
-            this.barHintMin.Name = "barHintMin";
-            this.barHintMin.Size = new System.Drawing.Size(321, 56);
-            this.barHintMin.TabIndex = 8;
-            this.barHintMin.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.barHintMin.ValueChanged += new System.EventHandler(this.HintsChange);
+            this.barHint.LargeChange = 1;
+            this.barHint.Location = new System.Drawing.Point(28, 266);
+            this.barHint.Minimum = 1;
+            this.barHint.Name = "barHint";
+            this.barHint.Size = new System.Drawing.Size(321, 56);
+            this.barHint.TabIndex = 8;
+            this.barHint.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.barHint.Value = 1;
+            this.barHint.ValueChanged += new System.EventHandler(this.ValuesChanged);
             // 
             // frmSpellingQuizDifficultyAdventure
             // 
@@ -275,8 +263,7 @@ namespace LevelUpLearning.WinForm
             ((System.ComponentModel.ISupportInitialize)(this.barWordsPerDeal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barNumDeals)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barDifficultyRange)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barHintMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barHintMin)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barHint)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -291,9 +278,8 @@ namespace LevelUpLearning.WinForm
         private System.Windows.Forms.GroupBox grpDifficultyDetails;
         private System.Windows.Forms.Label lblDifficultyRange;
         private System.Windows.Forms.TrackBar barDifficultyRange;
-        private System.Windows.Forms.TrackBar barHintMax;
         private System.Windows.Forms.Label lblHintLetters;
-        private System.Windows.Forms.TrackBar barHintMin;
+        private System.Windows.Forms.TrackBar barHint;
         private System.Windows.Forms.Label lblWordsPerDeal;
         private System.Windows.Forms.TrackBar barWordsPerDeal;
         private System.Windows.Forms.Label lblDeals;
