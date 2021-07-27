@@ -737,7 +737,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:LevelUpLearning.Core, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:LevelUpLearning.Core, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_666E9140180EAF68DFEF4E82F9673A98"
@@ -892,7 +892,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:LevelUpLearning.SpeechWindows, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:LevelUpLearning.SpeechWindows, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_92E84CAA53756189CE680FCEB7050A58"
@@ -1192,15 +1192,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Level Up Learning"
-        "ProductCode" = "8:{6DD7B615-5C4F-4A8E-B47C-DD02298B36C6}"
-        "PackageCode" = "8:{B2A99D2D-D883-434D-97EA-A9DC9E815B5D}"
+        "ProductCode" = "8:{DF3CCD4A-F022-4712-9DC3-9B51CE04329D}"
+        "PackageCode" = "8:{ABC10B05-F902-4063-9E8E-1EE07E3852FF}"
         "UpgradeCode" = "8:{79D51408-4FFA-44DA-A300-65282E043FA3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.3.1"
+        "ProductVersion" = "8:1.3.2"
         "Manufacturer" = "8:Code Done Wright"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

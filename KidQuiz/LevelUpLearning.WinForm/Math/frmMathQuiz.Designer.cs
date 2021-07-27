@@ -77,7 +77,6 @@ namespace LevelUpLearning.WinForms.Math
             // 
             this.lblProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblProgress.AutoSize = true;
             this.lblProgress.BackColor = System.Drawing.Color.Black;
             this.lblProgress.Font = new System.Drawing.Font("Consolas", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProgress.ForeColor = System.Drawing.Color.White;
@@ -90,7 +89,8 @@ namespace LevelUpLearning.WinForms.Math
             // 
             // barRemaining
             // 
-            this.barRemaining.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barRemaining.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.barRemaining.Location = new System.Drawing.Point(0, 491);
             this.barRemaining.Name = "barRemaining";
             this.barRemaining.Size = new System.Drawing.Size(800, 64);
@@ -111,6 +111,7 @@ namespace LevelUpLearning.WinForms.Math
             this.Name = "frmMathQuiz";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Level Up Learning - Math";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -39,6 +39,8 @@
             // 
             // txtInput
             // 
+            this.txtInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtInput.Font = new System.Drawing.Font("Courier New", 36F, System.Drawing.FontStyle.Bold);
             this.txtInput.Location = new System.Drawing.Point(12, 103);
             this.txtInput.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -48,6 +50,7 @@
             // 
             // btnDone
             // 
+            this.btnDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDone.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.btnDone.Location = new System.Drawing.Point(699, 185);
             this.btnDone.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -72,6 +75,8 @@
             // 
             // lblHint
             // 
+            this.lblHint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblHint.AutoSize = true;
             this.lblHint.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.lblHint.Location = new System.Drawing.Point(227, 36);
@@ -82,6 +87,8 @@
             // 
             // lblProgress
             // 
+            this.lblProgress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblProgress.BackColor = System.Drawing.Color.Black;
             this.lblProgress.Font = new System.Drawing.Font("Consolas", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProgress.ForeColor = System.Drawing.Color.White;
@@ -94,7 +101,8 @@
             // 
             // barRemaining
             // 
-            this.barRemaining.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.barRemaining.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.barRemaining.Location = new System.Drawing.Point(0, 284);
             this.barRemaining.Name = "barRemaining";
             this.barRemaining.Size = new System.Drawing.Size(917, 64);
@@ -102,6 +110,9 @@
             // 
             // lblInfo
             // 
+            this.lblInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
             this.lblInfo.Location = new System.Drawing.Point(12, 185);
             this.lblInfo.Name = "lblInfo";
@@ -125,6 +136,7 @@
             this.Name = "frmSpellingQuiz";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Level Up Learning - Spelling";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -29,7 +29,6 @@ namespace LevelUpLearning.Core
             }
 
             var change = (numerator / denominator) * (isCorrect ? 1 : -1);
-            Console.WriteLine($"Level changed by {change}");
             return change;
         }
     }

@@ -1,11 +1,40 @@
 using LevelUpLearning.Core.Data;
+using LevelUpLearning.WinForms.Common;
 using System;
 using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForm
 {
+    
     static class Program
     {
+        static frmBackground background;
+        public static frmBackground Background
+        {
+            get
+            {
+                if (background == null)
+                {
+                    background = new frmBackground();
+                    background.Show();
+                }
+                return background;
+            }
+        }
+        static frmOverlay overlay;
+        public static frmOverlay Overlay
+        {
+            get
+            {
+                if (overlay == null)
+                {
+                    overlay = new frmOverlay();
+                    overlay.Show();
+                }
+                return overlay;
+            }
+        }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

@@ -94,6 +94,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\frmBackground.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmBackground.Designer.cs">
+      <DependentUpon>frmBackground.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\frmOverlay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmOverlay.Designer.cs">
+      <DependentUpon>frmOverlay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Common\OptionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +124,8 @@
     <Compile Include="Common\TextDialog.Designer.cs">
       <DependentUpon>TextDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Common\Visuals\BaseVisual.cs" />
+    <Compile Include="Common\Visuals\TextVisual.cs" />
     <Compile Include="CustomMessageBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,6 +219,12 @@
       <DependentUpon>frmSpellingWordQuickCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="GitHubUtility.cs" />
+    <EmbeddedResource Include="Common\frmBackground.resx">
+      <DependentUpon>frmBackground.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\frmOverlay.resx">
+      <DependentUpon>frmOverlay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Common\OptionDialog.resx">
       <DependentUpon>OptionDialog.cs</DependentUpon>
     </EmbeddedResource>

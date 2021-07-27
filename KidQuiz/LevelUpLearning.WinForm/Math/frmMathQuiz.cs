@@ -1,6 +1,8 @@
 ﻿using LevelUpLearning.Core;
 using LevelUpLearning.Core.Data;
+using LevelUpLearning.WinForm;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LevelUpLearning.WinForms.Math
@@ -66,13 +68,17 @@ namespace LevelUpLearning.WinForms.Math
             answer = System.Math.Round(answer, 3);
             userInput = System.Math.Round(userInput, 3);
 
+            //TODO: More reaction based on streak
             bool isCorrect = (answer == userInput);
+            Program.Overlay.AnswerReaction(1, isCorrect);
             if (isCorrect)
             {
+                Program.Background.Flash(Color.DarkGreen);
                 MessageBox.Show("Correct!");
             }
             else
             {
+                Program.Background.Flash(Color.DarkRed);
                 MessageBox.Show($"Incorrect.  {CurrentProblem} = {answer} ( you said {userInput}");
             }
 

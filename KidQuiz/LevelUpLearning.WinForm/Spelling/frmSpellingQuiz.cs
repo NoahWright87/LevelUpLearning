@@ -202,10 +202,13 @@ namespace LevelUpLearning.WinForm
                         message += " !!!  :D";
                         lblInfo.ForeColor = Color.ForestGreen;
                         break;
-                    case 6: message += " !?!?  :O :O"; break;
-                    default:
-                    case 7:
-                        message += " !?!? O__O;;";
+                    case 6: message += " !?!  :O"; break;
+                    case 7: case 8: message += " !?!?  :O :O"; break;
+                    case 9: case 10: message += " !!!!  ^__^"; break;
+                    case 11: case 12: message += " !!!  ^____^"; break;
+                    case 13: case 14: message += " !! ^______^"; break;
+                    default: // >14
+                        message += " ! ^_____________^!";
                         lblInfo.ForeColor = Color.DarkGreen;
                         break;
                 }
@@ -292,29 +295,7 @@ namespace LevelUpLearning.WinForm
                 Adventure_CurrentStreak--;
             }
 
-            //double difference = trueDifficulty - UserSpellingLevel;
-
-            ////Flip the formulas if things were wrong
-            //if (!isCorrect) difference *= -1;
-
-            ////Base score is .1 or 1 / 10
-            //double numerator = 1;
-            //double denominator = 10;
-
-            //if (difference > 0)
-            //{
-            //    numerator += difference;
-            //}
-            //else
-            //{
-            //    denominator += difference;
-            //}
-
-            //double scoreChange = (numerator / denominator) * (isCorrect ? 1 : -1);
             Adventure_LevelChange += Utils.LevelChange(UserSpellingLevel, trueDifficulty, isCorrect);
-
-            //TODO: Track streaks, adjust hints based on that
-            //TODO: Indicate that streak somehow on the screen ??
         }
 
         private void btnDone_Click(object sender, EventArgs e)
@@ -344,14 +325,17 @@ namespace LevelUpLearning.WinForm
 
         private void ShowAnswerResults(string correctSpelling, string yourSpelling, bool isCorrect)
         {
+            Program.Overlay.AnswerReaction(Math.Abs(Adventure_CurrentStreak), isCorrect);
             if (isCorrect)
             {
                 SpeechUtil.Congrats();
+                Program.Background.Flash(Color.DarkGreen);
                 CustomMessageBox.Show($"You spelled '{correctSpelling}' correctly!", "Correct!", Color.LightGreen);
             }
             else
             {
                 SpeechUtil.ExplainMisspelling(correctSpelling, yourSpelling);
+                Program.Background.Flash(Color.DarkRed);
                 CustomMessageBox.Show($@"Wrong! :(
 You spelled: {yourSpelling}
 Correct spelling: {correctSpelling}", "Wrong", Color.Coral);
