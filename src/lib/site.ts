@@ -11,8 +11,8 @@ export const SITE = {
 } as const;
 
 /**
- * The activities, one per subject. `ready: false` shows the card as "coming soon";
- * flip it once the activity's page is built.
+ * The activities, one per subject. `ready: false` shows the card as "coming soon" and serves a
+ * placeholder from `/[activity]`; flip it once the activity has its own route under `src/app/`.
  */
 export const ACTIVITIES = [
   {
@@ -20,7 +20,7 @@ export const ACTIVITIES = [
     title: "Spelling",
     emoji: "🔤",
     description: "Hear a word, spell it, and level up as the words get tougher.",
-    ready: false,
+    ready: true,
   },
   {
     slug: "math",

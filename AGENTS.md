@@ -10,7 +10,8 @@ This repository uses `MEMORY.md` at the root as the source of truth for cross-ch
 
 ## Working Rules
 
-- Run `npm run lint`, `npm run typecheck` and `npm run build` before pushing.
+- Run `npm run lint`, `npm run typecheck`, `npm test` and `npm run build` before pushing.
+- Keep activity logic UI-free in `src/lib/<activity>/` with vitest tests beside it; components only render.
 - **Lean on `@noahwright/design`.** When something belongs in the design system, file an issue
   in `NoahWright87/design` and keep only a small, commented local workaround here that names it.
 - `archive/` is reference only; see `archive/AGENTS.md`.

@@ -6,13 +6,13 @@ import { ACTIVITIES } from "@/lib/site";
 type Params = { activity: string };
 
 export function generateStaticParams(): Params[] {
-  return ACTIVITIES.map((a) => ({ activity: a.slug }));
+  return ACTIVITIES.filter((a) => !a.ready).map((a) => ({ activity: a.slug }));
 }
 
 export const dynamicParams = false;
 
 function findActivity(slug: string) {
-  return ACTIVITIES.find((a) => a.slug === slug);
+  return ACTIVITIES.find((a) => a.slug === slug && !a.ready);
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {

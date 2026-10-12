@@ -23,17 +23,19 @@ The original project README is preserved as [`ORIGINAL_README.md`](ORIGINAL_READ
 
 ## Salvage list
 
-- [ ] **Spelling lists** (`Spelling Lists/`). The most valuable thing here: every word has a
-  hand-written example sentence, with `%%` standing in for the word
-  (e.g. `Blow out the candles on your %% cake.`). Convert to JSON for the web app.
+- [x] **Spelling lists** (`Spelling Lists/`). Done: converted by `scripts/convert-spelling-lists.mjs`
+  into `src/data/spellingLists.json`, example sentences (`%%` marks the word) kept as written.
 - [ ] **Word difficulty heuristic**: `LevelUpLearning.Core/Extensions/StringExtensions.cs`
   (`Difficulty()`): length, repeated letters, runs of vowels/consonants, tricky letters and patterns.
 - [ ] **Math problem generator**: `LevelUpLearning.Core/MathUtils.cs` (`GetMathProblemFor`):
   builds a problem aimed at a target level by adding digits, terms, decimals, negatives.
 - [ ] **Leveling curve**: `LevelUpLearning.Core/Utils.cs` (`LevelChange`): how a player's
   level moves after a right or wrong answer, relative to the problem's level.
-- [ ] **Ideas from the old UI** worth a look, not a port: difficulty presets that adjust the
-  score, star ratings per list, hints, per-user progress (`LevelUpLearning.WinForm/Spelling/`).
+- [x] **Spelling quiz settings**: the difficulty presets (blanks, hint letters, times to finish,
+  streak penalty) and score multiplier are in `src/lib/spelling/difficulty.ts`.
+- [ ] **Ideas from the old UI** still to bring over: saved per-user progress and per-list star
+  history (`frmSpellingQuizPerformance`), and the auto-leveling "adventure" mode
+  (`frmSpellingQuizDifficultyAdventure`, `Adventure_*` in `frmSpellingQuiz.cs`).
 
 Rewrite, don't port: the logic is small, and the new app should get it in TypeScript with tests.
 
