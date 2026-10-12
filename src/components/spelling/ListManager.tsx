@@ -141,7 +141,11 @@ export default function ListManager() {
             </NextLink>
             <Heading level={1}>📚 Word lists</Heading>
             <Text>
-              Lists you add are saved in this browser. Download them to keep a copy or move them to another device.
+              Lists you add are saved in this browser and included in your{" "}
+              <NextLink href="/progress" className="spelling-link">
+                save file
+              </NextLink>
+              . Download a list here to share it on its own.
             </Text>
           </div>
 

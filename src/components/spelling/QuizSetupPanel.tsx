@@ -17,12 +17,21 @@ import type { SpellingList, SpellingWord } from "@/lib/spelling/lists";
 import { uniqueWords } from "@/lib/spelling/quiz";
 import { sayWordPrompt } from "@/lib/spelling/speech";
 import { DEFAULT_SETUP, loadSetup, saveSetup, type QuizSetup } from "@/lib/spelling/storage";
+import PlayerPicker from "@/components/PlayerPicker";
+import { useSave } from "@/components/useSave";
+import { listBests } from "@/lib/save/spellingProgress";
 import { useSpellingLists } from "./useSpellingLists";
 import { useVoices } from "./useVoices";
 
-type Props = {
-  onStart: (round: { words: SpellingWord[]; settings: DifficultySettings; voiceURI?: string }) => void;
+export type Round = {
+  words: SpellingWord[];
+  lists: SpellingList[];
+  difficulty: DifficultyId;
+  settings: DifficultySettings;
+  voiceURI?: string;
 };
+
+type Props = { onStart: (round: Round) => void };
 
 const range = (min: number, max: number) => Array.from({ length: max - min + 1 }, (_, i) => min + i);
 
@@ -81,6 +90,8 @@ function NumberSelect({
 export default function QuizSetupPanel({ onStart }: Props) {
   const { builtIn, custom, all, loaded } = useSpellingLists();
   const { voices, supported } = useVoices();
+  const { player } = useSave();
+  const bests = useMemo(() => listBests(player), [player]);
   const [setup, setSetup] = useState<QuizSetup>(DEFAULT_SETUP);
 
   // Storage is browser-only, so the remembered setup arrives after the first render.
@@ -113,6 +124,10 @@ export default function QuizSetupPanel({ onStart }: Props) {
         <Text>Listen to each word, then type how it&apos;s spelled. Pick some lists and a difficulty to begin.</Text>
       </div>
 
+      <section className="spelling-panel" aria-label="Player">
+        <PlayerPicker />
+      </section>
+
       <section className="spelling-panel" aria-labelledby="lists-title">
         <div className="spelling-panel__head">
           <Heading level={2}>
@@ -129,7 +144,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
               {group.lists.map((list) => (
                 <Checkbox
                   key={list.id}
-                  label={`${list.name} (${list.words.length})`}
+                  label={`${list.name} (${list.words.length})${bests.has(list.id) ? ` ★ ${bests.get(list.id)!.stars}` : ""}`}
                   checked={selected.has(list.id)}
                   onChange={(e) => toggle(list.id, e.target.checked)}
                 />
@@ -250,7 +265,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
           color="primary"
           motion="bouncy"
           disabled={words.length === 0}
-          onClick={() => onStart({ words, settings, voiceURI: setup.voiceURI })}
+          onClick={() => onStart({ words, lists: chosenLists, difficulty: setup.difficulty, settings, voiceURI: setup.voiceURI })}
         >
           Start the quiz
         </Button>

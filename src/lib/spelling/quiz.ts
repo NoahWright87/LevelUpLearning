@@ -149,13 +149,16 @@ export type QuizSummary = {
   points: number;
 };
 
+/** 0–5 stars in half steps for a share of right answers. */
+export const starsFor = (accuracy: number) => Math.round(accuracy * 10) / 2;
+/** Points for a share of right answers at a difficulty multiplier. */
+export const pointsFor = (accuracy: number, multiplier: number) => Math.round(accuracy * multiplier * 1000);
+
 export function summarize(state: QuizState, multiplier: number): QuizSummary {
   const attempts = state.words.reduce((n, w) => n + w.attempts, 0);
   const correct = state.words.reduce((n, w) => n + w.correct, 0);
   const accuracy = attempts ? correct / attempts : 0;
-  const stars = Math.round(accuracy * 5 * 2) / 2;
-  const points = Math.round(accuracy * multiplier * 1000);
-  return { attempts, correct, accuracy, stars, points };
+  return { attempts, correct, accuracy, stars: starsFor(accuracy), points: pointsFor(accuracy, multiplier) };
 }
 
 /** Fills a sentence's placeholder with a blank (for reading) or with the word (for speaking). */

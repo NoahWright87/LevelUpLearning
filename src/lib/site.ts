@@ -31,4 +31,7 @@ export const ACTIVITIES = [
   },
 ] as const;
 
-export const NAV_ITEMS = ACTIVITIES.map((a) => ({ label: a.title, href: `/${a.slug}` }));
+export const NAV_ITEMS = [
+  ...ACTIVITIES.map((a) => ({ label: a.title, href: `/${a.slug}` })),
+  { label: "Progress", href: "/progress" },
+];

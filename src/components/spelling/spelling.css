@@ -256,6 +256,12 @@
   color: transparent;
 }
 
+.spelling-saved {
+  padding: var(--spacing-md, 1rem);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary) 10%, var(--background));
+}
+
 .spelling-table {
   width: 100%;
   border-collapse: collapse;

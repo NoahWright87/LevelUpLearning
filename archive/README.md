@@ -33,8 +33,9 @@ The original project README is preserved as [`ORIGINAL_README.md`](ORIGINAL_READ
   level moves after a right or wrong answer, relative to the problem's level.
 - [x] **Spelling quiz settings**: the difficulty presets (blanks, hint letters, times to finish,
   streak penalty) and score multiplier are in `src/lib/spelling/difficulty.ts`.
-- [ ] **Ideas from the old UI** still to bring over: saved per-user progress and per-list star
-  history (`frmSpellingQuizPerformance`), and the auto-leveling "adventure" mode
+- [x] **Saved progress**: users and per-list / per-word performance (`DataRoot`,
+  `UserSpellingPerformance`) are now players and session history in the save file (`src/lib/save/`).
+- [ ] **Ideas from the old UI** still to bring over: the auto-leveling "adventure" mode
   (`frmSpellingQuizDifficultyAdventure`, `Adventure_*` in `frmSpellingQuiz.cs`).
 
 Rewrite, don't port: the logic is small, and the new app should get it in TypeScript with tests.

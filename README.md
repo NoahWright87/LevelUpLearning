@@ -11,6 +11,8 @@ This is the **web app** rewrite. The original Windows desktop app (2020–2021) 
 - **Spelling** (`/spelling`): pick word lists and a difficulty, hear each word and its example
   sentence read aloud (the browser's text to speech), and type it. Lists can be uploaded,
   quick-created and downloaded as JSON at `/spelling/lists`; 22 built-in lists ship with the app.
+- **Progress** (`/progress`): players, quiz history, best per list, tricky words, and the save
+  file: everything is kept in this browser and can be downloaded and uploaded as one JSON file.
 - **Math**: placeholder.
 
 ## Stack
@@ -35,10 +37,11 @@ npm run build
 
 | Path | What |
 | --- | --- |
-| `src/app/` | Routes: `/`, `/spelling`, `/spelling/lists`, and `/[activity]` placeholders for unbuilt activities |
+| `src/app/` | Routes: `/`, `/spelling`, `/spelling/lists`, `/progress`, and `/[activity]` placeholders for unbuilt activities |
 | `src/components/SiteShell.tsx` | Header, nav, ⚙️ settings menu, horizon footer |
 | `src/lib/site.ts` | Site constants and the list of activities |
 | `src/lib/theme.ts` | Palette overrides (same as noahwright.dev) |
+| `src/lib/save/` | The save file: format, validation, players, localStorage store, spelling stats |
 | `src/lib/spelling/` | Quiz logic, difficulty presets, list file format, speech, storage (UI-free, tested) |
 | `src/components/spelling/` | Spelling screens: setup, quiz, results, list manager |
 | `src/data/spellingLists.json` | Built-in word lists |
