@@ -1,0 +1,363 @@
+/* Spelling quiz and list manager. Colors come from the theme tokens so both modes work. */
+
+.spelling-setup,
+.spelling-play,
+.spelling-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 1.5rem);
+}
+
+.spelling-setup__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.spelling-link {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.spelling-link:hover,
+.spelling-link:focus-visible {
+  text-decoration: underline;
+}
+
+.spelling-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 1rem);
+  padding: var(--spacing-lg, 1.5rem);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--foreground) 4%, var(--background));
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.spelling-panel__head,
+.spelling-panel__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+/* List picker: one column of checkboxes per grade. */
+.spelling-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--spacing-md, 1rem);
+}
+
+.spelling-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.spelling-group legend {
+  padding: 0 0 6px;
+  font-weight: 700;
+}
+
+.spelling-custom {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--spacing-md, 1rem);
+  align-items: end;
+}
+
+.spelling-summary {
+  margin: 0;
+  padding-left: 1.2em;
+  color: color-mix(in srgb, var(--foreground) 75%, transparent);
+}
+
+.spelling-voice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--spacing-md, 1rem);
+}
+
+.spelling-voice > :first-child {
+  min-width: min(100%, 260px);
+}
+
+.spelling-start {
+  display: flex;
+  justify-content: center;
+}
+
+/* Quiz */
+.spelling-play__top {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 1rem);
+}
+
+.spelling-progress {
+  flex: 1;
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.spelling-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 300ms ease;
+}
+
+.spelling-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg, 1.5rem);
+  padding: var(--spacing-xl, 2rem) var(--spacing-lg, 1.5rem);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--foreground) 4%, var(--background));
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.spelling-sentence {
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+.spelling-hint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.spelling-hint__cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2rem;
+  height: 2.6rem;
+  border-bottom: 3px solid var(--primary);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.spelling-hint__cell--fixed {
+  width: auto;
+  min-width: 0.6rem;
+  border-bottom-color: transparent;
+}
+
+.spelling-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: center;
+  gap: var(--spacing-sm, 0.5rem);
+  width: min(100%, 420px);
+}
+
+.spelling-answer {
+  flex: 1;
+  min-width: 200px;
+}
+
+.spelling-answer .nw-input__field {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.spelling-feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  width: 100%;
+  padding: var(--spacing-md, 1rem);
+  border-radius: 14px;
+  text-align: center;
+  animation: spelling-pop 250ms ease-out;
+}
+
+.spelling-feedback--right {
+  background: color-mix(in srgb, var(--confirm) 18%, var(--background));
+  border: 2px solid var(--confirm);
+}
+
+.spelling-feedback--wrong {
+  background: color-mix(in srgb, var(--danger) 14%, var(--background));
+  border: 2px solid var(--danger);
+}
+
+.spelling-feedback__word {
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+}
+
+.spelling-feedback__next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm, 0.5rem);
+  margin-top: var(--spacing-sm, 0.5rem);
+}
+
+@keyframes spelling-pop {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spelling-feedback {
+    animation: none;
+  }
+
+  .spelling-progress__fill {
+    transition: none;
+  }
+}
+
+/* Results */
+.spelling-results__score {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.spelling-stars {
+  font-size: 2.4rem;
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--foreground) 20%, transparent);
+}
+
+.spelling-stars .is-full {
+  color: var(--primary);
+}
+
+.spelling-stars .is-half {
+  background: linear-gradient(90deg, var(--primary) 50%, color-mix(in srgb, var(--foreground) 20%, transparent) 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.spelling-saved {
+  padding: var(--spacing-md, 1rem);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary) 10%, var(--background));
+}
+
+.spelling-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.spelling-table th,
+.spelling-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.spelling-results__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+/* List manager */
+.spelling-notice {
+  padding: var(--spacing-md, 1rem);
+  border-radius: 12px;
+}
+
+.spelling-notice--success {
+  background: color-mix(in srgb, var(--confirm) 16%, var(--background));
+  border: 1px solid var(--confirm);
+}
+
+.spelling-notice--error {
+  background: color-mix(in srgb, var(--danger) 14%, var(--background));
+  border: 1px solid var(--danger);
+}
+
+.spelling-file {
+  font: inherit;
+  max-width: 100%;
+}
+
+.spelling-format pre {
+  overflow-x: auto;
+  padding: var(--spacing-md, 1rem);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  font-size: 0.85rem;
+}
+
+.spelling-format summary,
+.spelling-list-row summary {
+  cursor: pointer;
+}
+
+.spelling-quick {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 1rem);
+}
+
+.spelling-quick__row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--spacing-md, 1rem);
+  align-items: end;
+}
+
+.spelling-list-rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.spelling-list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-sm, 0.5rem);
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.spelling-list-row details {
+  flex: 1;
+  min-width: 0;
+}
+
+.spelling-list-row__words {
+  margin: 8px 0 0;
+  padding-left: 1.2em;
+  font-size: 0.95rem;
+}
+
+.spelling-list-row__actions {
+  display: flex;
+  gap: 4px;
+}

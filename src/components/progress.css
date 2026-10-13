@@ -1,0 +1,82 @@
+.progress-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 1.5rem);
+}
+
+.progress-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 1rem);
+  padding: var(--spacing-lg, 1.5rem);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--foreground) 4%, var(--background));
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.progress-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.progress-link {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.progress-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-md, 1rem);
+}
+
+.progress-totals > div {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md, 1rem);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary) 10%, var(--background));
+}
+
+.progress-totals strong {
+  font-size: 1.8rem;
+  line-height: 1.1;
+}
+
+.progress-table-wrap {
+  overflow-x: auto;
+}
+
+.progress-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.progress-table th,
+.progress-table td {
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+.progress-table th {
+  white-space: nowrap;
+}
+
+.progress-notice {
+  padding: var(--spacing-md, 1rem);
+  border-radius: 12px;
+}
+
+.progress-notice--success {
+  background: color-mix(in srgb, var(--confirm) 16%, var(--background));
+  border: 1px solid var(--confirm);
+}
+
+.progress-notice--error {
+  background: color-mix(in srgb, var(--danger) 14%, var(--background));
+  border: 1px solid var(--danger);
+}

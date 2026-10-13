@@ -1,0 +1,10 @@
+.player-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.player-picker > :first-child {
+  min-width: min(100%, 240px);
+}
