@@ -11,6 +11,7 @@ import {
   MobileNav,
 } from "@noahwright/design";
 import SettingsMenu from "@/components/SettingsMenu";
+import Logo from "@/components/Logo";
 import { NAV_ITEMS, SITE } from "@/lib/site";
 
 // Same horizon scene as noahwright.dev: sun and moon toward the middle so their reflections
@@ -27,7 +28,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
           shadow={false}
           left={
             <Link href="/" className="site-home-link">
-              <span className="site-logo" aria-hidden="true">⭐</span>
+              <Logo />
               <strong className="site-name">{SITE.name}</strong>
             </Link>
           }

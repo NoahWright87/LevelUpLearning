@@ -80,4 +80,12 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - Backend and accounts: when, and whether they're paid. The save file above is the data shape.
 - Merging an uploaded save into an existing one (today it replaces).
-- Logo: a ⭐ emoji placeholder for now.
+
+## Logo (Oct 2026)
+
+- Noah selected the clean Graduate silhouette: graduation cap, original head/glasses,
+  no collar or held objects. Source silhouette/glasses came from
+  `NoahWright87/NoahWrightDev2026` `src/lib/logo.ts`.
+- Shared paths in `src/lib/logo.ts` render the header via `components/Logo.tsx` and
+  the SVG favicon via `app/icon.svg/route.ts`. Header colors follow the site theme;
+  favicon colors follow system light/dark mode. Logo is visible at every screen width.

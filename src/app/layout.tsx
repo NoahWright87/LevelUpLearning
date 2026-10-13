@@ -11,6 +11,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
+  icons: { icon: { url: "/icon.svg", type: "image/svg+xml" } },
 };
 
 export default function RootLayout({
