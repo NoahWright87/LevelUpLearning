@@ -51,6 +51,15 @@ export function stopSpeaking(): void {
 /** Says each part in order, a beat apart. Slow parts (the word itself) are said a little slower. */
 function say(parts: Array<{ text: string; slow?: boolean }>, options: SpeechOptions): void {
   if (!speechSupported()) return;
+  try {
+    speak(parts, options);
+  } catch (err) {
+    // Speech is a nice-to-have: a browser quirk here must never take the quiz down with it.
+    console.warn("Text to speech failed", err);
+  }
+}
+
+function speak(parts: Array<{ text: string; slow?: boolean }>, options: SpeechOptions): void {
   const synth = window.speechSynthesis;
   synth.cancel();
   const voice = englishVoices().find((v) => v.voiceURI === options.voiceURI) ?? englishVoices()[0];

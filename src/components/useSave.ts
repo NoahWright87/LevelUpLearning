@@ -11,6 +11,8 @@ import { getSave, getServerSave, subscribeSave } from "@/lib/save/store";
 export function useSave() {
   const save = useSyncExternalStore(subscribeSave, getSave, getServerSave);
   const [loaded, setLoaded] = useState(false);
-  useEffect(() => setLoaded(true), []);
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
   return { save, player: activePlayer(save), loaded };
 }

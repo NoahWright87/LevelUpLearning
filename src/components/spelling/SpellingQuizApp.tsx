@@ -43,7 +43,11 @@ export default function SpellingQuizApp() {
   const [phase, setPhase] = useState<Phase>({ name: "setup" });
 
   // Each phase is a new screen: start it at the top (Start sits at the bottom of a long setup).
-  useEffect(() => window.scrollTo({ top: 0 }), [phase.name]);
+  // Braces matter: newer Chrome returns a Promise from scrollTo, and React treats an effect's
+  // return value as its cleanup, so returning it crashed the page ("u is not a function").
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [phase.name]);
 
   const begin = (round: Round) => setPhase({ name: "play", round, quiz: startQuiz(round.words, round.settings) });
 

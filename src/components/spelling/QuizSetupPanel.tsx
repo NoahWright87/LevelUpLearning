@@ -95,7 +95,9 @@ export default function QuizSetupPanel({ onStart }: Props) {
   const [setup, setSetup] = useState<QuizSetup>(DEFAULT_SETUP);
 
   // Storage is browser-only, so the remembered setup arrives after the first render.
-  useEffect(() => setSetup(loadSetup()), []);
+  useEffect(() => {
+    setSetup(loadSetup());
+  }, []);
 
   const update = (patch: Partial<QuizSetup>) =>
     setSetup((prev) => {

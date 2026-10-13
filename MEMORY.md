@@ -65,6 +65,17 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - The first spelling release kept uploaded lists under `lul.spelling.lists.v1`; the store migrates
   them into the save file on first load and removes the old key.
 
+## Gotchas
+
+- **Effects need a block body.** `useEffect(() => window.scrollTo(...))` returns the call's
+  value as the cleanup; newer Chrome returns a Promise from `scrollTo`, and the spelling quiz
+  crashed with "u is not a function" on the first deploy preview. An ESLint rule in
+  `eslint.config.mjs` now rejects expression-bodied effects.
+- **Source maps** ship on every Netlify build except production (`next.config.ts` keys off
+  Netlify's `CONTEXT`), so preview errors show real names in dev tools.
+- Headless Chromium here has no voices and an older `scrollTo`; browser checks fake both
+  (several voices, Promise-returning `scrollTo`) to match real Chrome.
+
 ## Open Questions
 
 - Backend and accounts: when, and whether they're paid. The save file above is the data shape.
