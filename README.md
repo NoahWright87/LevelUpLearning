@@ -33,6 +33,11 @@ npm test           # vitest, logic in src/lib
 npm run build
 ```
 
+## Deploy
+
+Netlify builds the site from `netlify.toml`: production from `main`, and a deploy preview for
+every pull request.
+
 ## Layout
 
 | Path | What |
