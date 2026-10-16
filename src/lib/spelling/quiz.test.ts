@@ -46,6 +46,34 @@ describe("isCorrectSpelling", () => {
   });
 });
 
+describe("celebration combo", () => {
+  it("builds across different words and shuffled rounds without changing the previous state", () => {
+    let quiz = startQuiz(WORDS, settings({ timesToFinish: 3 }), seeded());
+    expect(quiz.combo).toBe(0);
+    for (let count = 1; count <= 9; count++) {
+      const previous = quiz;
+      const outcome = submitAnswer(quiz, quiz.words[quiz.current!].word);
+      expect(outcome.state.combo).toBe(count);
+      expect(previous.combo).toBe(count - 1);
+      quiz = nextWord(outcome.state, seeded());
+      expect(quiz.combo).toBe(count);
+    }
+    expect(isDone(quiz)).toBe(true);
+    expect(startQuiz(WORDS, settings(), seeded()).combo).toBe(0);
+  });
+
+  it("resets on a miss even when per-word hint streaks are preserved", () => {
+    let quiz = startQuiz([WORDS[0]], settings({ streakPenalty: 0, timesToFinish: 5 }), seeded());
+    quiz = answer(answer(quiz, true), true);
+    expect(quiz.combo).toBe(2);
+    const missed = submitAnswer(quiz, "wrong").state;
+    expect(missed.combo).toBe(0);
+    expect(missed.words[0].streak).toBe(2);
+    quiz = nextWord(missed, seeded());
+    expect(submitAnswer(quiz, "cake").state.combo).toBe(1);
+  });
+});
+
 describe("buildHint", () => {
   it("shows the requested number of letters and always shows punctuation", () => {
     const hint = buildHint("isn't", 2, true, seeded())!;

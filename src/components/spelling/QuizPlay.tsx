@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Text } from "@noahwright/design";
 import {
-  fillSentence,
   isDone,
   nextWord,
   progress,
@@ -13,27 +12,20 @@ import {
 } from "@/lib/spelling/quiz";
 import { sayCongrats, sayCorrection, sayWordPrompt, stopSpeaking } from "@/lib/spelling/speech";
 import AnswerInput from "./AnswerInput";
+import { comboCheer } from "@/lib/spelling/combo";
 
 type Props = {
   initial: QuizState;
   voiceURI?: string;
   onFinish: (quiz: QuizState) => void;
   onQuit: () => void;
+  onCorrectAnswer?: (combo: number) => void;
 };
 
-/** A cheer for answers in a row, the way the old app's streak label grew. */
-function streakText(streak: number): string | null {
-  if (streak < 2) return null;
-  if (streak < 5) return `🔥 ${streak} in a row!`;
-  if (streak < 10) return `🔥🔥 ${streak} in a row! Wow!`;
-  return `🔥🔥🔥 ${streak} in a row! Unstoppable!`;
-}
-
-export default function QuizPlay({ initial, voiceURI, onFinish, onQuit }: Props) {
+export default function QuizPlay({ initial, voiceURI, onFinish, onQuit, onCorrectAnswer }: Props) {
   const [quiz, setQuiz] = useState(initial);
   const [answer, setAnswer] = useState("");
   const [result, setResult] = useState<AnswerResult | null>(null);
-  const [streak, setStreak] = useState(0);
   /** Counts questions asked, so a word that comes up twice in a row is still spoken again. */
   const [turn, setTurn] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -80,9 +72,10 @@ export default function QuizPlay({ initial, voiceURI, onFinish, onQuit }: Props)
     const outcome = submitAnswer(quiz, answer);
     setQuiz(outcome.state);
     setResult(outcome.result);
-    setStreak((s) => (outcome.result.correct ? s + 1 : 0));
-    if (outcome.result.correct) sayCongrats(options);
-    else sayCorrection(outcome.result.expected, options);
+    if (outcome.result.correct) {
+      sayCongrats(options);
+      onCorrectAnswer?.(outcome.state.combo);
+    } else sayCorrection(outcome.result.expected, options);
   };
 
   const advance = () => {
@@ -96,7 +89,7 @@ export default function QuizPlay({ initial, voiceURI, onFinish, onQuit }: Props)
     }
   };
 
-  const cheer = result?.correct ? streakText(streak) : null;
+  const cheer = result?.correct ? comboCheer(quiz.combo) : null;
 
   return (
     <div className="spelling-play">
@@ -114,29 +107,13 @@ export default function QuizPlay({ initial, voiceURI, onFinish, onQuit }: Props)
         <Text tone="muted">
           {done} / {total}
         </Text>
-        <Button variant="text" onClick={onQuit}>
+        <strong className="spelling-combo">🔥 Combo ×{quiz.combo}</strong>
+        <Button size="small" variant="text" onClick={onQuit}>
           Quit
         </Button>
       </div>
 
       <div className="spelling-card">
-        <Button
-          size="large"
-          variant="outline"
-          onClick={() => {
-            sayWordPrompt(word.word, word.sentence, options);
-            if (!result) inputRef.current?.focus({ preventScroll: true });
-          }}
-        >
-          🔊 Hear it again
-        </Button>
-
-        {word.sentence ? (
-          <Text align="center" className="spelling-sentence">
-            “{fillSentence(word.sentence, "_____")}”
-          </Text>
-        ) : null}
-
         {quiz.hint ? (
           <div className="spelling-hint" aria-label="Letter hints">
             {quiz.hint.map((cell, i) => (
@@ -159,44 +136,44 @@ export default function QuizPlay({ initial, voiceURI, onFinish, onQuit }: Props)
             onChange={setAnswer}
             disabled={!!result}
           />
-          {!result ? (
-            <Button type="submit" color="primary">
-              Check
+          <div className="spelling-actions">
+            <Button type="button" variant="outline" onClick={() => {
+              sayWordPrompt(word.word, word.sentence, options);
+              if (!result) inputRef.current?.focus({ preventScroll: true });
+            }}>
+              Speak 🔊
             </Button>
-          ) : null}
+            {result ? (
+              <Button type="button" color={result.correct ? "confirm" : "primary"} onClick={advance}>
+                {done >= total ? "See results →" : "Next word →"}
+              </Button>
+            ) : (
+              <Button type="submit" color="primary">Check</Button>
+            )}
+          </div>
         </form>
 
+        <div className="spelling-feedback-slot" role="status" aria-live="polite" aria-atomic="true">
         {result ? (
           <div
             className={`spelling-feedback spelling-feedback--${result.correct ? "right" : "wrong"}`}
-            role="status"
           >
             {result.correct ? (
               <>
-                <strong>✅ You spelled “{result.expected}” right!</strong>
+                <strong>✅ Correct!</strong>
                 {cheer ? <span>{cheer}</span> : null}
               </>
             ) : (
               <>
-                <strong>❌ Not quite. Don&apos;t worry, you&apos;ll get it next time!</strong>
+                <strong>❌ Not quite. Try again next time!</strong>
                 <span>
-                  You spelled: <s>{result.given}</s>
-                </span>
-                <span>
-                  The word is: <strong className="spelling-feedback__word">{result.expected}</strong>
+                  You wrote: <s>{result.given}</s>. Correct spelling: <strong>{result.expected}</strong>.
                 </span>
               </>
             )}
-            <div className="spelling-feedback__next">
-              <Button color={result.correct ? "confirm" : "primary"} onClick={advance}>
-                {done >= total ? "See how you did →" : "Next word →"}
-              </Button>
-              <Text tone="muted" inline>
-                or press Enter
-              </Text>
-            </div>
           </div>
         ) : null}
+        </div>
       </div>
     </div>
   );

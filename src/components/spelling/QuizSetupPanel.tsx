@@ -256,7 +256,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
           </div>
         ) : (
           <Text tone="error">
-            This browser can&apos;t speak the words aloud. You can still play by reading the example sentences.
+            This browser can&apos;t speak the words aloud. Use a browser with text-to-speech support for the spoken quiz.
           </Text>
         )}
       </section>

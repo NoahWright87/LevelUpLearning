@@ -40,8 +40,8 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   `src/data/spellingLists.json` and are read-only; uploaded and quick-created lists go in the
   save file.
 - Speech: Web Speech API. Says the word, then the sentence; on a miss it says the word and spells
-  it letter by letter (not the misspelling, which TTS reads badly). The sentence is also shown
-  with a blank, so it works without sound.
+  it letter by letter (not the misspelling, which TTS reads badly). Noah requested that example
+  sentences not be shown on the quiz screen, since they can give away other answers.
 - The answer box is a plain `<input>` with design classes until NoahWright87/design#32 (Input
   ref + native attributes) lands, so spellcheck and autocorrect can be turned off.
 
@@ -76,8 +76,35 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Headless Chromium here has no voices and an older `scrollTo`; browser checks fake both
   (several voices, Promise-returning `scrollTo`) to match real Chrome.
 
+## Spelling celebrations (Oct 2026)
+
+- Design 1.6.0 provides the fireworks renderer and trigger API. The spelling app owns
+  one stable `useSceneEffects` handle, passes it to `SiteShell`'s footer, and triggers
+  one small firework per combo point for correct answers and a large group on quiz completion.
+- The hot streak lives in UI-free `QuizState.combo`, spans words/rounds, increments per
+  correct answer, and resets on a miss or new quiz. It is separate from each word's hint
+  streak. The play screen shows Combo ×N between answers, with escalating cheers.
+- Combo ×N launches N small fireworks at fresh random positions; no local tier cap.
+  The design renderer bounds particle usage. Unavailable scenes stop the trigger loop.
+- Triggers stay in event handlers, outside the UI-free quiz logic. Wrong/blank answers
+  and quitting do not celebrate. The design package drops unavailable/offscreen events
+  and respects Still/reduced motion; celebrations do not scroll or queue for later.
+- Logo, fireworks integration, and combo changes belong together in PR #30 on
+  `codex/graduate-logo`. Push follow-up changes there while that PR is open.
+- Active quizzes use compact spacing and a smaller scene via public sky/sea height props,
+  keeping the fireworks visible. Combo sits in the progress row; Speak shares the Check/Next
+  row. A reserved feedback slot keeps the footer from shifting when an answer is checked.
+
 ## Open Questions
 
 - Backend and accounts: when, and whether they're paid. The save file above is the data shape.
 - Merging an uploaded save into an existing one (today it replaces).
-- Logo: a ⭐ emoji placeholder for now.
+
+## Logo (Oct 2026)
+
+- Noah selected the clean Graduate silhouette: graduation cap, original head/glasses,
+  no collar or held objects. Source silhouette/glasses came from
+  `NoahWright87/NoahWrightDev2026` `src/lib/logo.ts`.
+- Shared paths in `src/lib/logo.ts` render the header via `components/Logo.tsx` and
+  the SVG favicon via `app/icon.svg/route.ts`. Header colors follow the site theme;
+  favicon colors follow system light/dark mode. Logo is visible at every screen width.

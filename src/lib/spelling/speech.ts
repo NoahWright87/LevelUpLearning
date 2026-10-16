@@ -1,6 +1,6 @@
 /**
  * Text to speech through the browser's Web Speech API. Every call cancels whatever is still
- * being said, so a quick tap on "Hear it again" never queues up a backlog.
+ * being said, so a quick tap on "Speak" never queues up a backlog.
  */
 
 import { PLACEHOLDER } from "./lists";
