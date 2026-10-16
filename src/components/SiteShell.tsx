@@ -19,9 +19,10 @@ import { NAV_ITEMS, SITE } from "@/lib/site";
 // stay clear of the footer text on either side. Module-level so the reference is stable.
 const FOOTER_SCENE_OPTIONS = { sunX: 0.62, moonX: 0.38 };
 
-export default function SiteShell({ children, effects }: {
+export default function SiteShell({ children, effects, compactScene = false }: {
   children: React.ReactNode;
   effects?: SceneEffects;
+  compactScene?: boolean;
 }) {
   const pathname = usePathname();
 
@@ -58,6 +59,8 @@ export default function SiteShell({ children, effects }: {
         <SceneFooter
           scene="horizon"
           effects={effects}
+          skyHeight={compactScene ? "clamp(64px, 18svh, 144px)" : undefined}
+          seaHeight={compactScene ? "clamp(48px, 10svh, 80px)" : undefined}
           sceneOptions={FOOTER_SCENE_OPTIONS}
           left={
             <span>

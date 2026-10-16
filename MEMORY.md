@@ -40,8 +40,8 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   `src/data/spellingLists.json` and are read-only; uploaded and quick-created lists go in the
   save file.
 - Speech: Web Speech API. Says the word, then the sentence; on a miss it says the word and spells
-  it letter by letter (not the misspelling, which TTS reads badly). The sentence is also shown
-  with a blank, so it works without sound.
+  it letter by letter (not the misspelling, which TTS reads badly). Noah requested that example
+  sentences not be shown on the quiz screen, since they can give away other answers.
 - The answer box is a plain `<input>` with design classes until NoahWright87/design#32 (Input
   ref + native attributes) lands, so spellcheck and autocorrect can be turned off.
 
@@ -91,6 +91,9 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   and respects Still/reduced motion; celebrations do not scroll or queue for later.
 - Logo, fireworks integration, and combo changes belong together in PR #30 on
   `codex/graduate-logo`. Push follow-up changes there while that PR is open.
+- Active quizzes use compact spacing and a smaller scene via public sky/sea height props,
+  keeping the fireworks visible. Combo sits in the progress row; Speak shares the Check/Next
+  row. A reserved feedback slot keeps the footer from shifting when an answer is checked.
 
 ## Open Questions
 

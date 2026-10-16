@@ -53,8 +53,8 @@ export default function SpellingQuizApp() {
   const begin = (round: Round) => setPhase({ name: "play", round, quiz: startQuiz(round.words, round.settings) });
 
   return (
-    <SiteShell effects={effects}>
-      <Container padding="lg">
+    <SiteShell effects={effects} compactScene={phase.name === "play"}>
+      <Container padding={phase.name === "play" ? "sm" : "lg"}>
         {phase.name === "setup" && <QuizSetupPanel onStart={begin} />}
         {phase.name === "play" && (
           <QuizPlay
