@@ -9,6 +9,7 @@ import {
   Container,
   Link,
   MobileNav,
+  type SceneEffects,
 } from "@noahwright/design";
 import SettingsMenu from "@/components/SettingsMenu";
 import Logo from "@/components/Logo";
@@ -18,7 +19,10 @@ import { NAV_ITEMS, SITE } from "@/lib/site";
 // stay clear of the footer text on either side. Module-level so the reference is stable.
 const FOOTER_SCENE_OPTIONS = { sunX: 0.62, moonX: 0.38 };
 
-export default function SiteShell({ children }: { children: React.ReactNode }) {
+export default function SiteShell({ children, effects }: {
+  children: React.ReactNode;
+  effects?: SceneEffects;
+}) {
   const pathname = usePathname();
 
   return (
@@ -53,6 +57,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       footer={
         <SceneFooter
           scene="horizon"
+          effects={effects}
           sceneOptions={FOOTER_SCENE_OPTIONS}
           left={
             <span>

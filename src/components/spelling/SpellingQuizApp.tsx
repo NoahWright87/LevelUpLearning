@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Container } from "@noahwright/design";
+import { Container, useSceneEffects } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import { activePlayer, ensurePlayer, type SpellingSession } from "@/lib/save/schema";
 import { buildSession, listBests, recordSession, type ListBest } from "@/lib/save/spellingProgress";
@@ -41,6 +41,7 @@ function saveResult(quiz: QuizState, round: Round): SavedResult {
 /** The /spelling page: pick lists and a difficulty, take the quiz, see how you did. */
 export default function SpellingQuizApp() {
   const [phase, setPhase] = useState<Phase>({ name: "setup" });
+  const effects = useSceneEffects();
 
   // Each phase is a new screen: start it at the top (Start sits at the bottom of a long setup).
   // Braces matter: newer Chrome returns a Promise from scrollTo, and React treats an effect's
@@ -52,16 +53,23 @@ export default function SpellingQuizApp() {
   const begin = (round: Round) => setPhase({ name: "play", round, quiz: startQuiz(round.words, round.settings) });
 
   return (
-    <SiteShell>
+    <SiteShell effects={effects}>
       <Container padding="lg">
         {phase.name === "setup" && <QuizSetupPanel onStart={begin} />}
         {phase.name === "play" && (
           <QuizPlay
             initial={phase.quiz}
             voiceURI={phase.round.voiceURI}
-            onFinish={(quiz) =>
-              setPhase({ name: "results", round: phase.round, quiz, saved: saveResult(quiz, phase.round) })
-            }
+            onCorrectAnswer={(combo) => {
+              // One shell per consecutive right answer; the design renderer owns the particle budget.
+              for (let i = 0; i < combo; i++) {
+                if (!effects.trigger({ type: "firework", size: "small" })) break;
+              }
+            }}
+            onFinish={(quiz) => {
+              setPhase({ name: "results", round: phase.round, quiz, saved: saveResult(quiz, phase.round) });
+              effects.trigger({ type: "firework", size: "large" });
+            }}
             onQuit={() => setPhase({ name: "setup" })}
           />
         )}

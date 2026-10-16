@@ -24,6 +24,8 @@ export type HintCell = { char: string | null; fixed: boolean };
 export type AnswerResult = { correct: boolean; expected: string; given: string };
 
 export type QuizState = {
+  /** Consecutive correct answers across all words; a miss resets the celebration combo. */
+  combo: number;
   settings: DifficultySettings;
   words: WordProgress[];
   /** Indexes of words still to come this round. */
@@ -98,7 +100,7 @@ function draw(state: QuizState, rng: Rng, previous: number | null): QuizState {
 
 export function startQuiz(words: SpellingWord[], settings: DifficultySettings, rng: Rng = Math.random): QuizState {
   const progress = uniqueWords(words).map((w) => ({ ...w, attempts: 0, correct: 0, streak: 0, misspellings: {} }));
-  return draw({ settings, words: progress, deck: [], current: null, hint: null }, rng, null);
+  return draw({ combo: 0, settings, words: progress, deck: [], current: null, hint: null }, rng, null);
 }
 
 /** Records an answer to the current word. The current word stays up until `nextWord`. */
@@ -118,7 +120,10 @@ export function submitAnswer(state: QuizState, answer: string): { state: QuizSta
       };
 
   const words = state.words.map((w, i) => (i === state.current ? updated : w));
-  return { state: { ...state, words }, result: { correct, expected: word.word, given } };
+  return {
+    state: { ...state, words, combo: correct ? state.combo + 1 : 0 },
+    result: { correct, expected: word.word, given },
+  };
 }
 
 export function nextWord(state: QuizState, rng: Rng = Math.random): QuizState {
