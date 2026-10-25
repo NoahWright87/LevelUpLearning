@@ -18,6 +18,8 @@ import {
 } from "@/lib/save/schema";
 import { listBests, totals, trickyWords } from "@/lib/save/spellingProgress";
 import { replaceSave, updateSave } from "@/lib/save/store";
+import { mathTotals } from "@/lib/math/progress";
+import { operationLabel } from "@/lib/math/game";
 import "./progress.css";
 
 type Notice = { tone: "success" | "error"; text: string } | null;
@@ -26,7 +28,7 @@ const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", tim
 const formatDate = (iso: string) => dateFormat.format(new Date(iso));
 
 function describeSave(save: SaveData): string {
-  const sessions = save.players.reduce((n, p) => n + p.spelling.sessions.length, 0);
+  const sessions = save.players.reduce((n, p) => n + p.spelling.sessions.length + p.math.sessions.length, 0);
   const players = save.players.map((p) => p.name).join(", ") || "no players";
   return `${players}; ${sessions} quiz${sessions === 1 ? "" : "zes"}; ${save.spelling.lists.length} word list${save.spelling.lists.length === 1 ? "" : "s"}`;
 }
@@ -219,6 +221,31 @@ function SpellingProgress() {
   );
 }
 
+function MathProgress() {
+  const { player } = useSave();
+  if (!player) return null;
+  const sum = mathTotals(player);
+  if (!sum.rounds) return <Text tone="muted">No math rounds yet. <NextLink href="/math" className="progress-link">Play a sprint →</NextLink></Text>;
+  return (
+    <>
+      <div className="progress-totals">
+        <div><strong>{sum.rounds}</strong><span>rounds</span></div>
+        <div><strong>{sum.correct}</strong><span>correct answers</span></div>
+        <div><strong>{sum.points.toLocaleString()}</strong><span>total points</span></div>
+      </div>
+      <Heading level={3}>Recent math rounds</Heading>
+      <div className="progress-table-wrap">
+        <table className="progress-table">
+          <thead><tr><th scope="col">When</th><th scope="col">Practice</th><th scope="col">Right / tries</th><th scope="col">Goal</th><th scope="col">Best combo</th><th scope="col">Points</th></tr></thead>
+          <tbody>{[...player.math.sessions].reverse().slice(0, 10).map((s) => (
+            <tr key={s.id}><td>{formatDate(s.finishedAt)}</td><td>{operationLabel(s.settings.operation)} · {s.settings.digits} digit{s.settings.digits > 1 ? "s" : ""}</td><td>{s.correct} / {s.attempts}</td><td>{s.correct >= s.settings.target ? "✓ " : ""}{s.settings.target}</td><td>×{s.bestCombo}</td><td>{s.points}</td></tr>
+          ))}</tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
 function SaveDataPanel({ onNotice }: { onNotice: (n: Notice) => void }) {
   const { save } = useSave();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -290,7 +317,7 @@ function SaveDataPanel({ onNotice }: { onNotice: (n: Notice) => void }) {
   );
 }
 
-/** /progress: players, their spelling history, and the save file. */
+/** /progress: players, their activity history, and the save file. */
 export default function ProgressPage() {
   const { player, loaded } = useSave();
   const [notice, setNotice] = useState<Notice>(null);
@@ -312,6 +339,13 @@ export default function ProgressPage() {
             <PlayerPicker />
             <PlayerSettings />
           </section>
+
+          {loaded && player ? (
+            <section className="progress-panel">
+              <Heading level={2}>⚡ Math: {player.name}</Heading>
+              <MathProgress />
+            </section>
+          ) : null}
 
           {loaded && player ? (
             <section className="progress-panel">

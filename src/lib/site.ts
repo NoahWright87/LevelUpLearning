@@ -26,8 +26,8 @@ export const ACTIVITIES = [
     slug: "math",
     title: "Math",
     emoji: "➗",
-    description: "Problems that grow with you, from adding to multi-step equations.",
-    ready: false,
+    description: "Think fast, build math combos, and light up the sky with fireworks.",
+    ready: true,
   },
 ] as const;
 
