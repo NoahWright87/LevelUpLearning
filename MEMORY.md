@@ -116,6 +116,12 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   and the storage key stay intact. Completed wins/losses save to the player selected at round
   start, capped at 500 math rounds; quitting doesn't record a result. `/progress` shows math
   totals and recent rounds. Native numeric input uses the existing design#32 workaround.
+- Math uses an on-screen numpad on coarse-pointer devices and screens up to 600px wide.
+  The answer field is read-only with `inputMode="none"`, and touch play never autofocuses it,
+  keeping the OS keyboard closed. Desktop retains typing/Enter. Keypad includes decimal,
+  backspace and submit/next; ordinary decimal answers are compared numerically.
+  Short-screen layouts put feedback beside the keys to keep the scene stable. The small
+  local Button grid is temporary pending NoahWright87/design#37.
 
 ## Logo (Oct 2026)
 

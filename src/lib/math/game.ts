@@ -1,3 +1,5 @@
+import { validAnswer } from "./answer";
+
 /** UI-free math sprint rules. Times are monotonic milliseconds supplied by the caller. */
 export const COMBO_MS = 5_000;
 export const MAX_HEARTS = 3;
@@ -63,10 +65,9 @@ export function expireCombo(game: MathGame, now: number): MathGame {
 }
 
 export function submitAnswer(game: MathGame, answer: string, now: number, random = Math.random): MathGame {
-  // Blank, fractional, exponent and otherwise malformed input never costs a heart.
-  if (game.finishedAt !== null || game.awaitingNext || !/^\d+$/.test(answer.trim())) return game;
+  // Blank, exponent and otherwise malformed input never costs a heart.
+  if (game.finishedAt !== null || game.awaitingNext || !validAnswer(answer)) return game;
   const value = Number(answer.trim());
-  if (!Number.isSafeInteger(value)) return game;
   const current = expireCombo(game, now);
   const expected = expectedAnswer(current.problem, current.settings.operation);
   const right = value === expected;

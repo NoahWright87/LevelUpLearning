@@ -7,6 +7,7 @@ import SiteShell from "@/components/SiteShell";
 import PlayerPicker from "@/components/PlayerPicker";
 import { DEFAULT_SETTINGS, ROUND_TARGETS, gameStats, operationLabel, symbol, type MathGame, type MathSettings } from "@/lib/math/game";
 import { useMathGame } from "./useMathGame";
+import { ANSWER_LIMIT, NUMPAD_KEYS, keypadEntry, validAnswer } from "@/lib/math/answer";
 import "./math.css";
 
 function Setup({ settings, onChange, onStart }: {
@@ -48,17 +49,27 @@ function Play({ game, remaining, onAnswer, onNext, onQuit }: {
   game: MathGame; remaining: number; onAnswer: (value: string) => boolean; onNext: () => void; onQuit: () => void;
 }) {
   const [value, setValue] = useState("");
+  const [keypad, setKeypad] = useState(() => typeof window !== "undefined" && window.matchMedia("(pointer: coarse), (max-width: 600px)").matches);
   const input = useRef<HTMLInputElement>(null);
   const form = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
+    const media = window.matchMedia("(pointer: coarse), (max-width: 600px)");
+    const update = () => setKeypad(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (keypad) return;
     if (game.awaitingNext) form.current?.querySelector("button")?.focus({ preventScroll: true });
     else input.current?.focus({ preventScroll: true });
-  }, [game.awaitingNext, game.attempts]);
+  }, [game.awaitingNext, game.attempts, keypad]);
 
   const feedback = game.feedback;
   return (
-    <div className="math-play">
+    <div className={`math-play${keypad ? " math-play--keypad" : ""}`}>
       <div className="math-topline">
         <strong>{operationLabel(game.settings.operation)} · {game.settings.digits} digit{game.settings.digits > 1 ? "s" : ""}</strong>
         <Button size="small" variant="text" onClick={onQuit}>Quit</Button>
@@ -75,23 +86,33 @@ function Play({ game, remaining, onAnswer, onNext, onQuit }: {
         </div>
       </div>
       <div className="math-question-card">
-        <p className="math-equation" aria-label={`${game.problem.left} ${game.settings.operation === "addition" ? "plus" : "times"} ${game.problem.right}`}>{game.problem.left} {symbol(game.settings.operation)} {game.problem.right} <span>= ?</span></p>
         <form ref={form} className="math-answer-form" onSubmit={(e) => {
           e.preventDefault();
           if (onAnswer(value)) setValue("");
         }}>
-          {/* Native input for focus and numeric keyboard, pending NoahWright87/design#32. */}
+          <p className="math-equation" aria-label={`${game.problem.left} ${game.settings.operation === "addition" ? "plus" : "times"} ${game.problem.right}`}>{game.problem.left} {symbol(game.settings.operation)} {game.problem.right} <span>= ?</span></p>
+          <div className="math-answer-entry">
+          {/* Native input for readOnly, inputMode and focus, pending NoahWright87/design#32. */}
           <label className="nw-input math-answer">
             <span className="nw-input__label">Your answer</span>
-            <input ref={input} className="nw-input__field" value={value} onChange={(e) => setValue(e.target.value)} type="text" inputMode="numeric" pattern="[0-9]*" maxLength={7} autoComplete="off" enterKeyHint="go" disabled={game.awaitingNext} />
+            <input ref={input} className="nw-input__field" value={value} onChange={(e) => setValue(e.target.value)} type="text" inputMode={keypad ? "none" : "decimal"} readOnly={keypad} maxLength={ANSWER_LIMIT} autoComplete="off" enterKeyHint="go" disabled={game.awaitingNext} />
           </label>
-          {game.awaitingNext ? (
+          {keypad && <Button type="button" variant="text" size="small" disabled={game.awaitingNext || !value} onClick={() => setValue((v) => keypadEntry(v, "backspace"))}>⌫<span className="math-sr-only">Backspace</span></Button>}
+          </div>
+          {keypad ? (
+            // Small Button grid pending the reusable keypad in NoahWright87/design#37.
+            <div className="math-keypad" role="group" aria-label="Answer keypad">
+              {NUMPAD_KEYS.map((key) => <Button key={key} type="button" variant="outline" disabled={game.awaitingNext} onClick={() => setValue((v) => keypadEntry(v, key))}>{key}</Button>)}
+              {game.awaitingNext ? <Button type="button" color="primary" onClick={onNext}><span aria-hidden="true">→</span><span className="math-sr-only">Next problem</span></Button>
+                : <Button type="submit" color="primary" disabled={!validAnswer(value)}><span aria-hidden="true">✓</span><span className="math-sr-only">Submit</span></Button>}
+            </div>
+          ) : game.awaitingNext ? (
             <Button type="button" color="primary" onClick={onNext}>Next problem →</Button>
-          ) : <Button type="submit" color="primary" disabled={!/^\d+$/.test(value.trim())}>Check →</Button>}
-        </form>
+          ) : <Button type="submit" color="primary" disabled={!validAnswer(value)}>Check →</Button>}
         <div className={`math-feedback${feedback ? feedback.correct ? " math-feedback--right" : " math-feedback--wrong" : ""}`} role="status" aria-live="polite" aria-atomic="true">
-          {feedback ? <span key={game.attempts}>{feedback.correct ? `✓ ${feedback.problem.left} ${symbol(game.settings.operation)} ${feedback.problem.right} = ${feedback.expected}. +${feedback.points} points!` : `Not quite: ${feedback.problem.left} ${symbol(game.settings.operation)} ${feedback.problem.right} = ${feedback.expected}.`}</span> : "Type your answer and press Enter."}
+          {feedback ? <span key={game.attempts}>{feedback.correct ? `✓ ${feedback.problem.left} ${symbol(game.settings.operation)} ${feedback.problem.right} = ${feedback.expected}. +${feedback.points} points!` : `Not quite: ${feedback.problem.left} ${symbol(game.settings.operation)} ${feedback.problem.right} = ${feedback.expected}.`}</span> : keypad ? "Tap an answer, then Submit." : "Type your answer and press Enter."}
         </div>
+        </form>
       </div>
     </div>
   );

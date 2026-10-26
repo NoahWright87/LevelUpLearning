@@ -20,28 +20,54 @@
 .math-question-card { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px; border-radius: 20px; background: color-mix(in srgb, var(--foreground) 4%, var(--background)); border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent); }
 .math-equation { margin: 0; font-size: clamp(1.6rem, 7vw, 3.25rem); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .math-equation span { opacity: 0.55; }
-.math-answer-form { display: flex; align-items: flex-end; justify-content: center; gap: 10px; width: min(100%, 440px); }
+.math-answer-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; width: min(100%, 440px); }
+.math-answer-form .math-equation { grid-column: 1 / -1; text-align: center; }
+.math-answer-entry { display: flex; align-items: center; min-width: 0; }
 .math-answer { flex: 1; min-width: 0; }
 .math-answer .nw-input__field { width: 100%; min-width: 0; text-align: center; font-size: 1.5rem; }
 .math-answer-form button { flex-shrink: 0; }
-.math-feedback { min-height: 44px; display: grid; place-items: center; text-align: center; font-size: 0.9rem; }
+.math-feedback { grid-column: 1 / -1; min-height: 44px; display: grid; place-items: center; text-align: center; font-size: 0.9rem; }
 .math-feedback--right { color: var(--foreground); font-weight: 600; }
 .math-feedback--wrong { font-weight: 600; }
 .math-final-score { text-align: center; font-size: 3rem; color: var(--primary); }
 .math-final-score span { font-size: 1rem; }
 .math-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .math-results a { color: var(--primary); text-decoration: underline; }
+.math-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* Local keypad layout pending NoahWright87/design#37; all keys use design Buttons. */
+.math-keypad { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(44px, 1fr)); gap: 4px; }
+.math-keypad button { min-width: 44px; min-height: 44px; padding: 0 4px; touch-action: manipulation; }
+.math-play--keypad .math-answer-form { width: min(100%, 440px); grid-template-columns: minmax(0, 1fr) 140px; }
+.math-play--keypad .math-equation { grid-column: auto; font-size: clamp(1rem, 4.5vw, 1.75rem); }
+.math-play--keypad .math-equation > span { display: none; }
+.math-play--keypad .math-answer-entry { position: relative; }
+.math-play--keypad .math-answer-entry > button { min-width: 44px; min-height: 44px; padding: 0; }
+.math-play--keypad .math-answer .nw-input__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.math-play--keypad .math-answer .nw-input__field { height: 44px; padding: 4px; font-size: 1.125rem; }
+.math-play--keypad .math-feedback { min-height: 44px; }
 @media (max-width: 520px) {
   .math-options { grid-template-columns: 1fr; gap: 8px; }
   .math-setup { gap: 12px; }
   .math-answer-form { gap: 6px; }
   .math-question-card { padding: 10px; }
 }
-@media (max-height: 650px) {
+@media (max-height: 750px) {
   .math-play { gap: 4px; }
   .math-question-card { padding: 6px; gap: 4px; }
   .math-scoreboard { padding: 4px; }
   .math-feedback { min-height: 32px; }
+  .math-play--keypad .math-scoreboard > div { flex-direction: row; gap: 4px; }
+  .math-play--keypad .math-scoreboard { gap: 4px; }
+  .math-play--keypad .math-scoreboard strong { font-size: 1rem; }
+  .math-play--keypad .math-scoreboard span { font-size: 0.7rem; }
+  .math-play--keypad .math-hearts { letter-spacing: 0; }
+  .math-play--keypad .math-combo__label span { display: none; }
+  .math-play--keypad .math-combo__track { height: 10px; }
+  .math-play--keypad .math-answer-form { grid-template-columns: minmax(0, 1fr) 140px; grid-template-areas: "equation keys" "answer keys" "feedback keys"; grid-template-rows: auto auto 1fr; align-items: start; gap: 6px 8px; }
+  .math-play--keypad .math-equation { grid-area: equation; }
+  .math-play--keypad .math-answer-entry { grid-area: answer; }
+  .math-play--keypad .math-keypad { grid-area: keys; }
+  .math-play--keypad .math-feedback { grid-area: feedback; min-height: 0; font-size: 0.8rem; }
 }
 @media (max-height: 550px) and (min-width: 600px) {
   .math-play { display: grid; grid-template-columns: minmax(170px, 1fr) minmax(0, 2fr); grid-template-areas: "top top" "score question" "combo question"; gap: 5px 12px; }
@@ -54,4 +80,6 @@
   .math-scoreboard { padding: 4px; }
   .math-equation { font-size: 1.75rem; }
   .math-feedback { min-height: 24px; }
+  .math-play--keypad { grid-template-areas: "top question" "score question" "combo question"; grid-template-rows: auto auto 1fr; }
+  .math-play--keypad .math-scoreboard { align-self: start; }
 }
