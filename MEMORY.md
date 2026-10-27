@@ -16,7 +16,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 ## Current Decisions
 
-- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); Spelling and Math have real
+- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); Spelling, Math and Matching have real
   pages. `/[activity]` renders placeholders for future activities marked `ready: false`.
 - Hosting is Netlify via `netlify.toml` (`@netlify/plugin-nextjs`, Node 20), same as noahwright.dev.
 - `.npmrc` sets `legacy-peer-deps` because the design package declares React 18 peers
@@ -49,7 +49,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - **Decided with Noah:** everything a person has (players, results, their word lists) is one
   versioned JSON document, `src/lib/save/schema.ts` (`format: "level-up-learning.save"`,
-  `version: 2`). It lives in localStorage (`lul.save.v1`, retained for migration) and can be downloaded and uploaded on
+  `version: 3`). It lives in localStorage (`lul.save.v1`, retained for migration) and can be downloaded and uploaded on
   `/progress`. **This is the contract for the future backend/accounts**: the server should store and
   return this same shape, and the download/upload path stays for people without an account (e.g. if
   accounts become paid). Not throwaway work: change it only through `SAVE_VERSION` + `migrate`.
@@ -125,3 +125,21 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Shared paths in `src/lib/logo.ts` render the header via `components/Logo.tsx` and
   the SVG favicon via `app/icon.svg/route.ts`. Header colors follow the site theme;
   favicon colors follow system light/dark mode. Logo is visible at every screen width.
+
+## Matching (Oct 2026)
+
+- `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
+  accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
+- Default: five rows, a 60-second challenge and continuous refill after a 400 ms fade.
+  Customize also offers clear-the-board batches and 2–6 rows. Both styles support timed
+  or match-count goals (including a short final board). Small custom decks use fewer cards.
+- Quick math sources: 0–9 addition/multiplication, squares 1–12 and simplifying proper fractions
+  with reduced denominators up to 10. Boards never contain duplicate prompts or answers.
+- Wrong pairs remain, briefly show feedback and add a miss. Either column can be picked first;
+  tapping the selected card deselects it. Pure transitions reject stale/rapid taps and check
+  time on input, so delayed browser intervals cannot extend a round.
+- Custom decks support create/edit/delete, 2–200 pairs, with unique labels per side to avoid
+  ambiguity. Save version 3 adds `matching.decks`; v1/v2 progress migrates intact, keeping
+  `lul.save.v1`. Decks are shared across players and included in Progress backup/restore.
+- Results currently show round matches, time, misses and accuracy; Matching history is not
+  recorded per player. All controls use the design system; card styling is activity-specific.

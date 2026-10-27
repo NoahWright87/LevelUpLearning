@@ -30,7 +30,7 @@ const formatDate = (iso: string) => dateFormat.format(new Date(iso));
 function describeSave(save: SaveData): string {
   const sessions = save.players.reduce((n, p) => n + p.spelling.sessions.length + p.math.sessions.length, 0);
   const players = save.players.map((p) => p.name).join(", ") || "no players";
-  return `${players}; ${sessions} quiz${sessions === 1 ? "" : "zes"}; ${save.spelling.lists.length} word list${save.spelling.lists.length === 1 ? "" : "s"}`;
+  return `${players}; ${sessions} quiz${sessions === 1 ? "" : "zes"}; ${save.spelling.lists.length} word list${save.spelling.lists.length === 1 ? "" : "s"}; ${save.matching.decks.length} matching deck${save.matching.decks.length === 1 ? "" : "s"}`;
 }
 
 function PlayerSettings() {
