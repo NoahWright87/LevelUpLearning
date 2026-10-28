@@ -51,6 +51,7 @@ every pull request.
 | --- | --- |
 | `src/app/` | Routes: `/`, `/matching`, `/math`, `/spelling`, `/spelling/lists`, `/progress`, and `/[activity]` placeholders for unbuilt activities |
 | `src/components/SiteShell.tsx` | Header, nav, ⚙️ settings menu, horizon footer |
+| `src/components/activity/` | Shared game page, toolbar, stats, feedback, results, clock and composition styles; start here for new games |
 | `src/lib/site.ts` | Site constants and the list of activities |
 | `src/lib/theme.ts` | Palette overrides (same as noahwright.dev) |
 | `src/lib/save/` | The save file: format, validation, players, localStorage store, spelling stats |

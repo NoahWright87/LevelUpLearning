@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import NextLink from "next/link";
-import { Button, Heading, Text } from "@noahwright/design";
+import { Text } from "@noahwright/design";
+import { ActivityResults } from "@/components/activity/ActivityUI";
 import { scoreMultiplier } from "@/lib/spelling/difficulty";
 import { summarize, type QuizState } from "@/lib/spelling/quiz";
 import { sayText } from "@/lib/spelling/speech";
@@ -46,8 +47,7 @@ export default function QuizResults({ quiz, voiceURI, saved, onAgain, onSetup }:
   const words = [...quiz.words].sort((a, b) => b.attempts - b.correct - (a.attempts - a.correct));
 
   return (
-    <div className="spelling-results">
-      <Heading level={1}>🎉 All done!</Heading>
+    <ActivityResults title="🎉 All done!" onAgain={onAgain} onSetup={onSetup} setupLabel="Change lists or difficulty">
       <div className="spelling-results__score">
         <Stars value={summary.stars} />
         <Text>
@@ -100,14 +100,6 @@ export default function QuizResults({ quiz, voiceURI, saved, onAgain, onSetup }:
         </tbody>
       </table>
 
-      <div className="spelling-results__actions">
-        <Button color="primary" onClick={onAgain}>
-          Play again
-        </Button>
-        <Button variant="outline" onClick={onSetup}>
-          Change lists or difficulty
-        </Button>
-      </div>
-    </div>
+    </ActivityResults>
   );
 }

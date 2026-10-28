@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSceneEffects } from "@noahwright/design";
+import { useActivityClock } from "@/components/activity/useActivityClock";
 import { comboRemaining, expireCombo, nextProblem, startGame, submitAnswer, type MathGame, type MathSettings } from "@/lib/math/game";
 import { buildMathSession, recordMathSession } from "@/lib/math/progress";
 import { activePlayer, ensurePlayer } from "@/lib/save/schema";
@@ -14,36 +15,28 @@ export function useMathGame() {
   const current = useRef<MathGame | null>(null);
   const owner = useRef({ id: "", name: "Player 1" });
   const [saved, setSaved] = useState(false);
-  const [now, setNow] = useState(0);
   const playing = game !== null && game.finishedAt === null;
-
-  useEffect(() => {
-    if (!playing) return;
-    const timer = window.setInterval(() => { setNow(performance.now()); }, 50);
-    return () => window.clearInterval(timer);
-  }, [playing]);
+  const { now, sample } = useActivityClock(playing);
 
   function begin(settings: MathSettings) {
     const save = ensurePlayer(getSave());
     const player = activePlayer(save)!;
     if (save !== getSave()) updateSave(() => save);
     owner.current = { id: player.id, name: player.name };
-    const time = performance.now();
+    const time = sample();
     const next = startGame(settings, time);
     current.current = next;
-    setNow(time);
     setSaved(false);
     setGame(next);
   }
 
   function answer(value: string) {
     if (!current.current) return false;
-    const time = performance.now();
+    const time = sample();
     const next = submitAnswer(current.current, value, time);
     if (next === current.current) return false;
     current.current = next;
     setGame(next);
-    setNow(time);
     if (next.feedback?.correct) {
       for (let i = 0; i < next.combo; i++) {
         if (!effects.trigger({ type: "firework", size: "small" })) break;

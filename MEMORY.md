@@ -143,3 +143,20 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   `lul.save.v1`. Decks are shared across players and included in Progress backup/restore.
 - Results currently show round matches, time, misses and accuracy; Matching history is not
   recorded per player. All controls use the design system; card styling is activity-specific.
+
+## Shared activity UI (Oct 2026)
+
+- Start new games with `src/components/activity/ActivityUI.tsx`: `ActivityPage` owns the
+  standard page width/site frame, `ActivityToolbar` the quit bar, `ActivityStats` the labeled
+  metrics, `ActivityFeedback` the reserved live region, and `ActivityResults` the heading
+  focus and replay/setup actions. Math and Matching share these; Spelling shares results.
+- Shared `.activity-stack`, `.activity-actions`, `.activity-rules` and `.activity-result-score`
+  replace per-game composition CSS. Use design `CardGrid` for responsive setup fields and
+  design `Link` with `as={NextLink}` for links. Keep game boards and feedback states local.
+- `useActivityClock(running, onTick?)` owns the browser interval and monotonic time. Call
+  `sample()` on inputs/start; optional ticks let Matching advance fades and deadlines while
+  Math derives its combo display from `now`. Rules remain UI-free in `src/lib/<activity>/`.
+- Generic statistics belong upstream in NoahWright87/design#38; the shared stats component
+  and styles are a small commented workaround. Tinted instructions track design#26.
+- PRs should target `main`: the Netlify preview only builds for that base. Matching PR #32
+  includes the pending Math Sprint work from #31 so it can preview against main.

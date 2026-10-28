@@ -1,17 +1,7 @@
 /* Activity-specific board and feedback; all standard controls use @noahwright/design. */
-.matching-app { width: min(100%, 680px); margin-inline: auto; }
-.matching-stack { display: flex; flex-direction: column; gap: 16px; }
-.matching-actions, .matching-top { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-.matching-top { justify-content: space-between; }
-.matching-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .matching-customize { border-block: 1px solid color-mix(in srgb, var(--foreground) 16%, transparent); padding-block: 12px; }
 .matching-customize summary { cursor: pointer; font-weight: 600; }
 .matching-customize > div { padding-top: 16px; }
-.matching-tip { padding: 16px; border-radius: 14px; background: color-mix(in srgb, var(--primary) 8%, var(--background)); }
-.matching-score { display: flex; justify-content: space-around; gap: 8px; padding: 12px; border-radius: 16px; background: color-mix(in srgb, var(--foreground) 5%, var(--background)); font-variant-numeric: tabular-nums; }
-.matching-score > div { display: flex; flex-direction: column; align-items: center; }
-.matching-score span { font-size: .8rem; }
-.matching-score strong { font-size: 1.4rem; }
 .matching-board { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(12px, 4vw, 32px); }
 .matching-column { display: grid; gap: 10px; }
 .matching-slot { min-width: 0; min-height: 62px; display: grid; }
@@ -21,13 +11,9 @@
 .matching-card--selected { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 15%, var(--background)); box-shadow: 0 3px 0 var(--primary); }
 .matching-card--wrong { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 15%, var(--background)); }
 .matching-card--matched { opacity: 0; border-color: var(--primary); cursor: default; }
-.matching-feedback { min-height: 28px; text-align: center; font-size: .9rem; }
-.matching-total { text-align: center; color: var(--primary); font-size: 4rem; }
-.matching-total span { font-size: 1.1rem; }
 .matching-editor { display: grid; gap: 12px; }
 .matching-editor-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px; align-items: end; }
 .matching-editor-row .nw-input, .matching-editor-row input { min-width: 0; width: 100%; }
-.matching-app a { color: var(--primary); text-decoration: underline; }
-@media (max-width: 400px) { .matching-options { grid-template-columns: 1fr; } .matching-stack { gap: 12px; } .matching-card { padding: 8px; } }
-@media (max-height: 700px) { .matching-slot, .matching-card { min-height: 48px; } .matching-column { gap: 8px; } .matching-stack { gap: 10px; } }
+@media (max-width: 400px) { .matching-card { padding: 8px; } }
+@media (max-height: 700px) { .matching-slot, .matching-card { min-height: 48px; } .matching-column { gap: 8px; } }
 @media (prefers-reduced-motion: reduce) { .matching-card { transition: none; } }

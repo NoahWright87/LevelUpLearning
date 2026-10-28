@@ -1,0 +1,18 @@
+/* App-level activity composition. Controls, typography and page containers use the design system. */
+.activity-stack { display: flex; flex-direction: column; gap: var(--spacing-md, 16px); }
+.activity-actions, .activity-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: var(--spacing-sm, 8px); }
+.activity-toolbar { justify-content: space-between; font-size: .9rem; }
+/* Shared tinted instructions, pending NoahWright87/design#26 (accent surfaces). */
+.activity-rules { display: flex; flex-direction: column; gap: var(--spacing-sm, 8px); padding: var(--spacing-md, 16px); border-radius: 16px; background: color-mix(in srgb, var(--primary) 8%, var(--background)); }
+/* Small statistics workaround, pending NoahWright87/design#38. */
+.activity-stats { display: flex; justify-content: space-around; gap: 8px; margin: 0; padding: 10px; border-radius: 14px; background: color-mix(in srgb, var(--foreground) 4%, var(--background)); border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent); font-variant-numeric: tabular-nums; }
+.activity-stats > div { min-width: 0; text-align: center; }
+.activity-stats dt { font-size: .8rem; }
+.activity-stats dd { margin: 0; font-size: 1.25rem; font-weight: 700; }
+.activity-result-score { text-align: center; color: var(--primary); font-size: 3rem; }
+.activity-result-score span { font-size: 1rem; }
+.activity-feedback { min-height: 32px; display: grid; place-items: center; text-align: center; font-size: .9rem; }
+@media (max-height: 650px) {
+  .activity-stats { padding: 4px; }
+  .activity-stack { gap: 12px; }
+}
