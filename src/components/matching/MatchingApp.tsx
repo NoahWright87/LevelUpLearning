@@ -7,7 +7,7 @@ import { useSave } from "@/components/useSave";
 import FittedText from "@/components/FittedText";
 import { newId } from "@/lib/save/schema";
 import { updateSave } from "@/lib/save/store";
-import { DEFAULT_SETTINGS, MATH_LABELS, elapsed, mathPairs, normalizeSettings, validateDeck, type Deck, type Game, type MathKind, type Settings } from "@/lib/matching/game";
+import { APPEAR_MS, DEFAULT_SETTINGS, MATH_LABELS, elapsed, isCardReady, mathPairs, normalizeSettings, validateDeck, type Deck, type Game, type MathKind, type Settings } from "@/lib/matching/game";
 import { useMatchingGame } from "./useMatchingGame";
 import "./matching.css";
 
@@ -44,10 +44,12 @@ function Play({ game, now, onChoose, onQuit, title }: { game: Game; now: number;
   const remaining = Math.max(0, Math.ceil(game.settings.amount - seconds));
   const board = useRef<HTMLDivElement>(null);
   const keyboard = useRef(false);
+  const firstReady = game.left.find(card => card && isCardReady(card, now))?.token;
+  const appearing = game.left.some(card => card && card.clearedAt === null && !isCardReady(card, now));
   useEffect(() => {
     // A cleared batch can remove the focused card; keep keyboard play on the board.
     if (keyboard.current && document.activeElement === document.body) board.current?.querySelector<HTMLButtonElement>("button[tabindex='0']")?.focus({ preventScroll: true });
-  }, [game.left]);
+  }, [game.left, firstReady]);
   // Start Tab navigation at the board without highlighting an untouched card.
   useEffect(() => { board.current?.focus({ preventScroll: true }); }, []);
   return <div className="activity-stack">
@@ -61,9 +63,10 @@ function Play({ game, now, onChoose, onQuit, title }: { game: Game; now: number;
     <div className="matching-board" ref={board} tabIndex={-1}>
       {(["left", "right"] as const).map(side => <div className="matching-column" role="group" aria-label={`${side === "left" ? "Left" : "Right"} cards`} key={side}>
         {game[side].map((card, i) => <div className="matching-slot" key={i}>
-          {card && <button type="button" className={`matching-card${game.selected?.token === card.token ? " matching-card--selected" : ""}${card.clearedAt !== null ? " matching-card--matched" : ""}${game.wrong.includes(card.token) ? " matching-card--wrong" : ""}`}
-            aria-pressed={game.selected?.token === card.token} aria-label={`${card.pair[side]}${card.clearedAt !== null ? ", matched" : ""}`}
-            tabIndex={card.clearedAt !== null ? -1 : 0} aria-disabled={game.wrong.length > 0 || card.clearedAt !== null}
+          {card && <button key={card.token} type="button" className={`matching-card${game.selected?.token === card.token ? " matching-card--selected" : ""}${card.clearedAt !== null ? " matching-card--matched" : ""}${game.wrong.includes(card.token) ? " matching-card--wrong" : ""}`}
+            style={{ animationDuration: `${APPEAR_MS}ms` }}
+            aria-pressed={game.selected?.token === card.token} aria-label={`${card.pair[side]}${card.clearedAt !== null ? ", matched" : !isCardReady(card, now) ? ", appearing" : ""}`}
+            tabIndex={isCardReady(card, now) ? 0 : -1} aria-disabled={game.wrong.length > 0 || !isCardReady(card, now)}
             onPointerDown={() => { keyboard.current = false; }}
             onClick={e => {
               keyboard.current = e.detail === 0;
@@ -76,7 +79,7 @@ function Play({ game, now, onChoose, onQuit, title }: { game: Game; now: number;
       </div>)}
     </div>
     <ActivityFeedback>
-      {game.wrong.length ? "Not a match. Try another pair." : game.correct ? `${game.correct} matched. Keep going!` : "Find your first match."}
+      {game.wrong.length ? "Not a match. Try another pair." : firstReady === undefined ? appearing ? "New cards are fading in…" : "More pairs are on their way." : game.correct ? `${game.correct} matched. Keep going!` : "Find your first match."}
     </ActivityFeedback>
   </div>;
 }
@@ -145,7 +148,7 @@ export default function MatchingApp() {
         <Select label="Cards on each side" value={String(settings.rows)} onChange={e => setSettings({ ...settings, rows: Number(e.target.value) })}>{[2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n} cards</option>)}</Select>
         <Input label={settings.goal === "time" ? "Custom seconds · 1–1800" : "Custom match target · 1–500"} type="number" value={customAmount ?? String(settings.amount)} onChange={e => { setCustomAmount(e.target.value); setSettings(normalizeSettings({ ...settings, amount: Number(e.target.value) })); }} />
       </div></details>
-      <div className="activity-rules"><Text>{settings.style === "refill" ? "Match at least two pairs to refill the empty spaces. More matches make the refill arrive sooner." : "Clear every pair to reveal a fresh board."} {settings.goal === "time" ? "Make as many matches as you can before time runs out." : "Reach your target as quickly as you can."}</Text>{deck && <Text tone="muted">Pairs repeat during the round. A small deck may show fewer cards.</Text>}</div>
+      <div className="activity-rules"><Text>{settings.style === "refill" ? "Each match starts a 30-second wait for a new pair. Every match halves the time left on all earlier waits. New cards always fade in over 2.5 seconds." : "Clear every pair to reveal a fresh board. New cards fade in over 2.5 seconds."} {settings.goal === "time" ? "Make as many matches as you can before time runs out." : "Reach your target as quickly as you can."}</Text>{deck && <Text tone="muted">Pairs repeat during the round. A small deck may show fewer cards.</Text>}</div>
       {notice && <p role="status">{notice}</p>}
       <Button color="primary" disabled={!canStart} onClick={start}>Let’s match →</Button>
     </div>}

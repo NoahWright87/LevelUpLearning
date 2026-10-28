@@ -130,10 +130,13 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
   accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
-- Default: five rows and a 60-second challenge. Cards fade over 400 ms; continuous refill
-  waits for at least two matches since the last deal, then 1.2 seconds. A third/fourth match
-  shortens the pending wait to 800/400 ms (without extending an earlier deadline). Every
-  fading card must finish before the batch is dealt, into shuffled empty slots on both sides.
+- Default: five rows and a 60-second challenge. Each correct match starts its own 30-second
+  replacement timer after halving the remaining time on all existing timers. Due timers deal
+  one pair each into random empty positions on both sides. A timer that cannot deal yet stays
+  queued. Matched cards fade out over 400 ms; every new card fades in over a fixed 2.5 seconds
+  and becomes selectable afterward. Matches accelerate waiting timers, never the fade-in.
+  Initial cards and clear-the-board deals use the same fixed appearance duration. Reduced
+  motion skips the animation while keeping the same readiness timing.
   Customize also offers clear-the-board batches and 2–6 rows. Both styles support timed
   or match-count goals (including a short final board). Small custom decks use fewer cards.
 - Quick math sources: 0–9 addition/multiplication, squares 1–12 and simplifying proper fractions

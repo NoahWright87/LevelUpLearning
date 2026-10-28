@@ -48,22 +48,24 @@ export function readDecks(value: unknown): Deck[] {
   }
   return decks;
 }
-export type Card = { pair: Pair; token: number; clearedAt: number | null };
+export type Card = { pair: Pair; token: number; appearedAt: number; clearedAt: number | null };
 export type Game = { settings: Settings; pool: Pair[]; left: (Card | null)[]; right: (Card | null)[];
   selected: { side: "left" | "right"; token: number } | null; wrong: number[]; wrongUntil: number;
   correct: number; mistakes: number; startedAt: number; finishedAt: number | null; serial: number;
-  matchesSinceRefill: number; refillAt: number | null };
+  refills: number[] };
 export const FADE_MS = 400;
-/** More cleared pairs shorten the wait, but every match still gets time to fade. */
-export function refillDelay(matches: number): number {
-  return Math.max(FADE_MS, 2000 - matches * 400);
+export const APPEAR_MS = 2500;
+export const REFILL_MS = 30_000;
+/** Appearing cards cannot be matched before their fixed fade-in finishes. */
+export function isCardReady(card: Card, now: number): boolean {
+  return card.clearedAt === null && now >= card.appearedAt + APPEAR_MS;
 }
 function shuffle<T>(items: T[], rng: () => number): T[] {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; }
   return copy;
 }
-function fill(game: Game, rng: () => number): Game {
+function fill(game: Game, now: number, rng: () => number, limit = Infinity): Game {
   const left = [...game.left], right = [...game.right];
   const active = left.filter((c): c is Card => !!c);
   const available = shuffle(game.pool.filter(p => !active.some(c => c.pair.left === p.left || c.pair.right === p.right)), rng);
@@ -71,23 +73,23 @@ function fill(game: Game, rng: () => number): Game {
   const emptyRight = shuffle(right.flatMap((c, i) => c ? [] : [i]), rng);
   let serial = game.serial;
   let remaining = game.settings.goal === "matches" ? game.settings.amount - game.correct - active.filter(c => c.clearedAt === null).length : Infinity;
-  for (let i = 0; i < emptyLeft.length && remaining > 0; i++) {
+  for (let i = 0; i < Math.min(emptyLeft.length, limit) && remaining > 0; i++) {
     const pair = available.shift();
     if (!pair) break;
     // A board never has indistinguishable prompts or answers, even for random math facts.
     for (let j = available.length - 1; j >= 0; j--) if (available[j].left === pair.left || available[j].right === pair.right) available.splice(j, 1);
-    left[emptyLeft[i]] = { pair, token: ++serial, clearedAt: null };
-    right[emptyRight[i]] = { pair, token: ++serial, clearedAt: null };
+    left[emptyLeft[i]] = { pair, token: ++serial, appearedAt: now, clearedAt: null };
+    right[emptyRight[i]] = { pair, token: ++serial, appearedAt: now, clearedAt: null };
     remaining--;
   }
-  return { ...game, left, right, serial, matchesSinceRefill: 0, refillAt: null };
+  return { ...game, left, right, serial };
 }
 export function startGame(pool: Pair[], settings: Settings, now: number, rng = Math.random): Game {
   if (pool.length < 2) throw new Error("At least two pairs are needed.");
   const s = normalizeSettings(settings);
   return fill({ settings: s, pool: [...pool], left: Array(s.rows).fill(null), right: Array(s.rows).fill(null), selected: null,
     wrong: [], wrongUntil: 0, correct: 0, mistakes: 0, startedAt: now, finishedAt: null, serial: 0,
-    matchesSinceRefill: 0, refillAt: null }, rng);
+    refills: [] }, now, rng);
 }
 export function tick(game: Game, now: number, rng = Math.random): Game {
   if (game.finishedAt !== null) return game;
@@ -99,31 +101,37 @@ export function tick(game: Game, now: number, rng = Math.random): Game {
     const remove = (c: Card | null) => c && c.clearedAt !== null && now >= c.clearedAt + FADE_MS ? null : c;
     next = { ...next, left: next.left.map(remove), right: next.right.map(remove) };
   }
-  const fading = next.left.some(c => c !== null && c.clearedAt !== null);
-  const ready = next.settings.style === "clear"
-    ? next.left.every(c => !c)
-    : next.refillAt !== null && now >= next.refillAt && !fading;
-  if (ready) next = fill(next, rng);
+  if (next.settings.style === "clear") {
+    if (next.left.every(c => !c)) next = fill(next, now, rng);
+  } else {
+    const due = next.refills.filter(time => time <= now).length;
+    if (due) {
+      const filled = fill(next, now, rng, due);
+      const dealt = (filled.serial - next.serial) / 2;
+      // Keep undelivered timers if their slots are still fading or a source has no free pair.
+      next = { ...filled, refills: filled.refills.slice(dealt) };
+    }
+  }
   return next;
 }
 export function selectCard(game: Game, side: "left" | "right", token: number, now: number, rng = Math.random): Game {
   const g = tick(game, now, rng);
   if (g.finishedAt !== null || g.wrong.length) return g;
   const card = g[side].find(c => c?.token === token);
-  if (!card || card.clearedAt !== null) return g;
+  if (!card || !isCardReady(card, now)) return g;
   const selected = g.selected;
   if (!selected || selected.side === side) return { ...g, selected: selected?.token === token ? null : { side, token } };
   const other = g[selected.side].find(c => c?.token === selected.token);
-  if (!other || other.clearedAt !== null) return { ...g, selected: { side, token } };
+  if (!other || !isCardReady(other, now)) return { ...g, selected: { side, token } };
   if (other.pair.id !== card.pair.id) return { ...g, selected: null, mistakes: g.mistakes + 1, wrong: [other.token, token], wrongUntil: now + FADE_MS };
   const mark = (c: Card | null) => c?.token === token || c?.token === other.token ? { ...c, clearedAt: now } : c;
   const correct = g.correct + 1;
-  const matchesSinceRefill = g.matchesSinceRefill + 1;
-  const refillAt = g.settings.style === "refill" && matchesSinceRefill >= 2
-    ? Math.min(g.refillAt ?? Infinity, now + refillDelay(matchesSinceRefill))
-    : null;
+  // A match halves the time left on existing timers, then starts its own full 30 seconds.
+  const refills = g.settings.style === "refill"
+    ? [...g.refills.map(time => now + Math.max(0, time - now) / 2), now + REFILL_MS]
+    : [];
   return { ...g, left: g.left.map(mark), right: g.right.map(mark), selected: null, correct,
-    matchesSinceRefill, refillAt,
+    refills,
     finishedAt: g.settings.goal === "matches" && correct >= g.settings.amount ? now : null };
 }
 export function elapsed(game: Game, now: number): number { return Math.max(0, ((game.finishedAt ?? now) - game.startedAt) / 1000); }
