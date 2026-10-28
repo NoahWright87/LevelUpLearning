@@ -4,6 +4,7 @@ import NextLink from "next/link";
 import { Button, CardGrid, Heading, Input, Link, Select, Text } from "@noahwright/design";
 import { ActivityFeedback, ActivityPage, ActivityResults, ActivityStats, ActivityToolbar } from "@/components/activity/ActivityUI";
 import { useSave } from "@/components/useSave";
+import FittedText from "@/components/FittedText";
 import { newId } from "@/lib/save/schema";
 import { updateSave } from "@/lib/save/store";
 import { DEFAULT_SETTINGS, MATH_LABELS, elapsed, mathPairs, normalizeSettings, validateDeck, type Deck, type Game, type MathKind, type Settings } from "@/lib/matching/game";
@@ -47,7 +48,8 @@ function Play({ game, now, onChoose, onQuit, title }: { game: Game; now: number;
     // A cleared batch can remove the focused card; keep keyboard play on the board.
     if (keyboard.current && document.activeElement === document.body) board.current?.querySelector<HTMLButtonElement>("button[tabindex='0']")?.focus({ preventScroll: true });
   }, [game.left]);
-  useEffect(() => { board.current?.querySelector<HTMLButtonElement>("button:not(:disabled)")?.focus({ preventScroll: true }); }, []);
+  // Start Tab navigation at the board without highlighting an untouched card.
+  useEffect(() => { board.current?.focus({ preventScroll: true }); }, []);
   return <div className="activity-stack">
     <ActivityToolbar title={title} onQuit={onQuit} />
     <ActivityStats items={[
@@ -56,13 +58,19 @@ function Play({ game, now, onChoose, onQuit, title }: { game: Game; now: number;
       { label: "Misses", value: game.mistakes },
     ]} />
     <Text tone="muted">Pick one card from each side. You can start on either side.</Text>
-    <div className="matching-board" ref={board}>
+    <div className="matching-board" ref={board} tabIndex={-1}>
       {(["left", "right"] as const).map(side => <div className="matching-column" role="group" aria-label={`${side === "left" ? "Left" : "Right"} cards`} key={side}>
         {game[side].map((card, i) => <div className="matching-slot" key={i}>
           {card && <button type="button" className={`matching-card${game.selected?.token === card.token ? " matching-card--selected" : ""}${card.clearedAt !== null ? " matching-card--matched" : ""}${game.wrong.includes(card.token) ? " matching-card--wrong" : ""}`}
             aria-pressed={game.selected?.token === card.token} aria-label={`${card.pair[side]}${card.clearedAt !== null ? ", matched" : ""}`}
-            tabIndex={card.clearedAt !== null ? -1 : 0} aria-disabled={game.wrong.length > 0 || card.clearedAt !== null} onClick={e => { keyboard.current = e.detail === 0; onChoose(side, card.token); }}>
-            {card.clearedAt !== null && <span aria-hidden="true">✓ </span>}{card.pair[side]}
+            tabIndex={card.clearedAt !== null ? -1 : 0} aria-disabled={game.wrong.length > 0 || card.clearedAt !== null}
+            onPointerDown={() => { keyboard.current = false; }}
+            onClick={e => {
+              keyboard.current = e.detail === 0;
+              if (!keyboard.current) e.currentTarget.blur();
+              onChoose(side, card.token);
+            }}>
+            <FittedText>{card.pair[side]}</FittedText>
           </button>}
         </div>)}
       </div>)}
@@ -137,7 +145,7 @@ export default function MatchingApp() {
         <Select label="Cards on each side" value={String(settings.rows)} onChange={e => setSettings({ ...settings, rows: Number(e.target.value) })}>{[2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n} cards</option>)}</Select>
         <Input label={settings.goal === "time" ? "Custom seconds · 1–1800" : "Custom match target · 1–500"} type="number" value={customAmount ?? String(settings.amount)} onChange={e => { setCustomAmount(e.target.value); setSettings(normalizeSettings({ ...settings, amount: Number(e.target.value) })); }} />
       </div></details>
-      <div className="activity-rules"><Text>{settings.style === "refill" ? "Matched cards fade away and new pairs take their place." : "Clear every pair to reveal a fresh board."} {settings.goal === "time" ? "Make as many matches as you can before time runs out." : "Reach your target as quickly as you can."}</Text>{deck && <Text tone="muted">Pairs repeat during the round. A small deck may show fewer cards.</Text>}</div>
+      <div className="activity-rules"><Text>{settings.style === "refill" ? "Match at least two pairs to refill the empty spaces. More matches make the refill arrive sooner." : "Clear every pair to reveal a fresh board."} {settings.goal === "time" ? "Make as many matches as you can before time runs out." : "Reach your target as quickly as you can."}</Text>{deck && <Text tone="muted">Pairs repeat during the round. A small deck may show fewer cards.</Text>}</div>
       {notice && <p role="status">{notice}</p>}
       <Button color="primary" disabled={!canStart} onClick={start}>Let’s match →</Button>
     </div>}

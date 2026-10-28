@@ -14,6 +14,11 @@ The shared stylesheet provides `activity-stack`, `activity-actions`, `activity-r
 `activity-result-score` for common composition. Keep board geometry and game-specific
 animations in the activity's stylesheet.
 
+For fixed-size cards, shared `components/FittedText.tsx` grows or shrinks wrapping text to
+fit both dimensions, including after resizing or font loads. Its parent must have fixed
+bounds so measuring the text cannot expand the container. This is a small workaround for
+NoahWright87/design#39.
+
 For timed activities, `useActivityClock(running, onTick?)` supplies `now` and `sample()`.
 Sample again on input so delayed interval callbacks cannot extend deadlines. The callback
 can apply the game's pure time transition; omit it when the screen only needs elapsed time.

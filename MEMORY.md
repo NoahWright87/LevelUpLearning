@@ -130,7 +130,10 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
   accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
-- Default: five rows, a 60-second challenge and continuous refill after a 400 ms fade.
+- Default: five rows and a 60-second challenge. Cards fade over 400 ms; continuous refill
+  waits for at least two matches since the last deal, then 1.2 seconds. A third/fourth match
+  shortens the pending wait to 800/400 ms (without extending an earlier deadline). Every
+  fading card must finish before the batch is dealt, into shuffled empty slots on both sides.
   Customize also offers clear-the-board batches and 2–6 rows. Both styles support timed
   or match-count goals (including a short final board). Small custom decks use fewer cards.
 - Quick math sources: 0–9 addition/multiplication, squares 1–12 and simplifying proper fractions
@@ -143,6 +146,12 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   `lul.save.v1`. Decks are shared across players and included in Progress backup/restore.
 - Results currently show round matches, time, misses and accuracy; Matching history is not
   recorded per player. All controls use the design system; card styling is activity-specific.
+- Pointer clicks blur cards and never restore board focus; keyboard play retains visible
+  focus and moves to an available card if the focused one disappears. The initial board focus
+  is on its container so it does not light up an untouched card.
+- Fixed card bounds use shared `components/FittedText.tsx` to maximize real, wrapping text
+  inside the available width/height. It refits on content, container resize and font loads;
+  this small local workaround tracks NoahWright87/design#39.
 
 ## Shared activity UI (Oct 2026)
 
