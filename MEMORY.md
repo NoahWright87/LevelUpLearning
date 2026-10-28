@@ -16,8 +16,8 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 ## Current Decisions
 
-- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); `/[activity]` renders a
-  placeholder for each until it has a real page. `ready: false` shows a "Coming soon" pill.
+- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); Spelling, Math and Matching have real
+  pages. `/[activity]` renders placeholders for future activities marked `ready: false`.
 - Hosting is Netlify via `netlify.toml` (`@netlify/plugin-nextjs`, Node 20), same as noahwright.dev.
 - `.npmrc` sets `legacy-peer-deps` because the design package declares React 18 peers
   (noahwright.dev does the same via `NPM_FLAGS` on Netlify).
@@ -49,7 +49,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - **Decided with Noah:** everything a person has (players, results, their word lists) is one
   versioned JSON document, `src/lib/save/schema.ts` (`format: "level-up-learning.save"`,
-  `version: 1`). It lives in localStorage (`lul.save.v1`) and can be downloaded and uploaded on
+  `version: 3`). It lives in localStorage (`lul.save.v1`, retained for migration) and can be downloaded and uploaded on
   `/progress`. **This is the contract for the future backend/accounts**: the server should store and
   return this same shape, and the download/upload path stays for people without an account (e.g. if
   accounts become paid). Not throwaway work: change it only through `SAVE_VERSION` + `migrate`.
@@ -89,8 +89,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Triggers stay in event handlers, outside the UI-free quiz logic. Wrong/blank answers
   and quitting do not celebrate. The design package drops unavailable/offscreen events
   and respects Still/reduced motion; celebrations do not scroll or queue for later.
-- Logo, fireworks integration, and combo changes belong together in PR #30 on
-  `codex/graduate-logo`. Push follow-up changes there while that PR is open.
+- Logo, spelling fireworks, and compact quiz layout shipped together in merged PR #30.
 - Active quizzes use compact spacing and a smaller scene via public sky/sea height props,
   keeping the fireworks visible. Combo sits in the progress row; Speak shares the Check/Next
   row. A reserved feedback slot keeps the footer from shifting when an answer is checked.
@@ -100,6 +99,24 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Backend and accounts: when, and whether they're paid. The save file above is the data shape.
 - Merging an uploaded save into an existing one (today it replaces).
 
+## Math sprint (Oct 2026)
+
+- `/math` is playable: addition/multiplication, 1–3 digits per operand (0–9, 10–99,
+  100–999), and goals of 10/30/100 correct; default 30 is a short replayable round.
+- Three hearts; a miss costs one, resets combo and shows the correction until Next.
+  Correct answers advance immediately and retain input focus. Blank/invalid input is ignored.
+- Each correct answer refills a five-second combo timer; expiry resets only combo, never hearts.
+  Score = 10 × current combo per correct answer. Fireworks = one small shell per combo point,
+  plus a large burst on reaching the goal, through the shared design renderer.
+- Rules and clock calculations live in `src/lib/math/game.ts`, with tests beside them.
+  Browser timing uses `performance.now()`; submission checks expiry independently of UI ticks.
+- Compact scene plus responsive play layout keeps the game and footer within one viewport,
+  checked at desktop, phone (including 320×568) and 844×390 landscape sizes.
+- Save version 2 migrates version 1 by adding `player.math.sessions`; existing spelling data
+  and the storage key stay intact. Completed wins/losses save to the player selected at round
+  start, capped at 500 math rounds; quitting doesn't record a result. `/progress` shows math
+  totals and recent rounds. Native numeric input uses the existing design#32 workaround.
+
 ## Logo (Oct 2026)
 
 - Noah selected the clean Graduate silhouette: graduation cap, original head/glasses,
@@ -108,3 +125,47 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Shared paths in `src/lib/logo.ts` render the header via `components/Logo.tsx` and
   the SVG favicon via `app/icon.svg/route.ts`. Header colors follow the site theme;
   favicon colors follow system light/dark mode. Logo is visible at every screen width.
+
+## Matching (Oct 2026)
+
+- `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
+  accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
+- Default: five rows and a 60-second challenge. Cards fade over 400 ms; continuous refill
+  waits for at least two matches since the last deal, then 1.2 seconds. A third/fourth match
+  shortens the pending wait to 800/400 ms (without extending an earlier deadline). Every
+  fading card must finish before the batch is dealt, into shuffled empty slots on both sides.
+  Customize also offers clear-the-board batches and 2–6 rows. Both styles support timed
+  or match-count goals (including a short final board). Small custom decks use fewer cards.
+- Quick math sources: 0–9 addition/multiplication, squares 1–12 and simplifying proper fractions
+  with reduced denominators up to 10. Boards never contain duplicate prompts or answers.
+- Wrong pairs remain, briefly show feedback and add a miss. Either column can be picked first;
+  tapping the selected card deselects it. Pure transitions reject stale/rapid taps and check
+  time on input, so delayed browser intervals cannot extend a round.
+- Custom decks support create/edit/delete, 2–200 pairs, with unique labels per side to avoid
+  ambiguity. Save version 3 adds `matching.decks`; v1/v2 progress migrates intact, keeping
+  `lul.save.v1`. Decks are shared across players and included in Progress backup/restore.
+- Results currently show round matches, time, misses and accuracy; Matching history is not
+  recorded per player. All controls use the design system; card styling is activity-specific.
+- Pointer clicks blur cards and never restore board focus; keyboard play retains visible
+  focus and moves to an available card if the focused one disappears. The initial board focus
+  is on its container so it does not light up an untouched card.
+- Fixed card bounds use shared `components/FittedText.tsx` to maximize real, wrapping text
+  inside the available width/height. It refits on content, container resize and font loads;
+  this small local workaround tracks NoahWright87/design#39.
+
+## Shared activity UI (Oct 2026)
+
+- Start new games with `src/components/activity/ActivityUI.tsx`: `ActivityPage` owns the
+  standard page width/site frame, `ActivityToolbar` the quit bar, `ActivityStats` the labeled
+  metrics, `ActivityFeedback` the reserved live region, and `ActivityResults` the heading
+  focus and replay/setup actions. Math and Matching share these; Spelling shares results.
+- Shared `.activity-stack`, `.activity-actions`, `.activity-rules` and `.activity-result-score`
+  replace per-game composition CSS. Use design `CardGrid` for responsive setup fields and
+  design `Link` with `as={NextLink}` for links. Keep game boards and feedback states local.
+- `useActivityClock(running, onTick?)` owns the browser interval and monotonic time. Call
+  `sample()` on inputs/start; optional ticks let Matching advance fades and deadlines while
+  Math derives its combo display from `now`. Rules remain UI-free in `src/lib/<activity>/`.
+- Generic statistics belong upstream in NoahWright87/design#38; the shared stats component
+  and styles are a small commented workaround. Tinted instructions track design#26.
+- PRs should target `main`: the Netlify preview only builds for that base. Matching PR #32
+  includes the pending Math Sprint work from #31 so it can preview against main.

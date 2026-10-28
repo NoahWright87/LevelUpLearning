@@ -15,6 +15,7 @@ export const SITE = {
  * placeholder from `/[activity]`; flip it once the activity has its own route under `src/app/`.
  */
 export const ACTIVITIES = [
+  { slug: "matching", title: "Matching", emoji: "🃏", description: "Match quick math facts or your own cards in a race against the clock.", ready: true },
   {
     slug: "spelling",
     title: "Spelling",
@@ -26,8 +27,8 @@ export const ACTIVITIES = [
     slug: "math",
     title: "Math",
     emoji: "➗",
-    description: "Problems that grow with you, from adding to multi-step equations.",
-    ready: false,
+    description: "Think fast, build math combos, and light up the sky with fireworks.",
+    ready: true,
   },
 ] as const;
 

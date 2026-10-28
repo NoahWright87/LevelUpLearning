@@ -10,9 +10,22 @@
 import { clampSettings, PRESETS, type DifficultyId, type DifficultySettings } from "../spelling/difficulty";
 import { BUILT_IN_IDS } from "../spelling/builtInLists";
 import { parseListFile, type SpellingList } from "../spelling/lists";
+import { readDecks, type Deck } from "../matching/game";
+import type { MathSettings } from "../math/game";
 
 export const SAVE_FORMAT = "level-up-learning.save";
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 3;
+
+export type MathSession = {
+  id: string;
+  finishedAt: string;
+  settings: MathSettings;
+  correct: number;
+  attempts: number;
+  points: number;
+  bestCombo: number;
+  seconds: number;
+};
 
 export type WordResult = {
   word: string;
@@ -52,9 +65,11 @@ export type Player = {
   name: string;
   createdAt: string;
   spelling: { sessions: SpellingSession[] };
+  math: { sessions: MathSession[] };
 };
 
 export type SaveData = {
+  matching: { decks: Deck[] };
   format: typeof SAVE_FORMAT;
   version: number;
   /** ISO timestamp of the last change. */
@@ -80,6 +95,7 @@ export function emptySave(now = new Date().toISOString()): SaveData {
     activePlayerId: null,
     players: [],
     spelling: { lists: [] },
+    matching: { decks: [] },
   };
 }
 
@@ -134,6 +150,7 @@ function readSession(v: unknown, now: string): SpellingSession | null {
 function readPlayer(v: unknown, now: string): Player | null {
   if (!isObj(v) || typeof v.name !== "string" || !v.name.trim()) return null;
   const spelling = isObj(v.spelling) ? v.spelling : {};
+  const math = isObj(v.math) ? v.math : {};
   return {
     id: str(v.id) || newId(),
     name: v.name.trim(),
@@ -143,11 +160,30 @@ function readPlayer(v: unknown, now: string): Player | null {
         .map((s) => readSession(s, now))
         .filter((s): s is SpellingSession => !!s),
     },
+    math: { sessions: (Array.isArray(math.sessions) ? math.sessions : [])
+      .map((s) => readMathSession(s, now)).filter((s): s is MathSession => s !== null) },
   };
 }
 
-/** Upgrades older versions in place. Version 1 is the first, so there's nothing to do yet. */
+function readMathSession(v: unknown, now: string): MathSession | null {
+  if (!isObj(v) || !isObj(v.settings)) return null;
+  const { operation, digits, target } = v.settings;
+  if ((operation !== "addition" && operation !== "multiplication") ||
+    (digits !== 1 && digits !== 2 && digits !== 3) || (target !== 10 && target !== 30 && target !== 100)) return null;
+  const correct = Math.min(target, count(v.correct));
+  return { id: str(v.id) || newId(), finishedAt: date(v.finishedAt, now),
+    settings: { operation, digits, target }, correct,
+    attempts: Math.max(correct, count(v.attempts)), points: count(v.points),
+    bestCombo: Math.min(correct, count(v.bestCombo)), seconds: count(v.seconds) };
+}
+
+/** Version 2 adds math history; version 3 adds reusable matching decks. */
 function migrate(data: Obj): Obj {
+  if (typeof data.version !== "number" || data.version < 3) data = { ...data, matching: { decks: [] } };
+  if (typeof data.version !== "number" || data.version < 2) {
+    data = { ...data, version: 2, players: (Array.isArray(data.players) ? data.players : [])
+      .map((p) => isObj(p) ? { ...p, math: { sessions: [] } } : p) };
+  }
   return data;
 }
 
@@ -201,6 +237,7 @@ export function parseSaveFile(text: string, now = new Date().toISOString()): Sav
     activePlayerId: players.some((p) => p.id === activePlayerId) ? activePlayerId : (players[0]?.id ?? null),
     players,
     spelling: { lists },
+    matching: { decks: readDecks(isObj(data.matching) ? data.matching.decks : []) },
   };
 }
 
@@ -215,7 +252,7 @@ export function activePlayer(save: SaveData): Player | null {
 }
 
 export function addPlayer(save: SaveData, name: string, now = new Date().toISOString()): SaveData {
-  const player: Player = { id: newId(), name: name.trim() || "Player", createdAt: now, spelling: { sessions: [] } };
+  const player: Player = { id: newId(), name: name.trim() || "Player", createdAt: now, spelling: { sessions: [] }, math: { sessions: [] } };
   return { ...save, players: [...save.players, player], activePlayerId: player.id };
 }
 

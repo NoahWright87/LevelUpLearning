@@ -1,0 +1,38 @@
+/* Math-specific game layout; controls and the fireworks renderer come from the design system. */
+.math-play { display: flex; flex-direction: column; gap: 10px; }
+.math-combo__label { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.math-hearts { color: var(--danger); letter-spacing: 3px; }
+.math-hearts span { font-size: inherit; }
+.math-combo__label { margin-bottom: 6px; font-size: 0.9rem; }
+.math-combo__label strong { white-space: nowrap; }
+.math-combo__label span { font-size: 0.8rem; text-align: right; }
+.math-combo__track { height: 16px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--foreground) 12%, transparent); }
+.math-combo__fill { height: 100%; width: 100%; transform-origin: left; background: linear-gradient(90deg, var(--secondary), var(--primary)); }
+.math-question-card { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px; border-radius: 20px; background: color-mix(in srgb, var(--foreground) 4%, var(--background)); border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent); }
+.math-equation { margin: 0; font-size: clamp(1.6rem, 7vw, 3.25rem); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.math-equation span { opacity: 0.55; }
+.math-answer-form { display: flex; align-items: flex-end; justify-content: center; gap: 10px; width: min(100%, 440px); }
+.math-answer { flex: 1; min-width: 0; }
+.math-answer .nw-input__field { width: 100%; min-width: 0; text-align: center; font-size: 1.5rem; }
+.math-answer-form button { flex-shrink: 0; }
+.math-feedback--right { color: var(--foreground); font-weight: 600; }
+.math-feedback--wrong { font-weight: 600; }
+@media (max-width: 520px) {
+  .math-answer-form { gap: 6px; }
+  .math-question-card { padding: 10px; }
+}
+@media (max-height: 650px) {
+  .math-play { gap: 4px; }
+  .math-question-card { padding: 6px; gap: 4px; }
+}
+@media (max-height: 550px) and (min-width: 600px) {
+  .math-play { display: grid; grid-template-columns: minmax(170px, 1fr) minmax(0, 2fr); grid-template-areas: "top top" "score question" "combo question"; gap: 5px 12px; }
+  .math-topline { grid-area: top; }
+  .math-scoreboard { grid-area: score; }
+  .math-combo { grid-area: combo; align-self: start; }
+  .math-combo__label { flex-wrap: wrap; gap: 0; }
+  .math-question-card { grid-area: question; }
+  .math-question-card { gap: 4px; padding: 6px; }
+  .math-equation { font-size: 1.75rem; }
+  .math-feedback { min-height: 24px; }
+}
