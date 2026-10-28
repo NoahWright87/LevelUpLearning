@@ -16,8 +16,8 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 ## Current Decisions
 
-- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); `/[activity]` renders a
-  placeholder for each until it has a real page. `ready: false` shows a "Coming soon" pill.
+- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); Spelling and Math have real
+  pages. `/[activity]` renders placeholders for future activities marked `ready: false`.
 - Hosting is Netlify via `netlify.toml` (`@netlify/plugin-nextjs`, Node 20), same as noahwright.dev.
 - `.npmrc` sets `legacy-peer-deps` because the design package declares React 18 peers
   (noahwright.dev does the same via `NPM_FLAGS` on Netlify).
@@ -49,7 +49,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - **Decided with Noah:** everything a person has (players, results, their word lists) is one
   versioned JSON document, `src/lib/save/schema.ts` (`format: "level-up-learning.save"`,
-  `version: 1`). It lives in localStorage (`lul.save.v1`) and can be downloaded and uploaded on
+  `version: 2`). It lives in localStorage (`lul.save.v1`, retained for migration) and can be downloaded and uploaded on
   `/progress`. **This is the contract for the future backend/accounts**: the server should store and
   return this same shape, and the download/upload path stays for people without an account (e.g. if
   accounts become paid). Not throwaway work: change it only through `SAVE_VERSION` + `migrate`.
@@ -89,8 +89,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Triggers stay in event handlers, outside the UI-free quiz logic. Wrong/blank answers
   and quitting do not celebrate. The design package drops unavailable/offscreen events
   and respects Still/reduced motion; celebrations do not scroll or queue for later.
-- Logo, fireworks integration, and combo changes belong together in PR #30 on
-  `codex/graduate-logo`. Push follow-up changes there while that PR is open.
+- Logo, spelling fireworks, and compact quiz layout shipped together in merged PR #30.
 - Active quizzes use compact spacing and a smaller scene via public sky/sea height props,
   keeping the fireworks visible. Combo sits in the progress row; Speak shares the Check/Next
   row. A reserved feedback slot keeps the footer from shifting when an answer is checked.
@@ -99,6 +98,30 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - Backend and accounts: when, and whether they're paid. The save file above is the data shape.
 - Merging an uploaded save into an existing one (today it replaces).
+
+## Math sprint (Oct 2026)
+
+- `/math` is playable: addition/multiplication, 1–3 digits per operand (0–9, 10–99,
+  100–999), and goals of 10/30/100 correct; default 30 is a short replayable round.
+- Three hearts; a miss costs one, resets combo and shows the correction until Next.
+  Correct answers advance immediately and retain input focus. Blank/invalid input is ignored.
+- Each correct answer refills a five-second combo timer; expiry resets only combo, never hearts.
+  Score = 10 × current combo per correct answer. Fireworks = one small shell per combo point,
+  plus a large burst on reaching the goal, through the shared design renderer.
+- Rules and clock calculations live in `src/lib/math/game.ts`, with tests beside them.
+  Browser timing uses `performance.now()`; submission checks expiry independently of UI ticks.
+- Compact scene plus responsive play layout keeps the game and footer within one viewport,
+  checked at desktop, phone (including 320×568) and 844×390 landscape sizes.
+- Save version 2 migrates version 1 by adding `player.math.sessions`; existing spelling data
+  and the storage key stay intact. Completed wins/losses save to the player selected at round
+  start, capped at 500 math rounds; quitting doesn't record a result. `/progress` shows math
+  totals and recent rounds. Native numeric input uses the existing design#32 workaround.
+- Math uses an on-screen numpad on coarse-pointer devices and screens up to 600px wide.
+  The answer field is read-only with `inputMode="none"`, and touch play never autofocuses it,
+  keeping the OS keyboard closed. Desktop retains typing/Enter. Keypad includes decimal,
+  backspace and submit/next; ordinary decimal answers are compared numerically.
+  Short-screen layouts put feedback beside the keys to keep the scene stable. The small
+  local Button grid is temporary pending NoahWright87/design#37.
 
 ## Logo (Oct 2026)
 
