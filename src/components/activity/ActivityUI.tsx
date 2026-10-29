@@ -3,12 +3,13 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { Button, Container, Heading, Text, type SceneEffects } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
+import { formatClock } from "@/lib/activity/clock";
 import "./activity.css";
 
 /** Shared site frame for a game; the activity owns its screens and rules. */
-export function ActivityPage({ children, effects }: { children: ReactNode; effects?: SceneEffects }) {
+export function ActivityPage({ children, effects, focused = false }: { children: ReactNode; effects?: SceneEffects; focused?: boolean }) {
   return (
-    <SiteShell effects={effects} compactScene>
+    <SiteShell effects={effects} compactScene focused={focused}>
       <Container padding="sm" alignItems="center" noGutters>
         <Container padding="none" itemSpacing="none" width="min(100%, 700px)" fullWidth={false} noGutters>
           {children}
@@ -25,6 +26,21 @@ export function ActivityToolbar({ title, onQuit, className = "" }: {
     <div className={`activity-toolbar ${className}`}>
       <strong>{title}</strong>
       <Button size="small" variant="text" onClick={onQuit}>Quit</Button>
+    </div>
+  );
+}
+
+/** Compact game HUD; shared statistics presentation tracks NoahWright87/design#38. */
+export function ActivityBanner({ score, scoreLabel, seconds, clockLabel, onExit }: {
+  score: ReactNode; scoreLabel: string; seconds: number; clockLabel: string; onExit: () => void;
+}) {
+  return (
+    <div className="activity-banner" role="group" aria-label="Round status">
+      <output aria-label={scoreLabel}>{score}</output>
+      <span className="activity-clock" role="timer" aria-label={clockLabel}>{formatClock(seconds)}</span>
+      <Button variant="text" size="small" style={{ padding: 0, width: 36, height: 36, minWidth: 36 }} onClick={onExit}>
+        <span aria-hidden="true">X</span><span className="activity-sr-only">Exit game</span>
+      </Button>
     </div>
   );
 }

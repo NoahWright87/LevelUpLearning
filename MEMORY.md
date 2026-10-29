@@ -130,13 +130,13 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
   accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
-- Default: five rows and a 60-second challenge. Each correct match starts its own 30-second
+- Default: five rows and a 60-second challenge. Each correct match starts its own 15-second
   replacement timer after halving the remaining time on all existing timers. Due timers deal
   one pair each into random empty positions on both sides. A timer that cannot deal yet stays
-  queued. Matched cards fade out over 400 ms; every new card fades in over a fixed 2.5 seconds
-  and becomes selectable afterward. Matches accelerate waiting timers, never the fade-in.
-  Initial cards and clear-the-board deals use the same fixed appearance duration. Reduced
-  motion skips the animation while keeping the same readiness timing.
+  queued. Matched cards fade out over 400 ms; new cards fade in over a fixed 1.5 seconds
+  and become selectable after 500 ms. Opening cards are fully visible and ready immediately;
+  later clear-the-board deals use the normal fade. Matches accelerate waiting timers, never
+  the fade-in. Reduced motion skips the animation while keeping the same readiness timing.
   Customize also offers clear-the-board batches and 2–6 rows. Both styles support timed
   or match-count goals (including a short final board). Small custom decks use fewer cards.
 - Quick math sources: 0–9 addition/multiplication, squares 1–12 and simplifying proper fractions
@@ -152,6 +152,12 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Pointer clicks blur cards and never restore board focus; keyboard play retains visible
   focus and moves to an available card if the focused one disappears. The initial board focus
   is on its container so it does not light up an untouched card.
+- Active Matching uses the shared compact `ActivityBanner`: matches/attempts, a monospace
+  MM:SS countdown (or elapsed clock for match-count goals), and an X exit with an accessible
+  name. No activity title, instructions, visible feedback, site nav or footer copy during play.
+  `ActivityPage focused` keeps only the cards, banner and scene; setup/results restore the shell.
+  Correct matches trigger a small shared firework, and completion with a match triggers a large
+  one. Effects stay in the browser hook; misses and quitting do not celebrate.
 - Fixed card bounds use shared `components/FittedText.tsx` to maximize real, wrapping text
   inside the available width/height. It refits on content, container resize and font loads;
   this small local workaround tracks NoahWright87/design#39.
@@ -162,6 +168,9 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   standard page width/site frame, `ActivityToolbar` the quit bar, `ActivityStats` the labeled
   metrics, `ActivityFeedback` the reserved live region, and `ActivityResults` the heading
   focus and replay/setup actions. Math and Matching share these; Spelling shares results.
+- `ActivityBanner` is the compact score/clock/exit alternative; `lib/activity/clock.ts`
+  formats MM:SS. `ActivityPage focused` hides site navigation and footer text during play.
+  The empty scene content row is hidden with one commented override pending design#40.
 - Shared `.activity-stack`, `.activity-actions`, `.activity-rules` and `.activity-result-score`
   replace per-game composition CSS. Use design `CardGrid` for responsive setup fields and
   design `Link` with `as={NextLink}` for links. Keep game boards and feedback states local.

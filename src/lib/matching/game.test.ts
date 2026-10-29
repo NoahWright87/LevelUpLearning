@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { APPEAR_MS, DEFAULT_SETTINGS, FADE_MS, REFILL_MS, isCardReady, mathPairs, normalizeSettings, readDecks, selectCard, startGame, tick, validateDeck, type Card, type Game, type Pair } from "./game";
+import { APPEAR_MS, DEFAULT_SETTINGS, FADE_MS, INTERACTIVE_MS, REFILL_MS, isCardReady, mathPairs, normalizeSettings, readDecks, selectCard, startGame, tick, validateDeck, type Card, type Game, type Pair } from "./game";
 import { emptySave, parseSaveFile, serializeSave } from "../save/schema";
 const rng = () => 0.37;
 const pool: Pair[] = Array.from({ length: 12 }, (_, i) => ({ id: String(i), left: `Question ${i}`, right: `Answer ${i}` }));
@@ -17,13 +17,20 @@ describe("Matching engine", () => {
     expect(cards(g).map(c => c.pair.id).sort()).toEqual(cards(g, "right").map(c => c.pair.id).sort());
     expect(new Set([...cards(g), ...cards(g, "right")].map(c => c.token)).size).toBe(10);
     expect(cards(g).every(c => c.appearedAt === 0)).toBe(true);
+    expect(cards(g).every(c => c.initiallyVisible && isCardReady(c, 0))).toBe(true);
     expect(pool[0].id).toBe("0");
   });
-  it("rejects invisible and fading-in cards until the full appearance duration has elapsed", () => {
-    const g = startGame(pool, DEFAULT_SETTINGS, 0, rng), card = cards(g)[0];
-    expect(isCardReady(card, 0)).toBe(false);
-    expect(selectCard(g, "left", card.token, APPEAR_MS - 1, rng).selected).toBeNull();
-    expect(selectCard(g, "left", card.token, APPEAR_MS, rng).selected?.token).toBe(card.token);
+  it("opens immediately and unlocks replacement cards 500ms into their 1.5-second fade", () => {
+    const initial = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    let g = match(initial, 0);
+    expect(g.correct).toBe(1);
+    g = tick(g, REFILL_MS, rng);
+    const card = cards(g).find(c => !c.initiallyVisible)!;
+    expect(isCardReady(card, REFILL_MS)).toBe(false);
+    expect(selectCard(g, "left", card.token, REFILL_MS + INTERACTIVE_MS - 1, rng).selected).toBeNull();
+    expect(selectCard(g, "left", card.token, REFILL_MS + INTERACTIVE_MS, rng).selected?.token).toBe(card.token);
+    expect(INTERACTIVE_MS).toBe(500);
+    expect(APPEAR_MS).toBe(1500);
   });
   it("supports either selection order, toggling, and changing within a column", () => {
     let g = startGame(pool, DEFAULT_SETTINGS, 0, rng);
@@ -38,50 +45,50 @@ describe("Matching engine", () => {
     g = selectCard(g, "left", a.token, 3005, rng);
     expect(g.correct).toBe(1);
   });
-  it("starts an independent 30-second replacement timer even for one match", () => {
+  it("starts an independent 15-second replacement timer even for one match", () => {
     const initial = startGame(pool, DEFAULT_SETTINGS, 0, rng);
     let g = match(initial, 3000);
     const old = g.left.find(c => c?.clearedAt !== null && c)!;
     expect(initial.correct).toBe(0);
-    expect(g.refills).toEqual([33000]);
+    expect(g.refills).toEqual([18000]);
     expect(selectCard(g, "left", old.token, 3010, rng).correct).toBe(1);
     expect(tick(g, 3000 + FADE_MS - 1, rng).left.filter(Boolean)).toHaveLength(5);
     g = tick(g, 3000 + FADE_MS, rng);
     expect(cards(g)).toHaveLength(4);
     expect(g.left.some(c => c?.token === old.token)).toBe(false);
     expect(selectCard(g, "left", old.token, 3500, rng).selected).toBeNull();
-    expect(cards(tick(g, 32999, rng))).toHaveLength(4);
-    g = tick(g, 33000, rng);
+    expect(cards(tick(g, 17999, rng))).toHaveLength(4);
+    g = tick(g, 18000, rng);
     expect(cards(g)).toHaveLength(5);
     expect(g.refills).toEqual([]);
-    expect(cards(g).find(c => c.token > initial.serial)?.appearedAt).toBe(33000);
+    expect(cards(g).find(c => c.token > initial.serial)?.appearedAt).toBe(18000);
   });
   it("halves each existing timer's remaining time before adding a fresh timer", () => {
     let g = match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000);
-    expect(g.refills).toEqual([33000]);
+    expect(g.refills).toEqual([18000]);
     g = match(g, 5000);
-    expect(g.refills).toEqual([19000, 35000]);
+    expect(g.refills).toEqual([11500, 20000]);
     g = match(g, 7000);
-    expect(g.refills).toEqual([13000, 21000, 37000]);
+    expect(g.refills).toEqual([9250, 13500, 22000]);
     expect(g.refills.at(-1)! - 7000).toBe(REFILL_MS);
   });
   it("spawns only the pair whose timer expires, leaving other timers running", () => {
     let g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
-    g = tick(g, 19000, rng);
+    g = tick(g, 11500, rng);
     expect(cards(g)).toHaveLength(4);
-    expect(g.refills).toEqual([35000]);
-    expect(cards(tick(g, 34999, rng))).toHaveLength(4);
-    g = tick(g, 35000, rng);
+    expect(g.refills).toEqual([20000]);
+    expect(cards(tick(g, 19999, rng))).toHaveLength(4);
+    g = tick(g, 20000, rng);
     expect(cards(g)).toHaveLength(5);
     expect(g.refills).toEqual([]);
   });
   it("processes due timers on input even before a browser interval fires", () => {
     let g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
     const card = cards(g)[0];
-    g = selectCard(g, "left", card.token, 19000, rng);
+    g = selectCard(g, "left", card.token, 11500, rng);
     expect(g.selected?.token).toBe(card.token);
     expect(cards(g)).toHaveLength(4);
-    expect(g.refills).toEqual([35000]);
+    expect(g.refills).toEqual([20000]);
   });
   it("gives cards a full fade-in after a late browser tick rather than backdating their appearance", () => {
     const g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
@@ -90,33 +97,33 @@ describe("Matching engine", () => {
     expect(fresh).toHaveLength(2);
     expect(fresh.every(c => c.appearedAt === 40000)).toBe(true);
     expect(late.refills).toEqual([]);
-    expect(selectCard(late, "left", fresh[0].token, 40000 + APPEAR_MS - 1, rng).selected).toBeNull();
-    expect(selectCard(late, "left", fresh[0].token, 40000 + APPEAR_MS, rng).selected?.token).toBe(fresh[0].token);
+    expect(selectCard(late, "left", fresh[0].token, 40000 + INTERACTIVE_MS - 1, rng).selected).toBeNull();
+    expect(selectCard(late, "left", fresh[0].token, 40000 + INTERACTIVE_MS, rng).selected?.token).toBe(fresh[0].token);
   });
   it("does not speed up a fade-in when other matches accelerate pending timers", () => {
     let g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
-    g = tick(g, 19000, rng);
-    const fresh = cards(g).find(c => c.appearedAt === 19000)!;
-    g = match(g, 20000);
-    expect(g.refills).toEqual([27500, 50000]);
-    expect(cards(g).find(c => c.token === fresh.token)?.appearedAt).toBe(19000);
-    expect(isCardReady(fresh, 19000 + APPEAR_MS - 1)).toBe(false);
-    expect(isCardReady(fresh, 19000 + APPEAR_MS)).toBe(true);
+    g = tick(g, 11500, rng);
+    const fresh = cards(g).find(c => c.appearedAt === 11500)!;
+    g = match(g, 11800);
+    expect(g.refills).toEqual([15900, 26800]);
+    expect(cards(g).find(c => c.token === fresh.token)?.appearedAt).toBe(11500);
+    expect(isCardReady(fresh, 11500 + INTERACTIVE_MS - 1)).toBe(false);
+    expect(isCardReady(fresh, 11500 + INTERACTIVE_MS)).toBe(true);
   });
   it("can spawn a due pair in an old empty slot while another match is fading out", () => {
     let g = match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000);
-    g = match(g, 32999);
-    g = tick(g, 33000, rng);
+    g = match(g, 17999);
+    g = tick(g, 18000, rng);
     expect(g.left.filter(c => c !== null && c.clearedAt !== null)).toHaveLength(1);
-    expect(cards(g).some(c => c.appearedAt === 33000)).toBe(true);
-    expect(g.refills).toEqual([62999]);
+    expect(cards(g).some(c => c.appearedAt === 18000)).toBe(true);
+    expect(g.refills).toEqual([32999]);
   });
   it("holds mismatches briefly without changing any replacement timers", () => {
     let g = match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000);
     const a = cards(g)[0], b = cards(g, "right").find(c => c.pair.id !== a.pair.id)!;
     g = selectCard(selectCard(g, "left", a.token, 4000, rng), "right", b.token, 4001, rng);
     expect(g.mistakes).toBe(1);
-    expect(g.refills).toEqual([33000]);
+    expect(g.refills).toEqual([18000]);
     expect(selectCard(g, "left", a.token, 4002, rng)).toBe(g);
     expect(tick(g, 4001 + FADE_MS, rng).wrong).toEqual([]);
   });
@@ -128,7 +135,8 @@ describe("Matching engine", () => {
     g = tick(match(g, 4000), 4400, rng);
     expect(cards(g)).toHaveLength(2);
     expect(cards(g).every(c => c.appearedAt === 4400)).toBe(true);
-    expect(cards(g).every(c => !isCardReady(c, 4400 + APPEAR_MS - 1))).toBe(true);
+    expect(cards(g).every(c => !isCardReady(c, 4400 + INTERACTIVE_MS - 1))).toBe(true);
+    expect(cards(g).every(c => isCardReady(c, 4400 + INTERACTIVE_MS))).toBe(true);
     expect(g.refills).toEqual([]);
   });
   it("shuffles each replacement into random empty positions while preserving partners", () => {

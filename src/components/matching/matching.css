@@ -19,4 +19,9 @@
 .matching-editor-row .nw-input, .matching-editor-row input { min-width: 0; width: 100%; }
 @media (max-width: 400px) { .matching-card { padding: 8px; } }
 @media (max-height: 700px) { .matching-board { --matching-card-height: 48px; } .matching-column { gap: 8px; } }
+@media (max-height: 500px) and (min-width: 600px) {
+  .matching-board { --matching-card-height: clamp(30px, calc((100svh - 160px) / var(--matching-rows) - 6px), 48px); }
+  .matching-column { gap: 6px; }
+  .matching-card { padding: 4px 8px; }
+}
 @media (prefers-reduced-motion: reduce) { .matching-card { animation: none; transition: none; } }

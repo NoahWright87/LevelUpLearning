@@ -4,6 +4,8 @@ Reuse the parts of a game screen that already have a common convention:
 
 - `ActivityPage` provides the site shell, compact footer and content width.
 - `ActivityToolbar` provides the round title and Quit action.
+- `ActivityBanner` is a compact score/clock/X alternative with accessible names. Use
+  `ActivityPage focused` to hide site navigation/footer text while keeping the scene.
 - `ActivityStats` accepts `{ label, value }` items; values can include timers or accessible indicators.
 - `ActivityFeedback` reserves room for short, politely announced feedback.
 - `ActivityResults` focuses the result heading and provides replay/setup actions. Pass the
