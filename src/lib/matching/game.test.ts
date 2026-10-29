@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { APPEAR_MS, DEFAULT_SETTINGS, FADE_MS, INTERACTIVE_MS, REFILL_MS, isCardReady, mathPairs, normalizeSettings, readDecks, selectCard, startGame, tick, validateDeck, type Card, type Game, type Pair } from "./game";
+import { APPEAR_MS, DEFAULT_SETTINGS, FADE_MS, INTERACTIVE_MS, isCardReady, mathPairs, normalizeSettings, readDecks, selectCard, startGame, tick, validateDeck, type Card, type Game, type Pair } from "./game";
 import { emptySave, parseSaveFile, serializeSave } from "../save/schema";
 const rng = () => 0.37;
+const SETTINGS = { ...DEFAULT_SETTINGS, reductionSeconds: 3 };
+const REFILL_MS = SETTINGS.spawnSeconds * 1000;
 const pool: Pair[] = Array.from({ length: 12 }, (_, i) => ({ id: String(i), left: `Question ${i}`, right: `Answer ${i}` }));
 const cards = (g: Game, side: "left" | "right" = "left") => g[side].filter((c): c is Card => !!c && c.clearedAt === null);
 function match(g: Game, now: number): Game {
@@ -11,8 +13,27 @@ function match(g: Game, now: number): Game {
 }
 
 describe("Matching engine", () => {
+  it("uses the chosen spawn delay and reduction for each round", () => {
+    expect(DEFAULT_SETTINGS.spawnSeconds).toBe(10);
+    expect(DEFAULT_SETTINGS.reductionSeconds).toBe(5);
+    let g = startGame(pool, { ...DEFAULT_SETTINGS, spawnSeconds: 6, reductionSeconds: 2 }, 0, rng);
+    g = match(g, 0);
+    expect(g.refills).toEqual([6000]);
+    g = match(g, 1000);
+    expect(g.refills).toEqual([4000, 7000]);
+    expect(cards(tick(g, 3999, rng))).toHaveLength(3);
+    expect(cards(tick(g, 4000, rng))).toHaveLength(4);
+  });
+  it("supports fractional seconds and turning the match reduction off", () => {
+    let g = startGame(pool, { ...DEFAULT_SETTINGS, spawnSeconds: 2.5, reductionSeconds: 0.5 }, 0, rng);
+    g = match(match(g, 0), 1000);
+    expect(g.refills).toEqual([2000, 3500]);
+    g = startGame(pool, { ...DEFAULT_SETTINGS, spawnSeconds: 2.5, reductionSeconds: 0 }, 0, rng);
+    g = match(match(g, 0), 1000);
+    expect(g.refills).toEqual([2500, 3500]);
+  });
   it("deals solvable columns with distinct tokens and a fixed appearance time", () => {
-    const g = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    const g = startGame(pool, SETTINGS, 0, rng);
     expect(cards(g)).toHaveLength(5);
     expect(cards(g).map(c => c.pair.id).sort()).toEqual(cards(g, "right").map(c => c.pair.id).sort());
     expect(new Set([...cards(g), ...cards(g, "right")].map(c => c.token)).size).toBe(10);
@@ -21,7 +42,7 @@ describe("Matching engine", () => {
     expect(pool[0].id).toBe("0");
   });
   it("opens immediately and unlocks replacement cards 500ms into their 1.5-second fade", () => {
-    const initial = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    const initial = startGame(pool, SETTINGS, 0, rng);
     let g = match(initial, 0);
     expect(g.correct).toBe(1);
     g = tick(g, REFILL_MS, rng);
@@ -33,7 +54,7 @@ describe("Matching engine", () => {
     expect(APPEAR_MS).toBe(1500);
   });
   it("supports either selection order, toggling, and changing within a column", () => {
-    let g = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    let g = startGame(pool, SETTINGS, 0, rng);
     const [a, b] = cards(g);
     g = selectCard(g, "left", a.token, 3000, rng);
     expect(selectCard(g, "left", a.token, 3001, rng).selected).toBeNull();
@@ -46,7 +67,7 @@ describe("Matching engine", () => {
     expect(g.correct).toBe(1);
   });
   it("starts an independent 10-second replacement timer even for one match", () => {
-    const initial = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    const initial = startGame(pool, SETTINGS, 0, rng);
     let g = match(initial, 3000);
     const old = g.left.find(c => c?.clearedAt !== null && c)!;
     expect(initial.correct).toBe(0);
@@ -64,7 +85,7 @@ describe("Matching engine", () => {
     expect(cards(g).find(c => c.token > initial.serial)?.appearedAt).toBe(13000);
   });
   it("subtracts three seconds from existing waits before starting a fresh timer", () => {
-    let g = match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000);
+    let g = match(startGame(pool, SETTINGS, 0, rng), 3000);
     expect(g.refills).toEqual([13000]);
     g = match(g, 5000);
     expect(g.refills).toEqual([10000, 15000]);
@@ -73,7 +94,7 @@ describe("Matching engine", () => {
     expect(g.refills.at(-1)! - 7000).toBe(REFILL_MS);
   });
   it("makes a shortened wait due now instead of moving its deadline into the past", () => {
-    let g = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    let g = startGame(pool, SETTINGS, 0, rng);
     for (const now of [0, 1000, 2000, 3000]) g = match(g, now);
     expect(g.refills).toEqual([3000, 5000, 9000, 13000]);
     g = tick(g, 3000, rng);
@@ -81,7 +102,7 @@ describe("Matching engine", () => {
     expect(cards(g).filter(c => !c.initiallyVisible)).toHaveLength(1);
   });
   it("keeps an immediately due timer queued until a fading pair leaves room", () => {
-    let g = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    let g = startGame(pool, SETTINGS, 0, rng);
     for (const now of [0, 10, 20, 30, 40]) g = match(g, now);
     expect(g.refills[0]).toBe(40);
     const serial = g.serial;
@@ -93,7 +114,7 @@ describe("Matching engine", () => {
     expect(g.refills).toHaveLength(4);
   });
   it("spawns only the pair whose timer expires, leaving other timers running", () => {
-    let g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
+    let g = match(match(startGame(pool, SETTINGS, 0, rng), 3000), 5000);
     g = tick(g, 10000, rng);
     expect(cards(g)).toHaveLength(4);
     expect(g.refills).toEqual([15000]);
@@ -103,7 +124,7 @@ describe("Matching engine", () => {
     expect(g.refills).toEqual([]);
   });
   it("processes due timers on input even before a browser interval fires", () => {
-    let g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
+    let g = match(match(startGame(pool, SETTINGS, 0, rng), 3000), 5000);
     const card = cards(g)[0];
     g = selectCard(g, "left", card.token, 10000, rng);
     expect(g.selected?.token).toBe(card.token);
@@ -111,7 +132,7 @@ describe("Matching engine", () => {
     expect(g.refills).toEqual([15000]);
   });
   it("gives cards a full fade-in after a late browser tick rather than backdating their appearance", () => {
-    const g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
+    const g = match(match(startGame(pool, SETTINGS, 0, rng), 3000), 5000);
     const late = tick(g, 40000, rng);
     const fresh = cards(late).filter(c => c.token > g.serial);
     expect(fresh).toHaveLength(2);
@@ -121,7 +142,7 @@ describe("Matching engine", () => {
     expect(selectCard(late, "left", fresh[0].token, 40000 + INTERACTIVE_MS, rng).selected?.token).toBe(fresh[0].token);
   });
   it("does not speed up a fade-in when other matches accelerate pending timers", () => {
-    let g = match(match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000), 5000);
+    let g = match(match(startGame(pool, SETTINGS, 0, rng), 3000), 5000);
     g = tick(g, 10000, rng);
     const fresh = cards(g).find(c => c.appearedAt === 10000)!;
     g = match(g, 10300);
@@ -131,7 +152,7 @@ describe("Matching engine", () => {
     expect(isCardReady(fresh, 10000 + INTERACTIVE_MS)).toBe(true);
   });
   it("can spawn a due pair in an old empty slot while another match is fading out", () => {
-    let g = match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000);
+    let g = match(startGame(pool, SETTINGS, 0, rng), 3000);
     g = match(g, 12999);
     g = tick(g, 13000, rng);
     expect(g.left.filter(c => c !== null && c.clearedAt !== null)).toHaveLength(1);
@@ -139,7 +160,7 @@ describe("Matching engine", () => {
     expect(g.refills).toEqual([22999]);
   });
   it("holds mismatches briefly without changing any replacement timers", () => {
-    let g = match(startGame(pool, DEFAULT_SETTINGS, 0, rng), 3000);
+    let g = match(startGame(pool, SETTINGS, 0, rng), 3000);
     const a = cards(g)[0], b = cards(g, "right").find(c => c.pair.id !== a.pair.id)!;
     g = selectCard(selectCard(g, "left", a.token, 4000, rng), "right", b.token, 4001, rng);
     expect(g.mistakes).toBe(1);

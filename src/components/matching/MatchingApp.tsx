@@ -8,6 +8,7 @@ import { newId } from "@/lib/save/schema";
 import { updateSave } from "@/lib/save/store";
 import { APPEAR_MS, DEFAULT_SETTINGS, MATH_LABELS, elapsed, isCardReady, mathPairs, normalizeSettings, validateDeck, type Deck, type Game, type MathKind, type Settings } from "@/lib/matching/game";
 import { useMatchingGame } from "./useMatchingGame";
+import { loadSettings, saveSettings } from "@/lib/matching/storage";
 import "./matching.css";
 
 function DeckEditor({ deck, onSave, onCancel }: { deck: Deck | null; onSave: (deck: Deck) => void; onCancel: () => void }) {
@@ -99,15 +100,23 @@ export default function MatchingApp() {
   const [source, setSource] = useState("addition");
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [customAmount, setCustomAmount] = useState<string | null>(null);
+  const [timingDrafts, setTimingDrafts] = useState<Partial<Record<"spawnSeconds" | "reductionSeconds", string>>>({});
   const [editor, setEditor] = useState<{ deck: Deck | null } | null>(null);
   const [notice, setNotice] = useState("");
   const { game, now, effects, begin, choose, quit } = useMatchingGame();
+  useEffect(() => { setSettings(loadSettings()); }, []);
+  const changeSettings = (patch: Partial<Settings>) => {
+    const next = normalizeSettings({ ...settings, ...patch });
+    setSettings(next);
+    saveSettings(next);
+  };
   const deck = save.matching.decks.find(d => `deck:${d.id}` === source);
   const isMath = source in MATH_LABELS;
   const canStart = isMath || !!deck;
   const start = () => {
     if (!canStart) return;
     setCustomAmount(null);
+    setTimingDrafts({});
     begin(deck?.pairs ?? mathPairs(source as MathKind), normalizeSettings(settings));
   };
   return <ActivityPage effects={effects} focused={game !== null && game.finishedAt === null}>
@@ -128,16 +137,23 @@ export default function MatchingApp() {
         setSource("addition"); setNotice(stored ? "Deck deleted." : "The browser couldn’t save this change. The deck may return when you reload.");
       }}>Delete deck</Button></>}</div>
       <CardGrid minCardWidth="min(100%, 260px)" gap="sm">
-        <Select label="Round goal" value={settings.goal} onChange={e => { setCustomAmount(null); setSettings({ ...settings, goal: e.target.value as Settings["goal"], amount: e.target.value === "time" ? 60 : 20 }); }}><option value="time">Beat the clock</option><option value="matches">Race to a match count</option></Select>
-        <Select label={settings.goal === "time" ? "Time limit" : "Match target"} value={String(settings.amount)} onChange={e => { setCustomAmount(null); setSettings({ ...settings, amount: Number(e.target.value) }); }}>
+        <Select label="Round goal" value={settings.goal} onChange={e => { setCustomAmount(null); changeSettings({ goal: e.target.value as Settings["goal"], amount: e.target.value === "time" ? 60 : 20 }); }}><option value="time">Beat the clock</option><option value="matches">Race to a match count</option></Select>
+        <Select label={settings.goal === "time" ? "Time limit" : "Match target"} value={String(settings.amount)} onChange={e => { setCustomAmount(null); changeSettings({ amount: Number(e.target.value) }); }}>
           {(settings.goal === "time" ? [30, 60, 120] : [10, 20, 50]).map(n => <option key={n} value={n}>{settings.goal === "time" ? `${n} seconds` : `${n} matches`}</option>)}
           {!(settings.goal === "time" ? [30, 60, 120] : [10, 20, 50]).includes(settings.amount) && <option value={settings.amount}>{settings.amount} {settings.goal === "time" ? "seconds" : "matches"} · custom</option>}
         </Select>
       </CardGrid>
       <details className="matching-customize"><summary>Customize your round</summary><div className="activity-stack">
-        <Select label="Board style" value={settings.style} onChange={e => setSettings({ ...settings, style: e.target.value as Settings["style"] })}><option value="refill">Keep it flowing · refill matched cards</option><option value="clear">Clear the board · then deal a new set</option></Select>
-        <Select label="Cards on each side" value={String(settings.rows)} onChange={e => setSettings({ ...settings, rows: Number(e.target.value) })}>{[2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n} cards</option>)}</Select>
-        <Input label={settings.goal === "time" ? "Custom seconds · 1–1800" : "Custom match target · 1–500"} type="number" value={customAmount ?? String(settings.amount)} onChange={e => { setCustomAmount(e.target.value); setSettings(normalizeSettings({ ...settings, amount: Number(e.target.value) })); }} />
+        <Select label="Board style" value={settings.style} onChange={e => changeSettings({ style: e.target.value as Settings["style"] })}><option value="refill">Keep it flowing · refill matched cards</option><option value="clear">Clear the board · then deal a new set</option></Select>
+        <Select label="Cards on each side" value={String(settings.rows)} onChange={e => changeSettings({ rows: Number(e.target.value) })}>{[2, 3, 4, 5, 6].map(n => <option key={n} value={n}>{n} cards</option>)}</Select>
+        {settings.style === "refill" && <CardGrid minCardWidth="min(100%, 260px)" gap="sm">
+          {(["spawnSeconds", "reductionSeconds"] as const).map(field => <Input
+            key={field} label={field === "spawnSeconds" ? "Spawn delay (seconds)" : "Subtract per match (seconds)"}
+            type="number" value={timingDrafts[field] ?? String(settings[field])}
+            onChange={e => { setTimingDrafts({ ...timingDrafts, [field]: e.target.value }); changeSettings({ [field]: Number(e.target.value) }); }}
+          />)}
+        </CardGrid>}
+        <Input label={settings.goal === "time" ? "Custom seconds · 1–1800" : "Custom match target · 1–500"} type="number" value={customAmount ?? String(settings.amount)} onChange={e => { setCustomAmount(e.target.value); changeSettings({ amount: Number(e.target.value) }); }} />
       </div></details>
       {notice && <p role="status">{notice}</p>}
       <Button color="primary" disabled={!canStart} onClick={start}>Let’s match →</Button>

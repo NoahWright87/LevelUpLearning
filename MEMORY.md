@@ -131,7 +131,12 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
   accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
 - Default: five rows and a 60-second challenge. Each correct match starts its own 10-second
-  replacement timer after subtracting 3 seconds from all existing waits, clamped to due now.
+  replacement timer after subtracting 5 seconds from all existing waits, clamped to due now.
+  Customize exposes `spawnSeconds` and `reductionSeconds` (0–120 seconds, tenths supported);
+  zero reduction disables acceleration. The current round captures both values at start.
+  Setup preferences persist separately in `lul.matching.settings.v1` through
+  `lib/matching/storage.ts`, with safe defaults for older/damaged preferences. They are device
+  conveniences, not part of the portable save file, so no save-version change is needed.
   Due timers deal
   one pair each into random empty positions on both sides. A timer that cannot deal yet stays
   queued. Matched cards fade out over 400 ms; new cards fade in over a fixed 1.5 seconds

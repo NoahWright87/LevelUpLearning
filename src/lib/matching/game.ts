@@ -1,13 +1,20 @@
 export type Pair = { id: string; left: string; right: string };
 export type Deck = { id: string; name: string; pairs: Pair[] };
 export type MathKind = "addition" | "multiplication" | "squares" | "fractions";
-export type Settings = { style: "refill" | "clear"; goal: "time" | "matches"; amount: number; rows: number };
-export const DEFAULT_SETTINGS: Settings = { style: "refill", goal: "time", amount: 60, rows: 5 };
+export type Settings = { style: "refill" | "clear"; goal: "time" | "matches"; amount: number; rows: number;
+  spawnSeconds: number; reductionSeconds: number };
+export const DEFAULT_SETTINGS: Settings = { style: "refill", goal: "time", amount: 60, rows: 5,
+  spawnSeconds: 10, reductionSeconds: 5 };
 export const MATH_LABELS: Record<MathKind, string> = { addition: "Single digit addition", multiplication: "Single digit multiplication", squares: "Perfect squares · 1–12", fractions: "Simplifying fractions" };
 export function normalizeSettings(s: Settings): Settings {
   return { style: s.style === "clear" ? "clear" : "refill", goal: s.goal === "matches" ? "matches" : "time",
     amount: Math.max(1, Math.min(s.goal === "matches" ? 500 : 1800, Math.round(Number.isFinite(s.amount) ? s.amount : 60))),
-    rows: Math.max(2, Math.min(6, Math.round(Number.isFinite(s.rows) ? s.rows : 5))) };
+    rows: Math.max(2, Math.min(6, Math.round(Number.isFinite(s.rows) ? s.rows : 5))),
+    spawnSeconds: clampSeconds(s.spawnSeconds, DEFAULT_SETTINGS.spawnSeconds),
+    reductionSeconds: clampSeconds(s.reductionSeconds, DEFAULT_SETTINGS.reductionSeconds) };
+}
+function clampSeconds(value: number, fallback: number): number {
+  return Math.round(Math.max(0, Math.min(120, Number.isFinite(value) ? value : fallback)) * 10) / 10;
 }
 const gcd = (a: number, b: number): number => b ? gcd(b, a % b) : a;
 export function mathPairs(kind: MathKind): Pair[] {
@@ -56,8 +63,6 @@ export type Game = { settings: Settings; pool: Pair[]; left: (Card | null)[]; ri
 export const FADE_MS = 400;
 export const APPEAR_MS = 1500;
 export const INTERACTIVE_MS = 500;
-export const REFILL_MS = 10_000;
-export const REFILL_REDUCTION_MS = 3000;
 /** Opening cards are ready immediately; new cards unlock partway through their fade. */
 export function isCardReady(card: Card, now: number): boolean {
   return card.clearedAt === null && (card.initiallyVisible || now >= card.appearedAt + INTERACTIVE_MS);
@@ -130,9 +135,9 @@ export function selectCard(game: Game, side: "left" | "right", token: number, no
   if (other.pair.id !== card.pair.id) return { ...g, selected: null, mistakes: g.mistakes + 1, wrong: [other.token, token], wrongUntil: now + FADE_MS };
   const mark = (c: Card | null) => c?.token === token || c?.token === other.token ? { ...c, clearedAt: now } : c;
   const correct = g.correct + 1;
-  // Each match takes three seconds off existing waits, then starts its own full wait.
+  // Shorten existing waits by the configured amount, then start this match's full wait.
   const refills = g.settings.style === "refill"
-    ? [...g.refills.map(time => Math.max(now, time - REFILL_REDUCTION_MS)), now + REFILL_MS]
+    ? [...g.refills.map(time => Math.max(now, time - g.settings.reductionSeconds * 1000)), now + g.settings.spawnSeconds * 1000]
     : [];
   return { ...g, left: g.left.map(mark), right: g.right.map(mark), selected: null, correct,
     refills,
