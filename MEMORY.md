@@ -130,8 +130,9 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
   accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
-- Default: five rows and a 60-second challenge. Each correct match starts its own 15-second
-  replacement timer after halving the remaining time on all existing timers. Due timers deal
+- Default: five rows and a 60-second challenge. Each correct match starts its own 10-second
+  replacement timer after subtracting 3 seconds from all existing waits, clamped to due now.
+  Due timers deal
   one pair each into random empty positions on both sides. A timer that cannot deal yet stays
   queued. Matched cards fade out over 400 ms; new cards fade in over a fixed 1.5 seconds
   and become selectable after 500 ms. Opening cards are fully visible and ready immediately;
@@ -171,6 +172,11 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - `ActivityBanner` is the compact score/clock/exit alternative; `lib/activity/clock.ts`
   formats MM:SS. `ActivityPage focused` hides site navigation and footer text during play.
   The empty scene content row is hidden with one commented override pending design#40.
+- Focused games use `useActivityViewport` and a constrained viewport wrapper (pending
+  design#41). It measures `visualViewport.height` with an `innerHeight` fallback, updates on
+  browser-bar/orientation changes, and measures content so the scene fills the remaining
+  height with its ocean visible. Only focused play locks document scrolling; setup/results
+  keep normal flow. Extremely short views can scroll the board region while keeping the sea.
 - Shared `.activity-stack`, `.activity-actions`, `.activity-rules` and `.activity-result-score`
   replace per-game composition CSS. Use design `CardGrid` for responsive setup fields and
   design `Link` with `as={NextLink}` for links. Keep game boards and feedback states local.

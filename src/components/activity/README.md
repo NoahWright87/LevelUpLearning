@@ -6,6 +6,9 @@ Reuse the parts of a game screen that already have a common convention:
 - `ActivityToolbar` provides the round title and Quit action.
 - `ActivityBanner` is a compact score/clock/X alternative with accessible names. Use
   `ActivityPage focused` to hide site navigation/footer text while keeping the scene.
+  Focused mode also uses the visible mobile viewport and gives the spare height to the scene,
+  keeping its ocean on screen as browser controls expand or collapse. The temporary layout
+  and measurement hook track NoahWright87/design#41.
 - `ActivityStats` accepts `{ label, value }` items; values can include timers or accessible indicators.
 - `ActivityFeedback` reserves room for short, politely announced feedback.
 - `ActivityResults` focuses the result heading and provides replay/setup actions. Pass the

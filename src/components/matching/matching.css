@@ -20,7 +20,7 @@
 @media (max-width: 400px) { .matching-card { padding: 8px; } }
 @media (max-height: 700px) { .matching-board { --matching-card-height: 48px; } .matching-column { gap: 8px; } }
 @media (max-height: 500px) and (min-width: 600px) {
-  .matching-board { --matching-card-height: clamp(30px, calc((100svh - 160px) / var(--matching-rows) - 6px), 48px); }
+  .matching-board { --matching-card-height: clamp(30px, calc((var(--activity-viewport-height, 100dvh) - 160px) / var(--matching-rows) - 6px), 48px); }
   .matching-column { gap: 6px; }
   .matching-card { padding: 4px 8px; }
 }

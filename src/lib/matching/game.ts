@@ -56,7 +56,8 @@ export type Game = { settings: Settings; pool: Pair[]; left: (Card | null)[]; ri
 export const FADE_MS = 400;
 export const APPEAR_MS = 1500;
 export const INTERACTIVE_MS = 500;
-export const REFILL_MS = 15_000;
+export const REFILL_MS = 10_000;
+export const REFILL_REDUCTION_MS = 3000;
 /** Opening cards are ready immediately; new cards unlock partway through their fade. */
 export function isCardReady(card: Card, now: number): boolean {
   return card.clearedAt === null && (card.initiallyVisible || now >= card.appearedAt + INTERACTIVE_MS);
@@ -129,9 +130,9 @@ export function selectCard(game: Game, side: "left" | "right", token: number, no
   if (other.pair.id !== card.pair.id) return { ...g, selected: null, mistakes: g.mistakes + 1, wrong: [other.token, token], wrongUntil: now + FADE_MS };
   const mark = (c: Card | null) => c?.token === token || c?.token === other.token ? { ...c, clearedAt: now } : c;
   const correct = g.correct + 1;
-  // A match halves the time left on existing timers, then starts its own full wait.
+  // Each match takes three seconds off existing waits, then starts its own full wait.
   const refills = g.settings.style === "refill"
-    ? [...g.refills.map(time => now + Math.max(0, time - now) / 2), now + REFILL_MS]
+    ? [...g.refills.map(time => Math.max(now, time - REFILL_REDUCTION_MS)), now + REFILL_MS]
     : [];
   return { ...g, left: g.left.map(mark), right: g.right.map(mark), selected: null, correct,
     refills,

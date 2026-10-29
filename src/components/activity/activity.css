@@ -10,6 +10,12 @@
 .activity-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 /* Empty scene content still reserves a row, pending NoahWright87/design#40. */
 .activity-scene--focused .nw-scene-footer__content { display: none; }
+/* Visible-viewport focused layout, pending NoahWright87/design#41. Normal pages still scroll. */
+html:has(.activity-viewport), body:has(.activity-viewport) { overflow: hidden; }
+.activity-viewport { --activity-sea-height: clamp(24px, 6svh, 48px); position: fixed; inset: 0; height: var(--activity-viewport-height, 100dvh); overflow: hidden; }
+.activity-viewport > .nw-layout { height: 100%; min-height: 0; }
+.activity-viewport .nw-layout__content { flex: 0 0 auto; min-height: 0; max-height: calc(var(--activity-viewport-height, 100dvh) - var(--activity-sea-height) - 48px); overflow: auto; }
+.activity-viewport .activity-scene--focused { flex-shrink: 0; }
 /* Shared tinted instructions, pending NoahWright87/design#26 (accent surfaces). */
 .activity-rules { display: flex; flex-direction: column; gap: var(--spacing-sm, 8px); padding: var(--spacing-md, 16px); border-radius: 16px; background: color-mix(in srgb, var(--primary) 8%, var(--background)); }
 /* Small statistics workaround, pending NoahWright87/design#38. */

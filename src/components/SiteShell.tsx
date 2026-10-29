@@ -13,6 +13,7 @@ import {
 } from "@noahwright/design";
 import SettingsMenu from "@/components/SettingsMenu";
 import Logo from "@/components/Logo";
+import { useActivityViewport } from "@/components/activity/useActivityViewport";
 import { NAV_ITEMS, SITE } from "@/lib/site";
 
 // Same horizon scene as noahwright.dev: sun and moon toward the middle so their reflections
@@ -26,8 +27,10 @@ export default function SiteShell({ children, effects, compactScene = false, foc
   focused?: boolean;
 }) {
   const pathname = usePathname();
+  const viewport = useActivityViewport(focused);
 
   return (
+    <div ref={viewport} className={focused ? "activity-viewport" : undefined}>
     <Layout
       header={
         focused ? undefined : <Header
@@ -61,8 +64,8 @@ export default function SiteShell({ children, effects, compactScene = false, foc
           className={focused ? "activity-scene--focused" : undefined}
           scene="horizon"
           effects={effects}
-          skyHeight={compactScene ? "clamp(64px, 18svh, 144px)" : undefined}
-          seaHeight={focused ? "clamp(24px, 6svh, 48px)" : compactScene ? "clamp(48px, 10svh, 80px)" : undefined}
+          skyHeight={focused ? "max(48px, calc(var(--activity-viewport-height, 100dvh) - var(--activity-content-height, 0px) - var(--activity-sea-height)))" : compactScene ? "clamp(64px, 18svh, 144px)" : undefined}
+          seaHeight={focused ? "var(--activity-sea-height)" : compactScene ? "clamp(48px, 10svh, 80px)" : undefined}
           sceneOptions={FOOTER_SCENE_OPTIONS}
           left={
             focused ? undefined : <span>
@@ -83,5 +86,6 @@ export default function SiteShell({ children, effects, compactScene = false, foc
         </Container>
       </Container>
     </Layout>
+    </div>
   );
 }
