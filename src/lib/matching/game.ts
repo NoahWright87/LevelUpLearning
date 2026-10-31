@@ -4,7 +4,7 @@ export type MathKind = "addition" | "multiplication" | "squares" | "fractions";
 export type Settings = { style: "refill" | "clear"; goal: "time" | "matches"; amount: number; rows: number;
   spawnSeconds: number; reductionSeconds: number };
 export const DEFAULT_SETTINGS: Settings = { style: "refill", goal: "time", amount: 60, rows: 5,
-  spawnSeconds: 10, reductionSeconds: 5 };
+  spawnSeconds: 4, reductionSeconds: 3 };
 export const MATH_LABELS: Record<MathKind, string> = { addition: "Single digit addition", multiplication: "Single digit multiplication", squares: "Perfect squares · 1–12", fractions: "Simplifying fractions" };
 export function normalizeSettings(s: Settings): Settings {
   return { style: s.style === "clear" ? "clear" : "refill", goal: s.goal === "matches" ? "matches" : "time",
@@ -81,15 +81,25 @@ function fill(game: Game, now: number, rng: () => number, { limit = Infinity, in
   const emptyLeft = shuffle(left.flatMap((c, i) => c ? [] : [i]), rng);
   const emptyRight = shuffle(right.flatMap((c, i) => c ? [] : [i]), rng);
   let serial = game.serial;
-  let remaining = game.settings.goal === "matches" ? game.settings.amount - game.correct - active.filter(c => c.clearedAt === null).length : Infinity;
-  for (let i = 0; i < Math.min(emptyLeft.length, limit) && remaining > 0; i++) {
+  const remaining = game.settings.goal === "matches" ? game.settings.amount - game.correct - active.filter(c => c.clearedAt === null).length : Infinity;
+  const pairs: Pair[] = [];
+  while (pairs.length < Math.min(emptyLeft.length, emptyRight.length, limit, remaining)) {
     const pair = available.shift();
     if (!pair) break;
     // A board never has indistinguishable prompts or answers, even for random math facts.
     for (let j = available.length - 1; j >= 0; j--) if (available[j].left === pair.left || available[j].right === pair.right) available.splice(j, 1);
+    pairs.push(pair);
+  }
+  if (game.settings.style === "refill") {
+    // Leave enough for a final group of two instead of revealing a lone answer.
+    // Two-slot decks need an even remainder, so an odd goal opens with one pair.
+    if (remaining - pairs.length === 1 || (initiallyVisible && pairs.length === 2 && (remaining - 2) % 2 === 1)) pairs.pop();
+    if (!initiallyVisible && pairs.length < 2) return game;
+  }
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i];
     left[emptyLeft[i]] = { pair, token: ++serial, appearedAt: now, initiallyVisible, clearedAt: null };
     right[emptyRight[i]] = { pair, token: ++serial, appearedAt: now, initiallyVisible, clearedAt: null };
-    remaining--;
   }
   return { ...game, left, right, serial };
 }
@@ -114,8 +124,11 @@ export function tick(game: Game, now: number, rng = Math.random): Game {
     if (next.left.every(c => !c)) next = fill(next, now, rng);
   } else {
     const due = next.refills.filter(time => time <= now).length;
-    if (due) {
-      const filled = fill(next, now, rng, { limit: due });
+    // A short opening board can have only one timer; refill it as a full group
+    // once empty so odd match targets on two-slot decks cannot get stuck.
+    const empty = next.left.every(c => !c);
+    if (due >= 2 || (due && empty)) {
+      const filled = fill(next, now, rng, { limit: empty ? Math.max(2, due) : due });
       const dealt = (filled.serial - next.serial) / 2;
       // Keep undelivered timers if their slots are still fading or a source has no free pair.
       next = { ...filled, refills: filled.refills.slice(dealt) };
