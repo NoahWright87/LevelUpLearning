@@ -79,13 +79,14 @@ function Play({ game, now, onChoose, onQuit }: { game: Game; now: number; onChoo
   </div>;
 }
 
-function Results({ game, onAgain, onSetup }: { game: Game; onAgain: () => void; onSetup: () => void }) {
+function Results({ game, saved, playerName, onAgain, onSetup }: { game: Game; saved: boolean; playerName: string; onAgain: () => void; onSetup: () => void }) {
   const seconds = elapsed(game, game.finishedAt!);
   const attempts = game.correct + game.mistakes;
   return <ActivityResults
     title={game.settings.goal === "time" ? "Time’s up!" : "All matched!"}
     onAgain={onAgain} onSetup={onSetup}
   >
+    <p role="status">{saved ? `Saved to ${playerName} progress.` : "This browser could not save this round."}</p>
     <strong className="activity-result-score">{game.correct}<span> matches</span></strong>
     <ActivityStats items={[
       { label: "Time", value: `${seconds.toFixed(1)}s` },
@@ -103,7 +104,7 @@ export default function MatchingApp() {
   const [timingDrafts, setTimingDrafts] = useState<Partial<Record<"spawnSeconds" | "reductionSeconds", string>>>({});
   const [editor, setEditor] = useState<{ deck: Deck | null } | null>(null);
   const [notice, setNotice] = useState("");
-  const { game, now, effects, begin, choose, quit } = useMatchingGame();
+  const { game, now, effects, begin, choose, quit, saved, playerName } = useMatchingGame();
   useEffect(() => { setSettings(loadSettings()); }, []);
   const changeSettings = (patch: Partial<Settings>) => {
     const next = normalizeSettings({ ...settings, ...patch });
@@ -117,14 +118,14 @@ export default function MatchingApp() {
     if (!canStart) return;
     setCustomAmount(null);
     setTimingDrafts({});
-    begin(deck?.pairs ?? mathPairs(source as MathKind), normalizeSettings(settings));
+    begin(deck?.pairs ?? mathPairs(source as MathKind), normalizeSettings(settings), deck?.name ?? MATH_LABELS[source as MathKind]);
   };
   return <ActivityPage effects={effects} focused={game !== null && game.finishedAt === null}>
     {editor ? <DeckEditor deck={editor.deck} onCancel={() => setEditor(null)} onSave={d => {
       const stored = updateSave(s => ({ ...s, matching: { decks: [...s.matching.decks.filter(old => old.id !== d.id), d] } }));
       setSource(`deck:${d.id}`); setEditor(null);
       setNotice(stored ? `“${d.name}” saved in this browser.` : "Your deck is available for this visit, but browser storage failed. Download a backup from Progress before leaving.");
-    }} /> : game ? game.finishedAt !== null ? <Results game={game} onAgain={() => begin(game.pool, game.settings)} onSetup={quit} /> : <Play game={game} now={now} onChoose={choose} onQuit={quit} /> : <div className="activity-stack">
+    }} /> : game ? game.finishedAt !== null ? <Results saved={saved} playerName={playerName} game={game} onAgain={() => begin(game.pool, game.settings)} onSetup={quit} /> : <Play game={game} now={now} onChoose={choose} onQuit={quit} /> : <div className="activity-stack">
       <Heading level={1}>Matching</Heading>
       <Select label="What are we matching?" value={canStart ? source : ""} onChange={e => { setSource(e.target.value); setNotice(""); }}>
         {!canStart && <option value="" disabled>Choose a deck</option>}
