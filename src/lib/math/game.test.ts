@@ -39,10 +39,15 @@ describe("math sprint", () => {
 
   it("ignores invalid input without consuming a turn or heart", () => {
     const game = start();
-    for (const answer of ["", " ", "1e1", "2.5", "abc", "-1", "9007199254740992"]) {
+    for (const answer of ["", " ", ".", "1e1", "abc", "-1", "9007199254740992"]) {
       expect(submitAnswer(game, answer, 1)).toBe(game);
     }
     expect(submitAnswer(startGame(DEFAULT_SETTINGS, 0, () => 0), "0", 1).correct).toBe(1);
+  });
+
+  it("scores decimal entries numerically and treats a wrong decimal as a miss", () => {
+    expect(submitAnswer(start(), "8.0", 1).correct).toBe(1);
+    expect(submitAnswer(start(), "8.5", 1).hearts).toBe(2);
   });
 
   it("shows corrections, blocks repeat submissions and ends on the third miss", () => {
