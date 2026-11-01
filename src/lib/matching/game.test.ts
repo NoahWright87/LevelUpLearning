@@ -22,7 +22,7 @@ describe("Matching engine", () => {
     g = match(g, 1000);
     expect(g.refills).toEqual([4000, 7000]);
     expect(cards(tick(g, 3999, rng))).toHaveLength(3);
-    expect(cards(tick(g, 4000, rng))).toHaveLength(3);
+    expect(cards(tick(g, 4000, rng))).toHaveLength(5);
     expect(cards(tick(g, 7000, rng))).toHaveLength(5);
   });
   it("supports fractional seconds and turning the match reduction off", () => {
@@ -67,7 +67,7 @@ describe("Matching engine", () => {
     g = selectCard(g, "left", a.token, 3005, rng);
     expect(g.correct).toBe(1);
   });
-  it("holds a single expired timer until another pair is due", () => {
+  it("holds a single expired timer until a second pair has cleared", () => {
     const initial = startGame(pool, SETTINGS, 0, rng);
     let g = match(initial, 3000);
     const old = g.left.find(c => c?.clearedAt !== null && c)!;
@@ -84,11 +84,11 @@ describe("Matching engine", () => {
     expect(cards(g)).toHaveLength(4);
     expect(g.refills).toEqual([13000]);
     g = match(g, 14000);
-    expect(cards(tick(g, 23999, rng))).toHaveLength(3);
-    g = tick(g, 24000, rng);
+    expect(cards(tick(g, 14000 + FADE_MS - 1, rng))).toHaveLength(3);
+    g = tick(g, 14000 + FADE_MS, rng);
     expect(cards(g)).toHaveLength(5);
     expect(g.refills).toEqual([]);
-    expect(cards(g).filter(c => c.token > initial.serial).every(c => c.appearedAt === 24000)).toBe(true);
+    expect(cards(g).filter(c => c.token > initial.serial).every(c => c.appearedAt === 14400)).toBe(true);
   });
   it("subtracts three seconds from existing waits before starting a fresh timer", () => {
     let g = match(startGame(pool, SETTINGS, 0, rng), 3000);
@@ -104,8 +104,8 @@ describe("Matching engine", () => {
     for (const now of [0, 1000, 2000, 3000]) g = match(g, now);
     expect(g.refills).toEqual([3000, 5000, 9000, 13000]);
     g = tick(g, 3000, rng);
-    expect(g.refills).toEqual([3000, 5000, 9000, 13000]);
-    expect(cards(g).filter(c => !c.initiallyVisible)).toHaveLength(0);
+    expect(g.refills).toEqual([13000]);
+    expect(cards(g).filter(c => !c.initiallyVisible)).toHaveLength(3);
   });
   it("keeps an immediately due timer queued until a fading pair leaves room", () => {
     let g = startGame(pool, SETTINGS, 0, rng);
@@ -118,19 +118,29 @@ describe("Matching engine", () => {
     g = tick(g, FADE_MS, rng);
     expect(g.serial).toBe(serial);
     expect(g.refills).toHaveLength(5);
-    g = tick(g, 1010, rng);
-    expect(g.serial).toBe(serial + 4);
-    expect(g.refills).toHaveLength(3);
+    g = tick(g, FADE_MS + 40, rng);
+    expect(g.serial).toBe(serial + 10);
+    expect(g.refills).toHaveLength(0);
   });
-  it("reveals due pairs together and retains any remaining timer", () => {
+  it("reveals the whole waiting group when its first timer expires", () => {
     let g = match(match(startGame(pool, SETTINGS, 0, rng), 3000), 5000);
+    expect(cards(tick(g, 9999, rng))).toHaveLength(3);
     g = tick(g, 10000, rng);
-    expect(cards(g)).toHaveLength(3);
-    expect(g.refills).toEqual([10000, 15000]);
-    expect(cards(tick(g, 14999, rng))).toHaveLength(3);
-    g = tick(g, 15000, rng);
     expect(cards(g)).toHaveLength(5);
     expect(g.refills).toEqual([]);
+  });
+  it("reveals all three cleared pairs even when only one timer has expired", () => {
+    let g = startGame(pool, DEFAULT_SETTINGS, 0, rng);
+    for (const now of [0, 100, 200]) g = match(g, now);
+    expect(g.refills).toEqual([200, 1100, 4200]);
+    expect(tick(g, 499, rng).serial).toBe(10);
+    g = tick(g, 600, rng);
+    expect(g.serial).toBe(16);
+    expect(cards(g)).toHaveLength(5);
+    expect(cards(g).filter(c => c.appearedAt === 600)).toHaveLength(3);
+    expect(cards(g, "right").filter(c => c.appearedAt === 600)).toHaveLength(3);
+    expect(g.refills).toEqual([]);
+    expect(tick(g, 5000, rng).serial).toBe(16);
   });
   it("processes due timers on input even before a browser interval fires", () => {
     let g = match(match(startGame(pool, SETTINGS, 0, rng), 3000), 5000);
@@ -252,10 +262,10 @@ describe("Matching engine", () => {
     expect(g.serial).toBe(10);
     g = match(g, 5000);
     expect(g.refills).toEqual([5000, 9000]);
-    expect(tick(g, 8999, rng).serial).toBe(10);
-    g = tick(g, 9000, rng);
+    expect(tick(g, 5399, rng).serial).toBe(10);
+    g = tick(g, 5400, rng);
     expect(g.serial).toBe(14);
-    expect(cards(g).filter(c => c.appearedAt === 9000)).toHaveLength(2);
+    expect(cards(g).filter(c => c.appearedAt === 5400)).toHaveLength(2);
   });
   it("finishes odd and even targets with groups of at least two, including two-card decks", () => {
     for (const size of [2, 3, 12]) for (const rows of [2, 3, 4, 5, 6]) for (let amount = 1; amount <= 15; amount++) {

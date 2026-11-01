@@ -138,8 +138,10 @@ This file is the cross-chat handoff record for this repository. Keep it short an
   `lib/matching/storage.ts`, with safe defaults for older/damaged preferences. They are device
   conveniences, not part of the portable save file, so no save-version change is needed.
   Replacements reveal at least two pairs together, independently shuffled into empty slots
-  on both sides. A lone due timer waits for another; timers also wait for enough cleared slots
-  and available pairs. Match-count rounds reserve enough for a final group of two. Two-slot
+  on both sides. The first expired timer releases as many waiting pairs as fit, even when
+  later timers haven't expired. Refills still wait for at least two cleared slots and available
+  pairs; consumed timers are removed so they cannot spawn again. Match-count rounds reserve
+  enough for a final group of two. Two-slot
   decks with odd goals open with one pair, whose expired timer deals a group of two once the
   board is empty; rounds still stop exactly at the target. Saved timing choices stay intact.
   Matched cards fade out over 400 ms; new cards fade in over a fixed 1.5 seconds

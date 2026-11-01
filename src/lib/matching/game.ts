@@ -72,8 +72,8 @@ function shuffle<T>(items: T[], rng: () => number): T[] {
   for (let i = copy.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [copy[i], copy[j]] = [copy[j], copy[i]]; }
   return copy;
 }
-function fill(game: Game, now: number, rng: () => number, { limit = Infinity, initiallyVisible = false }: {
-  limit?: number; initiallyVisible?: boolean;
+function fill(game: Game, now: number, rng: () => number, { initiallyVisible = false }: {
+  initiallyVisible?: boolean;
 } = {}): Game {
   const left = [...game.left], right = [...game.right];
   const active = left.filter((c): c is Card => !!c);
@@ -83,7 +83,7 @@ function fill(game: Game, now: number, rng: () => number, { limit = Infinity, in
   let serial = game.serial;
   const remaining = game.settings.goal === "matches" ? game.settings.amount - game.correct - active.filter(c => c.clearedAt === null).length : Infinity;
   const pairs: Pair[] = [];
-  while (pairs.length < Math.min(emptyLeft.length, emptyRight.length, limit, remaining)) {
+  while (pairs.length < Math.min(emptyLeft.length, emptyRight.length, remaining)) {
     const pair = available.shift();
     if (!pair) break;
     // A board never has indistinguishable prompts or answers, even for random math facts.
@@ -123,12 +123,10 @@ export function tick(game: Game, now: number, rng = Math.random): Game {
   if (next.settings.style === "clear") {
     if (next.left.every(c => !c)) next = fill(next, now, rng);
   } else {
-    const due = next.refills.filter(time => time <= now).length;
-    // A short opening board can have only one timer; refill it as a full group
-    // once empty so odd match targets on two-slot decks cannot get stuck.
-    const empty = next.left.every(c => !c);
-    if (due >= 2 || (due && empty)) {
-      const filled = fill(next, now, rng, { limit: empty ? Math.max(2, due) : due });
+    // The oldest expired timer releases the whole waiting group, including pairs
+    // whose own timers haven't expired. fill still requires at least two pairs.
+    if (next.refills.some(time => time <= now)) {
+      const filled = fill(next, now, rng);
       const dealt = (filled.serial - next.serial) / 2;
       // Keep undelivered timers if their slots are still fading or a source has no free pair.
       next = { ...filled, refills: filled.refills.slice(dealt) };
