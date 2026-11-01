@@ -13,23 +13,27 @@ import {
 } from "@noahwright/design";
 import SettingsMenu from "@/components/SettingsMenu";
 import Logo from "@/components/Logo";
+import { useActivityViewport } from "@/components/activity/useActivityViewport";
 import { NAV_ITEMS, SITE } from "@/lib/site";
 
 // Same horizon scene as noahwright.dev: sun and moon toward the middle so their reflections
 // stay clear of the footer text on either side. Module-level so the reference is stable.
 const FOOTER_SCENE_OPTIONS = { sunX: 0.62, moonX: 0.38 };
 
-export default function SiteShell({ children, effects, compactScene = false }: {
+export default function SiteShell({ children, effects, compactScene = false, focused = false }: {
   children: React.ReactNode;
   effects?: SceneEffects;
   compactScene?: boolean;
+  focused?: boolean;
 }) {
   const pathname = usePathname();
+  const viewport = useActivityViewport(focused);
 
   return (
+    <div ref={viewport} className={focused ? "activity-viewport" : undefined}>
     <Layout
       header={
-        <Header
+        focused ? undefined : <Header
           shadow={false}
           left={
             <Link href="/" className="site-home-link">
@@ -57,18 +61,19 @@ export default function SiteShell({ children, effects, compactScene = false }: {
       }
       footer={
         <SceneFooter
+          className={focused ? "activity-scene--focused" : undefined}
           scene="horizon"
           effects={effects}
-          skyHeight={compactScene ? "clamp(64px, 18svh, 144px)" : undefined}
-          seaHeight={compactScene ? "clamp(48px, 10svh, 80px)" : undefined}
+          skyHeight={focused ? "max(48px, calc(var(--activity-viewport-height, 100dvh) - var(--activity-content-height, 0px) - var(--activity-sea-height)))" : compactScene ? "clamp(64px, 18svh, 144px)" : undefined}
+          seaHeight={focused ? "var(--activity-sea-height)" : compactScene ? "clamp(48px, 10svh, 80px)" : undefined}
           sceneOptions={FOOTER_SCENE_OPTIONS}
           left={
-            <span>
+            focused ? undefined : <span>
               © {new Date().getFullYear()} <a href={SITE.authorUrl}>{SITE.author}</a>
             </span>
           }
           right={
-            <a href={SITE.github} target="_blank" rel="noreferrer">
+            focused ? undefined : <a href={SITE.github} target="_blank" rel="noreferrer">
               GitHub
             </a>
           }
@@ -81,5 +86,6 @@ export default function SiteShell({ children, effects, compactScene = false }: {
         </Container>
       </Container>
     </Layout>
+    </div>
   );
 }

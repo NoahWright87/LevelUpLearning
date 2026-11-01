@@ -16,7 +16,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 ## Current Decisions
 
-- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); Spelling and Math have real
+- Activities are listed in `ACTIVITIES` (`src/lib/site.ts`); Spelling, Math and Matching have real
   pages. `/[activity]` renders placeholders for future activities marked `ready: false`.
 - Hosting is Netlify via `netlify.toml` (`@netlify/plugin-nextjs`, Node 20), same as noahwright.dev.
 - `.npmrc` sets `legacy-peer-deps` because the design package declares React 18 peers
@@ -49,7 +49,7 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 
 - **Decided with Noah:** everything a person has (players, results, their word lists) is one
   versioned JSON document, `src/lib/save/schema.ts` (`format: "level-up-learning.save"`,
-  `version: 2`). It lives in localStorage (`lul.save.v1`, retained for migration) and can be downloaded and uploaded on
+  `version: 3`). It lives in localStorage (`lul.save.v1`, retained for migration) and can be downloaded and uploaded on
   `/progress`. **This is the contract for the future backend/accounts**: the server should store and
   return this same shape, and the download/upload path stays for people without an account (e.g. if
   accounts become paid). Not throwaway work: change it only through `SAVE_VERSION` + `migrate`.
@@ -131,3 +131,77 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Shared paths in `src/lib/logo.ts` render the header via `components/Logo.tsx` and
   the SVG favicon via `app/icon.svg/route.ts`. Header colors follow the site theme;
   favicon colors follow system light/dark mode. Logo is visible at every screen width.
+
+## Matching (Oct 2026)
+
+- `/matching` is a reusable two-column activity. The engine in `src/lib/matching/game.ts`
+  accepts plain `{ id, left, right }` pairs; math sources and future subjects use the same rules.
+- Default: five rows and a 60-second challenge. Each correct match starts its own 4-second
+  replacement timer after subtracting 3 seconds from all existing waits, clamped to due now.
+  Customize exposes `spawnSeconds` and `reductionSeconds` (0–120 seconds, tenths supported);
+  zero reduction disables acceleration. The current round captures both values at start.
+  Setup preferences persist separately in `lul.matching.settings.v1` through
+  `lib/matching/storage.ts`, with safe defaults for older/damaged preferences. They are device
+  conveniences, not part of the portable save file, so no save-version change is needed.
+  Replacements reveal at least two pairs together, independently shuffled into empty slots
+  on both sides. The first expired timer releases as many waiting pairs as fit, even when
+  later timers haven't expired. Refills still wait for at least two cleared slots and available
+  pairs; consumed timers are removed so they cannot spawn again. Match-count rounds reserve
+  enough for a final group of two. Two-slot
+  decks with odd goals open with one pair, whose expired timer deals a group of two once the
+  board is empty; rounds still stop exactly at the target. Saved timing choices stay intact.
+  Matched cards fade out over 400 ms; new cards fade in over a fixed 1.5 seconds
+  and become selectable after 500 ms. Opening cards are fully visible and ready immediately;
+  later clear-the-board deals use the normal fade. Matches accelerate waiting timers, never
+  the fade-in. Reduced motion skips the animation while keeping the same readiness timing.
+  Customize also offers clear-the-board batches and 2–6 rows. Both styles support timed
+  or match-count goals (including a short final board). Small custom decks use fewer cards.
+- Quick math sources: 0–9 addition/multiplication, squares 1–12 and simplifying proper fractions
+  with reduced denominators up to 10. Boards never contain duplicate prompts or answers.
+- Wrong pairs remain, briefly show feedback and add a miss. Either column can be picked first;
+  tapping the selected card deselects it. Pure transitions reject stale/rapid taps and check
+  time on input, so delayed browser intervals cannot extend a round.
+- Custom decks support create/edit/delete, 2–200 pairs, with unique labels per side to avoid
+  ambiguity. Save version 3 adds `matching.decks`; v1/v2 progress migrates intact, keeping
+  `lul.save.v1`. Decks are shared across players and included in Progress backup/restore.
+- Results currently show round matches, time, misses and accuracy; Matching history is not
+  recorded per player. All controls use the design system; card styling is activity-specific.
+- Pointer clicks blur cards and never restore board focus; keyboard play retains visible
+  focus and moves to an available card if the focused one disappears. The initial board focus
+  is on its container so it does not light up an untouched card.
+- Active Matching uses the shared compact `ActivityBanner`: matches/attempts, a monospace
+  MM:SS countdown (or elapsed clock for match-count goals), and an X exit with an accessible
+  name. No activity title, instructions, visible feedback, site nav or footer copy during play.
+  `ActivityPage focused` keeps only the cards, banner and scene; setup/results restore the shell.
+  Correct matches trigger a small shared firework, and completion with a match triggers a large
+  one. Effects stay in the browser hook; misses and quitting do not celebrate.
+- Fixed card bounds use shared `components/FittedText.tsx` to maximize real, wrapping text
+  inside the available width/height. It refits on content, container resize and font loads;
+  this small local workaround tracks NoahWright87/design#39.
+
+## Shared activity UI (Oct 2026)
+
+- Start new games with `src/components/activity/ActivityUI.tsx`: `ActivityPage` owns the
+  standard page width/site frame, `ActivityToolbar` the quit bar, `ActivityStats` the labeled
+  metrics, `ActivityFeedback` the reserved live region, and `ActivityResults` the heading
+  focus and replay/setup actions. Math and Matching share these; Spelling shares results.
+- `ActivityBanner` is the compact score/clock/exit alternative; `lib/activity/clock.ts`
+  formats MM:SS. `ActivityPage focused` hides site navigation and footer text during play.
+  The empty scene content row is hidden with one commented override pending design#40.
+- Focused games use `useActivityViewport` and a constrained viewport wrapper (pending
+  design#41). It measures `visualViewport.height` with an `innerHeight` fallback, updates on
+  browser-bar/orientation changes, and measures content so the scene fills the remaining
+  height with its ocean visible. Only focused play locks document scrolling; setup/results
+  keep normal flow. Extremely short views can scroll the board region while keeping the sea.
+- Shared `.activity-stack`, `.activity-actions`, `.activity-rules` and `.activity-result-score`
+  replace per-game composition CSS. Use design `CardGrid` for responsive setup fields and
+  design `Link` with `as={NextLink}` for links. Keep game boards and feedback states local.
+- `useActivityClock(running, onTick?)` owns the browser interval and monotonic time. Call
+  `sample()` on inputs/start; optional ticks let Matching advance fades and deadlines while
+  Math derives its combo display from `now`. Rules remain UI-free in `src/lib/<activity>/`.
+- Generic statistics belong upstream in NoahWright87/design#38; the shared stats component
+  and styles are a small commented workaround. Tinted instructions track design#26.
+- PRs should target `main`: the Netlify preview only builds for that base. Math Sprint #31
+  is merged; Matching #32 integrates its mobile keypad with the shared activity UI. Keep
+  keypad feedback inside the answer form for short-screen grid placement, and target the
+  shared statistics' `dt`/`dd` elements in compact keypad styles.
