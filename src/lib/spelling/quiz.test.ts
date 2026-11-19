@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ALL_LETTERS, PRESETS, hintCount, scoreMultiplier, type DifficultySettings } from "./difficulty";
 import {
   buildHint,
+  fillSentence,
   isCorrectSpelling,
   isDone,
   nextWord,
@@ -158,5 +159,13 @@ describe("scoreMultiplier", () => {
     const values = Object.values(PRESETS).map((p) => scoreMultiplier(p.settings));
     expect(values.every((v) => v > 0)).toBe(true);
     expect(values).toEqual([...values].sort((a, b) => a - b));
+  });
+});
+
+describe("fillSentence", () => {
+  it("fills every placeholder and leaves sentences without one alone", () => {
+    expect(fillSentence("Blow out the %% on your %%.", "cake")).toBe("Blow out the cake on your cake.");
+    expect(fillSentence("I like %%.", "___")).toBe("I like ___.");
+    expect(fillSentence("No blank here.", "cake")).toBe("No blank here.");
   });
 });

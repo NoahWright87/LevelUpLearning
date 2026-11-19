@@ -3,7 +3,7 @@
  * being said, so a quick tap on "Speak" never queues up a backlog.
  */
 
-import { PLACEHOLDER } from "./lists";
+import { fillSentence } from "./quiz";
 
 const CONGRATS = [
   "You did it!",
@@ -79,7 +79,7 @@ export function sayWordPrompt(word: string, sentence: string, options: SpeechOpt
   say(
     [
       { text: word, slow: true },
-      { text: sentence.split(PLACEHOLDER).join(word) },
+      { text: fillSentence(sentence, word) },
     ],
     options,
   );

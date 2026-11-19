@@ -5,6 +5,7 @@ import NextLink from "next/link";
 import { Button, Container, Heading, Input, Select, Text } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import { downloadText } from "@/lib/download";
+import { fillSentence } from "@/lib/spelling/quiz";
 import {
   ListFileError,
   parseListFile,
@@ -49,7 +50,7 @@ function ListRow({ list, onDelete }: { list: SpellingList; onDelete?: () => void
           {list.words.map((w) => (
             <li key={w.word}>
               <strong>{w.word}</strong>
-              {w.sentence ? <> — {w.sentence.split("%%").join("___")}</> : null}
+              {w.sentence ? <> — {fillSentence(w.sentence, "___")}</> : null}
             </li>
           ))}
         </ul>
