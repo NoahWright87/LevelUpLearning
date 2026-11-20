@@ -339,7 +339,7 @@ describe("custom decks and saves", () => {
   it.each([1, 2])("migrates version %s without losing existing progress", version => {
     const old = { ...emptySave(), version, matching: undefined, players: [{ id: "p", name: "Ava", createdAt: "2026-01-01", spelling: { sessions: [] }, math: { sessions: [] } }] };
     const next = parseSaveFile(JSON.stringify(old));
-    expect(next.version).toBe(3); expect(next.matching.decks).toEqual([]);
+    expect(next.version).toBe(4); expect(next.matching.decks).toEqual([]);
     expect(next.players[0].name).toBe("Ava");
     expect(next.players[0].math.sessions).toEqual([]);
   });

@@ -164,8 +164,10 @@ This file is the cross-chat handoff record for this repository. Keep it short an
 - Custom decks support create/edit/delete, 2–200 pairs, with unique labels per side to avoid
   ambiguity. Save version 3 adds `matching.decks`; v1/v2 progress migrates intact, keeping
   `lul.save.v1`. Decks are shared across players and included in Progress backup/restore.
-- Results currently show round matches, time, misses and accuracy; Matching history is not
-  recorded per player. All controls use the design system; card styling is activity-specific.
+- Results show round matches, time, misses and accuracy. Save version 4 adds per-player
+  Matching history (newest 500 completed rounds), owned by the player selected at round start.
+  Source names and settings are captured with results; quitting does not save. Progress shows
+  totals and ten recent rounds, and backup/restore includes history. Existing v1–v3 saves migrate. All controls use the design system; card styling is activity-specific.
 - Pointer clicks blur cards and never restore board focus; keyboard play retains visible
   focus and moves to an available card if the focused one disappears. The initial board focus
   is on its container so it does not light up an untouched card.

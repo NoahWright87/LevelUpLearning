@@ -10,11 +10,16 @@
 import { clampSettings, PRESETS, type DifficultyId, type DifficultySettings } from "../spelling/difficulty";
 import { BUILT_IN_IDS } from "../spelling/builtInLists";
 import { parseListFile, type SpellingList } from "../spelling/lists";
-import { readDecks, type Deck } from "../matching/game";
+import { readDecks, normalizeSettings, type Settings, type Deck } from "../matching/game";
 import type { MathSettings } from "../math/game";
 
 export const SAVE_FORMAT = "level-up-learning.save";
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
+
+export type MatchingSession = {
+  id: string; finishedAt: string; source: string; settings: Settings;
+  correct: number; mistakes: number; seconds: number;
+};
 
 export type MathSession = {
   id: string;
@@ -66,6 +71,7 @@ export type Player = {
   createdAt: string;
   spelling: { sessions: SpellingSession[] };
   math: { sessions: MathSession[] };
+  matching: { sessions: MatchingSession[] };
 };
 
 export type SaveData = {
@@ -150,6 +156,7 @@ function readSession(v: unknown, now: string): SpellingSession | null {
 function readPlayer(v: unknown, now: string): Player | null {
   if (!isObj(v) || typeof v.name !== "string" || !v.name.trim()) return null;
   const spelling = isObj(v.spelling) ? v.spelling : {};
+  const matching = isObj(v.matching) ? v.matching : {};
   const math = isObj(v.math) ? v.math : {};
   return {
     id: str(v.id) || newId(),
@@ -160,9 +167,17 @@ function readPlayer(v: unknown, now: string): Player | null {
         .map((s) => readSession(s, now))
         .filter((s): s is SpellingSession => !!s),
     },
+    matching: { sessions: (Array.isArray(matching.sessions) ? matching.sessions : []).map((s) => readMatchingSession(s, now)).filter((s): s is MatchingSession => s !== null).slice(-500) },
     math: { sessions: (Array.isArray(math.sessions) ? math.sessions : [])
       .map((s) => readMathSession(s, now)).filter((s): s is MathSession => s !== null) },
   };
+}
+
+function readMatchingSession(v: unknown, now: string): MatchingSession | null {
+  if (!isObj(v) || !isObj(v.settings)) return null;
+  return { id: str(v.id) || newId(), finishedAt: date(v.finishedAt, now), source: str(v.source, "Matching"),
+    settings: normalizeSettings(v.settings as Settings), correct: count(v.correct), mistakes: count(v.mistakes),
+    seconds: Math.max(0, num(v.seconds)) };
 }
 
 function readMathSession(v: unknown, now: string): MathSession | null {
@@ -177,8 +192,9 @@ function readMathSession(v: unknown, now: string): MathSession | null {
     bestCombo: Math.min(correct, count(v.bestCombo)), seconds: count(v.seconds) };
 }
 
-/** Version 2 adds math history; version 3 adds reusable matching decks. */
+/** Versions 2–4 add math history, matching decks, then per-player matching history. */
 function migrate(data: Obj): Obj {
+  if (typeof data.version !== "number" || data.version < 4) data = { ...data, players: (Array.isArray(data.players) ? data.players : []).map(p => isObj(p) ? { ...p, matching: { sessions: [] } } : p) };
   if (typeof data.version !== "number" || data.version < 3) data = { ...data, matching: { decks: [] } };
   if (typeof data.version !== "number" || data.version < 2) {
     data = { ...data, version: 2, players: (Array.isArray(data.players) ? data.players : [])
@@ -252,7 +268,7 @@ export function activePlayer(save: SaveData): Player | null {
 }
 
 export function addPlayer(save: SaveData, name: string, now = new Date().toISOString()): SaveData {
-  const player: Player = { id: newId(), name: name.trim() || "Player", createdAt: now, spelling: { sessions: [] }, math: { sessions: [] } };
+  const player: Player = { id: newId(), name: name.trim() || "Player", createdAt: now, spelling: { sessions: [] }, math: { sessions: [] }, matching: { sessions: [] } };
   return { ...save, players: [...save.players, player], activePlayerId: player.id };
 }
 
