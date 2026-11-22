@@ -2,7 +2,7 @@
  * The save file in localStorage, as a tiny external store for `useSyncExternalStore`.
  * Every change goes through `updateSave`, which writes it and tells subscribers (this tab via
  * an event, other tabs via the storage event). Storage being missing, full or blocked never
- * throws: the app keeps working for the visit and `lastWriteFailed` says so.
+ * throws: the app keeps working for the visit and `updateSave`/`replaceSave` return false.
  */
 
 import { emptySave, parseSaveFile, serializeSave, type SaveData } from "./schema";
@@ -57,11 +57,6 @@ export function getSave(): SaveData {
 
 export function getServerSave(): SaveData {
   return SERVER_SAVE;
-}
-
-/** True when the last write didn't stick (private browsing, storage full). */
-export function lastWriteFailed(): boolean {
-  return failed;
 }
 
 function commit(next: SaveData): SaveData {
