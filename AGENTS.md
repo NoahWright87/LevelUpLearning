@@ -15,6 +15,8 @@ This repository uses `MEMORY.md` at the root as the source of truth for cross-ch
 - **Lean on `@noahwright/design`.** When something belongs in the design system, file an issue
   in `NoahWright87/design` and keep only a small, commented local workaround here that names it.
 - `archive/` is reference only; see `archive/AGENTS.md`.
+- **Site copy lives in `src/content/copy.ts`**, each entry marked `author: "ai"` or `"noah"`. Noah is rewriting
+  it a piece at a time, so new copy goes there marked `"ai"`, and `"noah"` entries aren't reworded.
 
 ## Related Docs
 

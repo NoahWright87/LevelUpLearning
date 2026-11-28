@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
 import MatchingApp from "@/components/matching/MatchingApp";
-export const metadata: Metadata = { title: "Matching", description: "Speed drills for math facts and your own matching cards." };
+import { COPY } from "@/content/copy";
+export const metadata: Metadata = { title: "Matching", description: COPY.matching.metaDescription.text };
 export default function MatchingPage() { return <MatchingApp />; }

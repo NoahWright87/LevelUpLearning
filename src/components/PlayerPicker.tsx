@@ -5,6 +5,7 @@ import { Button, Input, Select, Text } from "@noahwright/design";
 import { addPlayer, setActivePlayer } from "@/lib/save/schema";
 import { updateSave } from "@/lib/save/store";
 import { useSave } from "./useSave";
+import { COPY } from "@/content/copy";
 import "./player-picker.css";
 
 /** "Who's playing?": switch between players or add one. Results save to whoever is picked. */
@@ -36,7 +37,7 @@ export default function PlayerPicker() {
           </Button>
         ) : (
           <Text tone="muted" inline>
-            Or skip this: results save as &ldquo;Player 1&rdquo;.
+            {COPY.players.skipHint.text}
           </Text>
         )}
       </form>
@@ -46,7 +47,7 @@ export default function PlayerPicker() {
   return (
     <div className="player-picker">
       <Select
-        label="Who's playing?"
+        label={COPY.players.whoIsPlaying.text}
         value={player?.id ?? ""}
         onChange={(e) => updateSave((s) => setActivePlayer(s, e.target.value))}
       >

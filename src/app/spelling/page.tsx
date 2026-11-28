@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import SpellingQuizApp from "@/components/spelling/SpellingQuizApp";
+import { COPY } from "@/content/copy";
 
 export const metadata: Metadata = {
   title: "Spelling",
-  description: "Hear a word, spell it, and level up as the words get tougher.",
+  description: COPY.spelling.metaDescription.text,
 };
 
 export default function SpellingPage() {

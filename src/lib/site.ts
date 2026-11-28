@@ -1,10 +1,11 @@
-/** Shared site content constants. */
+/** Shared site content constants. The words themselves live in `src/content/copy.ts`. */
+
+import { COPY } from "@/content/copy";
 
 export const SITE = {
   name: "Level Up Learning",
-  tagline: "Practice school skills and level up, RPG-style",
-  description:
-    "Learning activities for kids that track your experience in each subject, so practicing spelling or math feels like leveling up a character.",
+  tagline: COPY.site.tagline.text,
+  description: COPY.site.description.text,
   author: "Noah Wright",
   authorUrl: "https://noahwright.dev",
   github: "https://github.com/NoahWright87/LevelUpLearning",
@@ -15,19 +16,19 @@ export const SITE = {
  * placeholder from `/[activity]`; flip it once the activity has its own route under `src/app/`.
  */
 export const ACTIVITIES = [
-  { slug: "matching", title: "Matching", emoji: "🃏", description: "Match quick math facts or your own cards in a race against the clock.", ready: true },
+  { slug: "matching", title: "Matching", emoji: "🃏", description: COPY.activities.matching.description.text, ready: true },
   {
     slug: "spelling",
     title: "Spelling",
     emoji: "🔤",
-    description: "Hear a word, spell it, and level up as the words get tougher.",
+    description: COPY.activities.spelling.description.text,
     ready: true,
   },
   {
     slug: "math",
     title: "Math",
     emoji: "➗",
-    description: "Think fast, build math combos, and light up the sky with fireworks.",
+    description: COPY.activities.math.description.text,
     ready: true,
   },
 ] as const;
