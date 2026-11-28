@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import MathGameApp from "@/components/math/MathGameApp";
+import { COPY } from "@/content/copy";
 
 export const metadata: Metadata = {
-  title: "Math sprint",
-  description: "Practice addition and multiplication, build quick combos, and light up the sky with fireworks.",
+  title: COPY.math.metaTitle.text,
+  description: COPY.math.metaDescription.text,
 };
 
 export default function MathPage() {

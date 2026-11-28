@@ -8,6 +8,7 @@ import PlayerPicker from "@/components/PlayerPicker";
 import { DEFAULT_SETTINGS, ROUND_TARGETS, gameStats, operationLabel, symbol, type MathGame, type MathSettings } from "@/lib/math/game";
 import { useMathGame } from "./useMathGame";
 import { ANSWER_LIMIT, NUMPAD_KEYS, keypadEntry, validAnswer } from "@/lib/math/answer";
+import { COPY } from "@/content/copy";
 import "./math.css";
 
 function Setup({ settings, onChange, onStart }: {
@@ -16,9 +17,9 @@ function Setup({ settings, onChange, onStart }: {
   return (
     <div className="activity-stack">
       <div>
-        <Text tone="muted">THINK FAST. BUILD YOUR STREAK.</Text>
-        <Heading level={1}>Math sprint</Heading>
-        <Text>Little problems. Big combos. Light up the sky as you learn your math facts.</Text>
+        <Text tone="muted">{COPY.math.kicker.text}</Text>
+        <Heading level={1}>{COPY.math.heading.text}</Heading>
+        <Text>{COPY.math.intro.text}</Text>
       </div>
       <PlayerPicker />
       <CardGrid minCardWidth="min(100%, 200px)" gap="sm">
@@ -36,11 +37,9 @@ function Setup({ settings, onChange, onStart }: {
         </Select>
       </CardGrid>
       <div className="activity-rules">
-        <Text><strong>♥ Three hearts.</strong> Each wrong answer costs one and resets your combo.</Text>
-        <Text><strong>Five seconds to keep it going.</strong> Each correct answer refills the bar. An empty bar resets your combo, with no heart lost.</Text>
-        <Text><strong>10 points × your combo.</strong> Keep answering quickly for bigger scores and more fireworks. Take your time whenever you need to.</Text>
+        {Object.entries(COPY.math.rules).map(([key, rule]) => <Text key={key}><strong>{rule.lead.text}</strong> {rule.body.text}</Text>)}
       </div>
-      <Button color="primary" onClick={onStart}>Let’s play →</Button>
+      <Button color="primary" onClick={onStart}>{COPY.math.playButton.text}</Button>
     </div>
   );
 }

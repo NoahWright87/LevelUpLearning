@@ -16,6 +16,7 @@ import {
   type SpellingList,
 } from "@/lib/spelling/lists";
 import { useSpellingLists } from "./useSpellingLists";
+import { COPY, fill } from "@/content/copy";
 import "./spelling.css";
 
 const EXAMPLE = `{
@@ -80,11 +81,11 @@ export default function ListManager() {
 
   const save = (lists: SpellingList[]) => {
     if (!addLists(lists)) {
-      setNotice({ tone: "error", text: "This browser wouldn't save the lists (private browsing or storage full)." });
+      setNotice({ tone: "error", text: COPY.spellingLists.notices.saveFailed.text });
       return false;
     }
     const names = lists.map((l) => `“${l.name}”`).join(", ");
-    setNotice({ tone: "success", text: `Added ${names}. They're ready to pick on the spelling page.` });
+    setNotice({ tone: "success", text: fill(COPY.spellingLists.notices.added, { names }) });
     return true;
   };
 
@@ -110,8 +111,8 @@ export default function ListManager() {
   const onQuickCreate = (e: React.FormEvent) => {
     e.preventDefault();
     const words = parseQuickList(quickWords);
-    if (!quickName.trim()) return setNotice({ tone: "error", text: "Give the list a name." });
-    if (!words.length) return setNotice({ tone: "error", text: "Add at least one word." });
+    if (!quickName.trim()) return setNotice({ tone: "error", text: COPY.spellingLists.notices.needName.text });
+    if (!words.length) return setNotice({ tone: "error", text: COPY.spellingLists.notices.needWord.text });
     const list: SpellingList = {
       id: uniqueId(quickName, takenIds),
       name: quickName.trim(),
@@ -126,9 +127,9 @@ export default function ListManager() {
   };
 
   const onDelete = (list: SpellingList) => {
-    if (window.confirm(`Delete “${list.name}”? Download it first if you might want it back.`)) {
+    if (window.confirm(fill(COPY.spellingLists.notices.confirmDelete, { name: list.name }))) {
       removeList(list.id);
-      setNotice({ tone: "success", text: `Deleted “${list.name}”.` });
+      setNotice({ tone: "success", text: fill(COPY.spellingLists.notices.deleted, { name: list.name }) });
     }
   };
 
@@ -138,15 +139,15 @@ export default function ListManager() {
         <div className="spelling-setup">
           <div className="spelling-setup__intro">
             <NextLink href="/spelling" className="spelling-link">
-              ← Back to spelling
+              {COPY.spellingLists.backLink.text}
             </NextLink>
-            <Heading level={1}>📚 Word lists</Heading>
+            <Heading level={1}>{COPY.spellingLists.heading.text}</Heading>
             <Text>
-              Lists you add are saved in this browser and included in your{" "}
+              {COPY.spellingLists.intro.before.text}{" "}
               <NextLink href="/progress" className="spelling-link">
-                save file
+                {COPY.spellingLists.intro.link.text}
               </NextLink>
-              . Download a list here to share it on its own.
+              {COPY.spellingLists.intro.after.text}
             </Text>
           </div>
 
@@ -157,8 +158,8 @@ export default function ListManager() {
           ) : null}
 
           <section className="spelling-panel">
-            <Heading level={2}>Upload lists</Heading>
-            <Text>Pick one or more .json files, like ones downloaded from this page.</Text>
+            <Heading level={2}>{COPY.spellingLists.uploadHeading.text}</Heading>
+            <Text>{COPY.spellingLists.uploadIntro.text}</Text>
             <input
               ref={fileRef}
               type="file"
@@ -169,7 +170,7 @@ export default function ListManager() {
               onChange={(e) => onFiles(e.target.files)}
             />
             <details className="spelling-format">
-              <summary>What goes in the file?</summary>
+              <summary>{COPY.spellingLists.formatSummary.text}</summary>
               <Text>
                 A list has a <code>name</code>, an optional <code>grade</code>, and <code>words</code>. Each word can
                 have an example <code>sentence</code>; put <code>%%</code> where the word goes. A word can also be just
@@ -180,7 +181,7 @@ export default function ListManager() {
           </section>
 
           <section className="spelling-panel">
-            <Heading level={2}>Quick-create a list</Heading>
+            <Heading level={2}>{COPY.spellingLists.quickCreateHeading.text}</Heading>
             <form className="spelling-quick" onSubmit={onQuickCreate}>
               <div className="spelling-quick__row">
                 <Input label="List name" value={quickName} onChange={(e) => setQuickName(e.target.value)} />
@@ -194,7 +195,7 @@ export default function ListManager() {
                 </Select>
               </div>
               <Input
-                label="Words: one per line, optionally with a sentence after a dash"
+                label={COPY.spellingLists.wordsLabel.text}
                 multiline
                 rows={6}
                 placeholder={"cake - Blow out the candles on your cake.\nrain - I hope it doesn't rain today.\nfriend"}
@@ -203,7 +204,7 @@ export default function ListManager() {
               />
               <div>
                 <Button type="submit" color="primary">
-                  Create list
+                  {COPY.spellingLists.createButton.text}
                 </Button>
               </div>
             </form>
@@ -211,7 +212,7 @@ export default function ListManager() {
 
           <section className="spelling-panel">
             <div className="spelling-panel__head">
-              <Heading level={2}>My lists</Heading>
+              <Heading level={2}>{COPY.spellingLists.myListsHeading.text}</Heading>
               {custom.length > 1 ? (
                 <Button size="small" variant="outline" onClick={() => downloadLists(custom, "my-spelling-lists")}>
                   Download all
@@ -225,13 +226,13 @@ export default function ListManager() {
                 ))}
               </ul>
             ) : (
-              <Text tone="muted">No lists of your own yet. Upload or create one above.</Text>
+              <Text tone="muted">{COPY.spellingLists.noListsYet.text}</Text>
             )}
           </section>
 
           <section className="spelling-panel">
             <div className="spelling-panel__head">
-              <Heading level={2}>Built-in lists</Heading>
+              <Heading level={2}>{COPY.spellingLists.builtInHeading.text}</Heading>
               <Button size="small" variant="outline" onClick={() => downloadLists(builtIn, "level-up-spelling-lists")}>
                 Download all
               </Button>

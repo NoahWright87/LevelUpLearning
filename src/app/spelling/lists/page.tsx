@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import ListManager from "@/components/spelling/ListManager";
+import { COPY } from "@/content/copy";
 
 export const metadata: Metadata = {
-  title: "Spelling word lists",
-  description: "Upload, create and download spelling word lists.",
+  title: COPY.spellingLists.metaTitle.text,
+  description: COPY.spellingLists.metaDescription.text,
 };
 
 export default function SpellingListsPage() {

@@ -3,6 +3,7 @@
 import { Hero, Card, CardGrid, Container, Heading, Text, Pill } from "@noahwright/design";
 import SiteShell from "@/components/SiteShell";
 import { ACTIVITIES, SITE } from "@/lib/site";
+import { COPY } from "@/content/copy";
 
 export default function HomePage() {
   return (
@@ -16,7 +17,7 @@ export default function HomePage() {
       />
 
       <Container padding="lg">
-        <Heading level={2}>Pick an activity</Heading>
+        <Heading level={2}>{COPY.home.activitiesHeading.text}</Heading>
         <CardGrid minCardWidth="220px">
           {ACTIVITIES.map((activity) => (
             <Card
@@ -24,7 +25,7 @@ export default function HomePage() {
               href={`/${activity.slug}`}
               title={`${activity.emoji} ${activity.title}`}
               interactive
-              footer={activity.ready ? undefined : <Pill>Coming soon</Pill>}
+              footer={activity.ready ? undefined : <Pill>{COPY.home.comingSoon.text}</Pill>}
             >
               <Text tone="muted">{activity.description}</Text>
             </Card>

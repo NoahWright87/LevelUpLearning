@@ -22,6 +22,7 @@ import { useSave } from "@/components/useSave";
 import { listBests } from "@/lib/save/spellingProgress";
 import { useSpellingLists } from "./useSpellingLists";
 import { useVoices } from "./useVoices";
+import { COPY } from "@/content/copy";
 
 export type Round = {
   words: SpellingWord[];
@@ -122,8 +123,8 @@ export default function QuizSetupPanel({ onStart }: Props) {
   return (
     <div className="spelling-setup">
       <div className="spelling-setup__intro">
-        <Heading level={1}>🔤 Spelling</Heading>
-        <Text>Listen to each word, then type how it&apos;s spelled. Pick some lists and a difficulty to begin.</Text>
+        <Heading level={1}>{COPY.spelling.heading.text}</Heading>
+        <Text>{COPY.spelling.intro.text}</Text>
       </div>
 
       <section className="spelling-panel" aria-label="Player">
@@ -133,10 +134,10 @@ export default function QuizSetupPanel({ onStart }: Props) {
       <section className="spelling-panel" aria-labelledby="lists-title">
         <div className="spelling-panel__head">
           <Heading level={2}>
-            <span id="lists-title">1. Pick word lists</span>
+            <span id="lists-title">{COPY.spelling.listsHeading.text}</span>
           </Heading>
           <NextLink href="/spelling/lists" className="spelling-link">
-            Upload or download lists →
+            {COPY.spelling.listsLink.text}
           </NextLink>
         </div>
         <div className="spelling-groups">
@@ -159,7 +160,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
             {words.length
               ? `${words.length} word${words.length === 1 ? "" : "s"} from ${chosenLists.length} list${chosenLists.length === 1 ? "" : "s"}`
               : loaded
-                ? "No lists picked yet"
+                ? COPY.spelling.noListsPicked.text
                 : "Loading lists…"}
           </Text>
           {setup.listIds.length ? (
@@ -172,7 +173,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
 
       <section className="spelling-panel" aria-labelledby="difficulty-title">
         <Heading level={2}>
-          <span id="difficulty-title">2. Choose a difficulty</span>
+          <span id="difficulty-title">{COPY.spelling.difficultyHeading.text}</span>
         </Heading>
         <RadioGroup
           label="Difficulty"
@@ -181,7 +182,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
           onChange={(e) => update({ difficulty: e.target.value as DifficultyId })}
           options={[
             ...PRESET_IDS.map((id) => ({ value: id, label: `${PRESETS[id].label}: ${PRESETS[id].hint}` })),
-            { value: "custom", label: "Custom: set it up yourself" },
+            { value: "custom", label: COPY.spelling.customDifficulty.text },
           ]}
         />
 
@@ -230,7 +231,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
 
       <section className="spelling-panel" aria-labelledby="voice-title">
         <Heading level={2}>
-          <span id="voice-title">3. Check the sound</span>
+          <span id="voice-title">{COPY.spelling.soundHeading.text}</span>
         </Heading>
         {supported ? (
           <div className="spelling-voice">
@@ -249,14 +250,14 @@ export default function QuizSetupPanel({ onStart }: Props) {
             ) : null}
             <Button
               variant="outline"
-              onClick={() => sayWordPrompt("spelling", "I love practicing my %% words!", { voiceURI: setup.voiceURI })}
+              onClick={() => sayWordPrompt("spelling", COPY.spelling.testVoiceSentence.text, { voiceURI: setup.voiceURI })}
             >
-              🔊 Test the voice
+              {COPY.spelling.testVoiceButton.text}
             </Button>
           </div>
         ) : (
           <Text tone="error">
-            This browser can&apos;t speak the words aloud. Use a browser with text-to-speech support for the spoken quiz.
+            {COPY.spelling.noSpeech.text}
           </Text>
         )}
       </section>
@@ -269,7 +270,7 @@ export default function QuizSetupPanel({ onStart }: Props) {
           disabled={words.length === 0}
           onClick={() => onStart({ words, lists: chosenLists, difficulty: setup.difficulty, settings, voiceURI: setup.voiceURI })}
         >
-          Start the quiz
+          {COPY.spelling.startButton.text}
         </Button>
       </div>
     </div>
